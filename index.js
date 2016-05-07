@@ -6,8 +6,6 @@ import React, {
 
 const { Voice } = NativeModules;
 
-console.log(Voice);
-
 class RCTVoice {
   constructor() {
     this._loaded = false;
