@@ -49,6 +49,9 @@ public class MainActivity extends ReactActivity {
 }
 ```
 
+# Example
+Full example located in `/VoiceTest`.
+
 # Usage
 
 ```javascript

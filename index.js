@@ -11,6 +11,7 @@ console.log(Voice);
 class RCTVoice {
   constructor() {
     this._loaded = false;
+    this._listeners = null;
     this._events = {
       'onSpeechStart': this._onSpeechStart.bind(this),
       'onSpeechRecognized': this._onSpeechRecognized.bind(this),
@@ -26,14 +27,16 @@ class RCTVoice {
       if (error) {
         return error;
       }
-      Object.keys(this._events)
-        .map((key, index) => DeviceEventEmitter.removeListener(key));
+      if (this._listeners) {
+        this._listeners.map((listener, index) => listener.remove());
+        this._listeners = null;
+      }
       return null;
     });
   }
   start(locale) {
-    if (!this._loaded) {
-      Object.keys(this._events)
+    if (!this._loaded && !this._listeners) {
+      this._listeners = Object.keys(this._events)
         .map((key, index) => DeviceEventEmitter.addListener(key, this._events[key]));
     }
     return Voice.startSpeech(locale, (error) => {
