@@ -76,7 +76,7 @@ Methods that are invoked when a native event emitted.
 Event Name                    | Description                                            | Event                                           | Platform
 ----------------------------- | ------------------------------------------------------ | ----------------------------------------------- | --------
 onSpeechStart(event)          | Invoked when `.start()` is called without error.       | `{ error: false }`                              | Android
-onSpeechRecognized(event)     | Invoked when speech is recognized.                     | `{ value: [..., 'Speech recognized'] }`         | Android
+onSpeechRecognized(event)     | Invoked when speech is recognized.                     | `{ error: false }`                              | Android
 onSpeechEnd(event)            | Invoked when SpeechRecognizer stops recognition.       | `{ error: false }`                              | Android
 onSpeechError(event)          | Invoked when an error occurs.                          | `{ error: Description of error as string }`     | Android
 onSpeechResults(event)        | Invoked when SpeechRecognizer is finished recognizing. | `{ value: [..., 'Speech recognized'] }`         | Android
