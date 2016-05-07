@@ -4,9 +4,11 @@ import React, {
   DeviceEventEmitter,
 } from 'react-native';
 
-const { RCTVoice } = NativeModules;
+const { Voice } = NativeModules;
 
-class Voice {
+console.log(Voice);
+
+class RCTVoice {
   constructor() {
     this._loaded = false;
     this._events = {
@@ -20,7 +22,7 @@ class Voice {
     };
   }
   destroy() {
-    return RCTVoice.destroySpeech((error) => {
+    return Voice.destroySpeech((error) => {
       if (error) {
         return error;
       }
@@ -29,12 +31,12 @@ class Voice {
       return null;
     });
   }
-  start() {
+  start(locale) {
     if (!this._loaded) {
       Object.keys(this._events)
         .map((key, index) => DeviceEventEmitter.addListener(key, this._events[key]));
     }
-    return RCTVoice.startSpeech((error) => {
+    return Voice.startSpeech(locale, (error) => {
       if (error) {
         return error;
       }
@@ -42,7 +44,7 @@ class Voice {
     });
   }
   stop() {
-    return RCTVoice.stopSpeech((error) => {
+    return Voice.stopSpeech((error) => {
       if (error) {
         return error;
       }
@@ -50,7 +52,7 @@ class Voice {
     });
   }
   cancel() {
-    return RCTVoice.cancelSpeech((error) => {
+    return Voice.cancelSpeech((error) => {
       if (error) {
         return error;
       }
@@ -58,10 +60,10 @@ class Voice {
     });
   }
   isAvailable(callback) {
-    RCTVoice.isSpeechAvailable(callback);
+    Voice.isSpeechAvailable(callback);
   }
   isRecognizing() {
-    return RCTVoice.isRecognizing(isRecognizing => isRecognizing);
+    return Voice.isRecognizing(isRecognizing => isRecognizing);
   }
   _onSpeechStart(e) {
     if (this.onSpeechStart) {
@@ -100,4 +102,4 @@ class Voice {
   }
 }
 
-module.exports = new Voice();
+module.exports = new RCTVoice();

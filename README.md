@@ -58,14 +58,14 @@ import Voice from 'react-native-voice';
 ## Methods
 Accessible methods to perform actions.
 
-Method Name           | Description                                                                      | Platform
---------------------- | -------------------------------------------------------------------------------- | --------
-isAvailable(callback) | Checks whether a speech recognition service is available on the system.          | Android
-start()               | Starts listening for speech. Returns null if no error occurs.                    | Android
-stop()                | Stops listening for speech. Returns null if no error occurs.                     | Android
-cancel()              | Cancels the speech recognition. Returns null if no error occurs.                 | Android
-destroy()             | Destroys the current SpeechRecognizer instance. Returns null if no error occurs. | Android
-isRecognizing()       | Return if the SpeechRecognizer is recognizing.                                   | Android
+Method Name           | Description                                                                         | Platform
+--------------------- | ----------------------------------------------------------------------------------- | --------
+isAvailable(callback) | Checks whether a speech recognition service is available on the system.             | Android
+start(locale)         | Starts listening for speech for a specific locale. Returns null if no error occurs. | Android
+stop()                | Stops listening for speech. Returns null if no error occurs.                        | Android
+cancel()              | Cancels the speech recognition. Returns null if no error occurs.                    | Android
+destroy()             | Destroys the current SpeechRecognizer instance. Returns null if no error occurs.    | Android
+isRecognizing()       | Return if the SpeechRecognizer is recognizing.                                      | Android
 
 ## Events
 Methods that are invoked when a native event emitted.
