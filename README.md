@@ -3,6 +3,9 @@ A speech-to-text library for [React Native](https://facebook.github.io/react-nat
 
 **NOTE**, currently only supports Android. Contribute to make this a universal module!
 
+## (Basically) Help Wanted
+If you want to contribute, feel like this isn't going anywhere for your needs, or you just have to fork it to fix some small issue but are to lazy to "submit" a PR, let me know! Or just open an issue and bring it to my attention!
+
 # Install
 
 ```sh
