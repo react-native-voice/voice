@@ -1,11 +1,11 @@
 {
   "name": "react-native-voice",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "React Native Native Voice library for iOS and Android",
   "main": "index.js",
   "author": "Sam Wenke <samwenke@gmail.com>",
   "peerDependencies": {
-    "react-native": "^0.14"
+    "react-native": ">=0.14 <0.35.0"
   },
   "keywords": [
     "react-native",
