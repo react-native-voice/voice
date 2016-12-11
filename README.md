@@ -31,10 +31,11 @@ dependencies {
 }
 ```
 
-- In `MainActivity.java`
+- In `MainApplication.java`
 
 ```java
 
+import com.facebook.react.ReactApplication
 import com.facebook.react.ReactPackage;
 ...
 import com.wenkesj.voice.VoicePackage; // <------ Add this!
@@ -53,12 +54,29 @@ public class MainActivity extends ReactActivity {
 ```
 
 # Example
-Full example located in `/VoiceTest`.
+Full example for Android platform located in `/VoiceTest`.
 
 # Usage
 
 ```javascript
 import Voice from 'react-native-voice';
+import {
+  ToastAndroid, ...
+} from 'react-native';
+...
+class VoiceTest extends Component {
+  constructor(props) {
+    Voice.onSpeechStart = this.onSpeechStartHandler.bind(this);
+    Voice.onSpeechEnd = this.onSpeechEndHandler.bind(this);
+    Voice.onSpeechResults = this.onSpeechResultsHandler.bind(this);
+  }
+  onButtonPress(e){
+    const error = Voice.start('en');
+    if (error) {
+      ToastAndroid.show(error, ToastAndroid.SHORT);
+    }
+  }
+  ...
 ```
 
 ## Methods
@@ -85,3 +103,8 @@ onSpeechError(event)          | Invoked when an error occurs.                   
 onSpeechResults(event)        | Invoked when SpeechRecognizer is finished recognizing. | `{ value: [..., 'Speech recognized'] }`         | Android
 onSpeechPartialResults(event) | Invoked when any results are computed.                 | `{ value: [..., 'Partial speech recognized'] }` | Android
 onSpeechVolumeChanged(event)  | Invoked when pitch that is recognized changed.         | `{ value: pitch in dB }`                        | Android
+
+## Permissions
+While the included `VoiceTest` app works without explicit permissions checks and requests, it may be necessary to add a permission request for `RECORD_AUDIO` for some configurations.
+
+Please see the documentation provided by ReactNative for this: [PermissionsAndroid](http://facebook.github.io/react-native/releases/0.38/docs/permissionsandroid.html)
