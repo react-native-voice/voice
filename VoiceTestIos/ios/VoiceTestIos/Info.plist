@@ -36,9 +36,11 @@
 		</dict>
 	</dict>
 	<key>NSSpeechRecognitionUsageDescription</key>
-	<string>Your usage description here</string>
+	<string>Your usage description here2</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Your usage description here</string>
+	<string>Your usage description here1111</string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
 	<key>LSApplicationCategoryType</key>
 	<string></string>
 	<key>UILaunchStoryboardName</key>

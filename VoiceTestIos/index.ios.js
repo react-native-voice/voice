@@ -28,9 +28,15 @@ class VoiceTestIos extends Component {
     // Voice.onSpeechRecognized = this.onSpeechRecognized.bind(this);
     // Voice.onSpeechEnd = this.onSpeechEnd.bind(this);
     // Voice.onSpeechError = this.onSpeechError.bind(this);
-    // Voice.onSpeechResults = this.onSpeechResults.bind(this);
+    Voice.onSpeechResults = this.onSpeechResults.bind(this);
     // Voice.onSpeechPartialResults = this.onSpeechPartialResults.bind(this);
     // Voice.onSpeechVolumeChanged = this.onSpeechVolumeChanged.bind(this);
+  }
+  componentWillUnmount() {
+    if (Voic.subscription != null) {
+      Voic.subscription.remove();
+      Voic.subscription = null;
+    }
   }
   onSpeechStart(e) {
     this.setState({
@@ -76,7 +82,7 @@ class VoiceTestIos extends Component {
       results: [],
       partialResults: [],
     });
-    const error = Voice.start('en');
+    const error = Voice.start('en-US');
     // if (error) {
     //   ToastAndroid.show(error, ToastAndroid.SHORT);
     // }

@@ -1,11 +1,7 @@
 #import <React/RCTBridgeModule.h>
-#import <Speech/Speech.h>
+#import <React/RCTEventEmitter.h>
 
-@interface Voice : NSObject <RCTBridgeModule, SFSpeechRecognizerDelegate> {
-  SFSpeechRecognizer *speechRecognizer;
-  SFSpeechAudioBufferRecognitionRequest *recognitionRequest;
-  SFSpeechRecognitionTask *recognitionTask;
-  AVAudioEngine *audioEngine;
-}
+@interface Voice : RCTEventEmitter <RCTBridgeModule>
+
+
 @end
-
