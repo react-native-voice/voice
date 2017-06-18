@@ -35,10 +35,10 @@
 			</dict>
 		</dict>
 	</dict>
-	<key>NSSpeechRecognitionUsageDescription</key>
-	<string>Your usage description here2</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Your usage description here1111</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Your usage description here2</string>
 	<key>CFBundleGetInfoString</key>
 	<string></string>
 	<key>LSApplicationCategoryType</key>

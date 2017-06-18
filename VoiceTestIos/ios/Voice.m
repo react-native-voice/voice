@@ -1,14 +1,9 @@
 
 #import "Voice.h"
 #import <React/RCTLog.h>
-//#import <AVFoundation/AVFoundation.h>
-//#import <Speech/Speech.h>
-
 #import <UIKit/UIKit.h>
 #import <React/RCTUtils.h>
-#import <React/RCTBridge.h>
 #import <React/RCTEventEmitter.h>
-// #import <React/RCTEventDispatcher.h>
 #import <Speech/Speech.h>
 
 @interface Voice () <SFSpeechRecognizerDelegate>
@@ -19,16 +14,11 @@
 @property (nonatomic) SFSpeechRecognitionTask* recognitionTask;
 @property (nonatomic) AVAudioSession* audioSession;
 
-
-@property (nonatomic, weak, readwrite) RCTBridge *
-bridge;
-
 @end
 
 @implementation Voice
 {
 }
-
 
 - (void) setupAndStartRecognizing:(NSString*)localeStr {
     [self teardown];
@@ -46,21 +36,8 @@ bridge;
     
     self.speechRecognizer.delegate = self;
     
-    
     NSError* audioSessionError = nil;
     self.audioSession = [AVAudioSession sharedInstance];
-     NSLog(@"ZZZZZZZ");
-
-[self.audioSession requestRecordPermission:^(BOOL granted) {
-    if (granted) {
-        NSLog(@"granted");
-    } else {
-        NSLog(@"denied");
-    }
-}];
-
-
-
     [self.audioSession setCategory:AVAudioSessionCategoryRecord error:&audioSessionError];
 
 
@@ -172,14 +149,13 @@ bridge;
 }
 
 - (void) sendResult:(NSDictionary*)error :(NSDictionary*)bestTranscription :(NSArray*)transcriptions :(NSNumber*)isFinal {
-//    NSString *eventName = notification.userInfo[@"name"];
     NSMutableDictionary* result = [[NSMutableDictionary alloc] init];
     if (error != nil && error != [NSNull null]) {
         result[@"error"] = error;
         [self sendEventWithName:@"onSpeechError" body:result[@"error"]];
     }
     if (bestTranscription != nil) {
-        result[@"bestTranscription"] = bestTranscription;
+        result[@"bestTranscription"] = @[bestTranscription[@"formattedString"]];
         [self sendEventWithName:@"onSpeechResults" body:result[@"bestTranscription"]];
     }
     if (transcriptions != nil) {
@@ -191,20 +167,7 @@ bridge;
        
         [self sendEventWithName:@"onSpeechRecognized" body:result[@"isFinal"]];
     }
-    
-    // [self.bridge.eventDispatcher sendAppEventWithName:@"SpeechToText"
-    //                                              body:result];
-
-
-// [self sendEventWithName:@"EventReminder" body:@{@"name": eventName}];
     [self sendEventWithName:@"SpeechToText" body:result];
-    
-   
-
-
-
-
-
 }
 
 - (void) teardown {
@@ -270,15 +233,6 @@ RCT_EXPORT_METHOD(startSpeech:(NSString*)localeStr callback:(RCTResponseSenderBl
         return;
     }
     
-//  NSLog(@"ZZZZZZZ");
-
-// [[AVAudioSession sharedInstance] requestRecordPermission:^(BOOL granted) {
-//     if (granted) {
-//         NSLog(@"granted");
-//     } else {
-//         NSLog(@"denied");
-//     }
-// }];
 
 
     [SFSpeechRecognizer requestAuthorization:^(SFSpeechRecognizerAuthorizationStatus status) {
@@ -322,134 +276,3 @@ RCT_EXPORT_MODULE()
 
 
 
-// @implementation Voice
-
-// - (dispatch_queue_t)methodQueue
-// {
-//   return dispatch_get_main_queue();
-// }
-// // This RCT (React) "macro" exposes the current module to JavaScript
-// RCT_EXPORT_MODULE();
-
-
-
-// RCT_EXPORT_METHOD(viewDidLoad) {
-  
-//   // Initialize the Speech Recognizer with the locale, couldn't find a list of locales
-//   // but I assume it's standard UTF-8 https://wiki.archlinux.org/index.php/locale
-//   speechRecognizer = [[SFSpeechRecognizer alloc] initWithLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"en_US"]];
-  
-//   // Set speech recognizer delegate
-//   speechRecognizer.delegate = self;
-  
-//   // Request the authorization to make sure the user is asked for permission so you can
-//   // get an authorized response, also remember to change the .plist file, check the repo's
-//   // readme file or this projects info.plist
-//   [SFSpeechRecognizer requestAuthorization:^(SFSpeechRecognizerAuthorizationStatus status) {
-//     switch (status) {
-//       case SFSpeechRecognizerAuthorizationStatusAuthorized:
-//         NSLog(@"Authorized");
-//         break;
-//       case SFSpeechRecognizerAuthorizationStatusDenied:
-//         NSLog(@"Denied");
-//         break;
-//       case SFSpeechRecognizerAuthorizationStatusNotDetermined:
-//         NSLog(@"Not Determined");
-//         break;
-//       case SFSpeechRecognizerAuthorizationStatusRestricted:
-//         NSLog(@"Restricted");
-//         break;
-//       default:
-//         break;
-//     }
-//   }];
-  
-// }
-
-
-
-// /*!
-//  * @brief Starts listening and recognizing user input through the phone's microphone
-//  */
-
-// RCT_EXPORT_METHOD(startListening) {
-  
-//   // Initialize the AVAudioEngine
-//   audioEngine = [[AVAudioEngine alloc] init];
-  
-//   // Make sure there's not a recognition task already running
-//   if (recognitionTask) {
-//     [recognitionTask cancel];
-//     recognitionTask = nil;
-//   }
-  
-//   // Starts an AVAudio Session
-//   NSError *error;
-//   AVAudioSession *audioSession = [AVAudioSession sharedInstance];
-//   [audioSession setCategory:AVAudioSessionCategoryRecord error:&error];
-//   [audioSession setActive:YES withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation error:&error];
-  
-//   // Starts a recognition process, in the block it logs the input or stops the audio
-//   // process if there's an error.
-//   recognitionRequest = [[SFSpeechAudioBufferRecognitionRequest alloc] init];
-//   AVAudioInputNode *inputNode = audioEngine.inputNode;
-//   recognitionRequest.shouldReportPartialResults = YES;
-//   recognitionTask = [speechRecognizer recognitionTaskWithRequest:recognitionRequest resultHandler:^(SFSpeechRecognitionResult * _Nullable result, NSError * _Nullable error) {
-//     BOOL isFinal = NO;
-//     if (result) {
-//       // Whatever you say in the mic after pressing the button should be being logged
-//       // in the console.
-//       NSLog(@"RESULT:%@",result.bestTranscription.formattedString);
-//       isFinal = !result.isFinal;
-//     }
-//     if (error) {
-//       [audioEngine stop];
-//       [inputNode removeTapOnBus:0];
-//       recognitionRequest = nil;
-//       recognitionTask = nil;
-//     }
-//   }];
-  
-//   // Sets the recording format
-//   AVAudioFormat *recordingFormat = [inputNode outputFormatForBus:0];
-//   [inputNode installTapOnBus:0 bufferSize:1024 format:recordingFormat block:^(AVAudioPCMBuffer * _Nonnull buffer, AVAudioTime * _Nonnull when) {
-//     [recognitionRequest appendAudioPCMBuffer:buffer];
-//   }];
-  
-//   // Starts the audio engine, i.e. it starts listening.
-//   [audioEngine prepare];
-//   [audioEngine startAndReturnError:&error];
-//   NSLog(@"Say Something, I'm listening");
-  
-  
-// }
-
-
-
-
-// #pragma mark - SFSpeechRecognizerDelegate Delegate Methods
-
-// - (void)speechRecognizer:(SFSpeechRecognizer *)speechRecognizer availabilityDidChange:(BOOL)available {
-//   NSLog(@"Availability:%d",available);
-// }
-
-
-
-
-// RCT_EXPORT_METHOD(startSpeech:(NSString *)location callback:(RCTResponseSenderBlock)callback) {
-//   if (!audioEngine.isRunning) {
-//     [self startListening];
-//   }
-//   callback(false);
-// }
-
-
-// RCT_EXPORT_METHOD(stopSpeech:(RCTResponseSenderBlock)callback) {
-//   if (audioEngine.isRunning) {
-//     [audioEngine stop];
-//     [recognitionRequest endAudio];
-//   }
-//   callback(false);
-// }
-
-// @end

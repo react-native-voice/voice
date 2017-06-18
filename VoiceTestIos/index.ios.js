@@ -59,8 +59,9 @@ class VoiceTestIos extends Component {
     });
   }
   onSpeechResults(e) {
+    console.log('RRRUUDUDUDDFUDWJSD result', e);
     this.setState({
-      results: e.value,
+      results: e,
     });
   }
   onSpeechPartialResults(e) {

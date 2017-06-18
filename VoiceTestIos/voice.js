@@ -23,33 +23,31 @@ class RCTVoice {
     };
 
 
-    // this.subscription = voiceEmitter.addListener(
-    // // this.subscription = NativeAppEventEmitter.addListener(
-    //   'SpeechToText',
-    //   (result) => {
-    //     console.log(result);
-    //     if (result.error) {
-    //       this.onSpeechError(JSON.stringify(result.error))
-    //       // alert(JSON.stringify(result.error));
-    //     } else {
-    //       if(result.isFinal) {
-    //         this.onSpeechRecognized(true);
-    //         this.onSpeechEnd(true);
-    //         this.onSpeechResults([result.bestTranscription.formattedString]);
-    //       }
-    //       this.onSpeechPartialResults(result.transcriptions.map(a => { return a.formattedString}));
+    this.subscription = voiceEmitter.addListener(
+    // this.subscription = NativeAppEventEmitter.addListener(
+      'SpeechToText',
+      (result) => {
+        console.log(result);
+        // if (result.error) {
+        //   this.onSpeechError(JSON.stringify(result.error))
+        //   // alert(JSON.stringify(result.error));
+        // } else {
+        //   if(result.isFinal) {
+        //     this.onSpeechRecognized(true);
+        //     this.onSpeechEnd(true);
+        //     this.onSpeechResults([result.bestTranscription.formattedString]);
+        //   }
+        //   this.onSpeechPartialResults(result.transcriptions.map(a => { return a.formattedString}));
 
 
 
-    //        console.log(result.bestTranscription.formattedString);
-    //     }
+        //    console.log(result.bestTranscription.formattedString);
+        // }
 
 
 
-    //   }
-    // );
-
-
+      }
+    );
 
 
   }
@@ -81,7 +79,7 @@ class RCTVoice {
 
   }
   stop() {
-    return Voice.stopSpeech((error) => {
+    return Voice.finishRecognition((error) => {
       if (error) {
         return error;
       }
@@ -89,7 +87,7 @@ class RCTVoice {
     });
   }
   cancel() {
-    return Voice.finishRecognition((error) => {
+    return Voice.stopSpeech((error) => {
       if (error) {
         return error;
       }
@@ -138,37 +136,6 @@ class RCTVoice {
   //   }
   // }
 
-
-  // onSpeechStart(e) {
-  //   this.setState({
-  //     started: '√',
-  //   });
-  // }
-  // onSpeechRecognized(e) {
-  //   this.setState({
-  //     recognized: '√',
-  //   });
-  // }
-  // onSpeechEnd(e) {
-  //   this.setState({
-  //     end: '√',
-  //   });
-  // }
-  // onSpeechError(e) {
-  //   this.setState({
-  //     error: e,
-  //   });
-  // }
-  // onSpeechResults(e) {
-  //   this.setState({
-  //     results: e,
-  //   });
-  // }
-  // onSpeechPartialResults(e) {
-  //   this.setState({
-  //     partialResults: e,
-  //   });
-  // }
 }
 
 module.exports = new RCTVoice();
