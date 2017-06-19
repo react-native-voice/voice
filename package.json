@@ -1,11 +1,11 @@
 {
   "name": "react-native-voice",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "React Native Native Voice library for iOS and Android",
   "main": "index.js",
   "author": "Sam Wenke <samwenke@gmail.com>",
   "peerDependencies": {
-    "react-native": ">=0.14 <0.35.0"
+    "react-native": ">=0.40.0"
   },
   "keywords": [
     "react-native",
@@ -18,5 +18,8 @@
     "type": "git",
     "url": "git://github.com/wenkesj/react-native-voice.git"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "react": "^16.0.0-alpha.12"
+  }
 }

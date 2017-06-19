@@ -1,10 +1,11 @@
 'use strict';
 import React, {
   NativeModules,
-  DeviceEventEmitter,
+  NativeEventEmitter
 } from 'react-native';
 
 const { Voice } = NativeModules;
+const voiceEmitter = new NativeEventEmitter(Voice);
 
 class RCTVoice {
   constructor() {
@@ -35,7 +36,7 @@ class RCTVoice {
   start(locale) {
     if (!this._loaded && !this._listeners) {
       this._listeners = Object.keys(this._events)
-        .map((key, index) => DeviceEventEmitter.addListener(key, this._events[key]));
+        .map((key, index) => voiceEmitter.addListener(key, this._events[key]));
     }
     return Voice.startSpeech(locale, (error) => {
       if (error) {
