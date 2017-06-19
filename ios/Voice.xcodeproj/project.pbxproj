@@ -1,0 +1,270 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		DC0729BA1EF78E41004EBC83 /* Voice.m in Sources */ = {isa = PBXBuildFile; fileRef = DC0729B91EF78E41004EBC83 /* Voice.m */; };
+		DC0729BB1EF78E41004EBC83 /* Voice.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = DC0729B81EF78E41004EBC83 /* Voice.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		DC0729B31EF78E41004EBC83 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/$(PRODUCT_NAME)";
+			dstSubfolderSpec = 16;
+			files = (
+				DC0729BB1EF78E41004EBC83 /* Voice.h in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		DC0729B51EF78E41004EBC83 /* libVoice.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libVoice.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		DC0729B81EF78E41004EBC83 /* Voice.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Voice.h; sourceTree = "<group>"; };
+		DC0729B91EF78E41004EBC83 /* Voice.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Voice.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		DC0729B21EF78E41004EBC83 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		DC0729AC1EF78E41004EBC83 = {
+			isa = PBXGroup;
+			children = (
+				DC0729B71EF78E41004EBC83 /* Voice */,
+				DC0729B61EF78E41004EBC83 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		DC0729B61EF78E41004EBC83 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				DC0729B51EF78E41004EBC83 /* libVoice.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		DC0729B71EF78E41004EBC83 /* Voice */ = {
+			isa = PBXGroup;
+			children = (
+				DC0729B81EF78E41004EBC83 /* Voice.h */,
+				DC0729B91EF78E41004EBC83 /* Voice.m */,
+			);
+			path = Voice;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		DC0729B41EF78E41004EBC83 /* Voice */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DC0729BE1EF78E41004EBC83 /* Build configuration list for PBXNativeTarget "Voice" */;
+			buildPhases = (
+				DC0729B11EF78E41004EBC83 /* Sources */,
+				DC0729B21EF78E41004EBC83 /* Frameworks */,
+				DC0729B31EF78E41004EBC83 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Voice;
+			productName = Voice;
+			productReference = DC0729B51EF78E41004EBC83 /* libVoice.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		DC0729AD1EF78E41004EBC83 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0830;
+				ORGANIZATIONNAME = Rudie_Shahinian;
+				TargetAttributes = {
+					DC0729B41EF78E41004EBC83 = {
+						CreatedOnToolsVersion = 8.3.2;
+						DevelopmentTeam = BQE8UXP5LX;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = DC0729B01EF78E41004EBC83 /* Build configuration list for PBXProject "Voice" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = DC0729AC1EF78E41004EBC83;
+			productRefGroup = DC0729B61EF78E41004EBC83 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				DC0729B41EF78E41004EBC83 /* Voice */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		DC0729B11EF78E41004EBC83 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DC0729BA1EF78E41004EBC83 /* Voice.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		DC0729BC1EF78E41004EBC83 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		DC0729BD1EF78E41004EBC83 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		DC0729BF1EF78E41004EBC83 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEVELOPMENT_TEAM = BQE8UXP5LX;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SYSTEM_HEADER_SEARCH_PATHS = "$(SRCROOT)/../node_modules/react-native/React/Base $(SRCROOT)/../node_modules/react-native/Libraries";
+			};
+			name = Debug;
+		};
+		DC0729C01EF78E41004EBC83 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEVELOPMENT_TEAM = BQE8UXP5LX;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SYSTEM_HEADER_SEARCH_PATHS = "$(SRCROOT)/../node_modules/react-native/React/Base $(SRCROOT)/../node_modules/react-native/Libraries";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		DC0729B01EF78E41004EBC83 /* Build configuration list for PBXProject "Voice" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DC0729BC1EF78E41004EBC83 /* Debug */,
+				DC0729BD1EF78E41004EBC83 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DC0729BE1EF78E41004EBC83 /* Build configuration list for PBXNativeTarget "Voice" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DC0729BF1EF78E41004EBC83 /* Debug */,
+				DC0729C01EF78E41004EBC83 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = DC0729AD1EF78E41004EBC83 /* Project object */;
+}
