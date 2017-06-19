@@ -19,51 +19,22 @@ class RCTVoice {
       'onSpeechError': this._onSpeechError.bind(this),
       'onSpeechResults': this._onSpeechResults.bind(this),
       'onSpeechPartialResults': this._onSpeechPartialResults.bind(this),
-      // 'onSpeechVolumeChanged': this._onSpeechVolumeChanged.bind(this)
+      'onSpeechVolumeChanged': this._onSpeechVolumeChanged.bind(this)
     };
-
-
-    this.subscription = voiceEmitter.addListener(
-    // this.subscription = NativeAppEventEmitter.addListener(
-      'SpeechToText',
-      (result) => {
-        console.log(result);
-        // if (result.error) {
-        //   this.onSpeechError(JSON.stringify(result.error))
-        //   // alert(JSON.stringify(result.error));
-        // } else {
-        //   if(result.isFinal) {
-        //     this.onSpeechRecognized(true);
-        //     this.onSpeechEnd(true);
-        //     this.onSpeechResults([result.bestTranscription.formattedString]);
-        //   }
-        //   this.onSpeechPartialResults(result.transcriptions.map(a => { return a.formattedString}));
-
-
-
-        //    console.log(result.bestTranscription.formattedString);
-        // }
-
-
-
-      }
-    );
-
-
   }
 
 
   destroy() {
-    // return Voice.destroySpeech((error) => {
-    //   if (error) {
-    //     return error;
-    //   }
-    //   if (this._listeners) {
-    //     this._listeners.map((listener, index) => listener.remove());
-    //     this._listeners = null;
-    //   }
-    //   return null;
-    // });
+    return Voice.destroySpeech((error) => {
+      if (error) {
+        return error;
+      }
+      if (this._listeners) {
+        this._listeners.map((listener, index) => listener.remove());
+        this._listeners = null;
+      }
+      return null;
+    });
   }
   start(locale) {
     if (!this._loaded && !this._listeners) {
@@ -79,7 +50,7 @@ class RCTVoice {
 
   }
   stop() {
-    return Voice.finishRecognition((error) => {
+    return Voice.stopRecognition((error) => {
       if (error) {
         return error;
       }
@@ -87,19 +58,19 @@ class RCTVoice {
     });
   }
   cancel() {
-    return Voice.stopSpeech((error) => {
+    return Voice.cancelSpeech((error) => {
       if (error) {
         return error;
       }
       return null;
     });
   }
-  // isAvailable(callback) {
-  //   Voice.isSpeechAvailable(callback);
-  // }
-  // isRecognizing() {
-  //   return Voice.isRecognizing(isRecognizing => isRecognizing);
-  // }
+  isAvailable(callback) {
+    Voice.isSpeechAvailable(callback);
+  }
+  isRecognizing() {
+    return Voice.isRecognizing(isRecognizing => isRecognizing);
+  }
   _onSpeechStart(e) {
     if (this.onSpeechStart) {
       this.onSpeechStart(e);
@@ -130,11 +101,11 @@ class RCTVoice {
       this.onSpeechPartialResults(e);
     }
   }
-  // _onSpeechVolumeChanged(e) {
-  //   if (this.onSpeechVolumeChanged) {
-  //     this.onSpeechVolumeChanged(e);
-  //   }
-  // }
+  _onSpeechVolumeChanged(e) {
+    if (this.onSpeechVolumeChanged) {
+      this.onSpeechVolumeChanged(e);
+    }
+  }
 
 }
 

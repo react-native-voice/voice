@@ -77,12 +77,16 @@
     // Configure request so that results are returned before audio recording is finished
     self.recognitionRequest.shouldReportPartialResults = YES;
     
-    [self sendEventWithName:@"onSpeechStart" body:@"true"];
+    [self sendEventWithName:@"onSpeechStart" body:@true];
 
     // A recognition task represents a speech recognition session.
     // We keep a reference to the task so that it can be cancelled.
     self.recognitionTask = [self.speechRecognizer recognitionTaskWithRequest:self.recognitionRequest resultHandler:^(SFSpeechRecognitionResult * _Nullable result, NSError * _Nullable error) {
-   NSLog(@"RRRUUDDDDIIEE");
+      
+        if (self.recognitionTask.isCancelled || self.recognitionTask.isFinishing){
+            [self sendEventWithName:@"onSpeechEnd" body:@{@"error": @false}];
+        }
+
         if (error != nil) {
             [self sendResult:RCTMakeError([error localizedDescription], nil, nil) :nil :nil :nil];
             [self teardown];
@@ -93,39 +97,18 @@
         if (result != nil) {
             NSMutableArray* transcriptionDics = [NSMutableArray new];
             for (SFTranscription* transcription in result.transcriptions) {
-                [transcriptionDics addObject:[self dicFromTranscription:transcription]];
+                [transcriptionDics addObject:transcription.formattedString];
             }
-            
-            [self sendResult:[NSNull null] :[self dicFromTranscription:result.bestTranscription] :transcriptionDics :@(isFinal)];
+            [self sendResult:[NSNull null] :result.bestTranscription.formattedString :transcriptionDics :@(isFinal)];
         }
-        
+      
         if (isFinal == YES) {
             [self teardown];
         }
-        
-        NSLog(@"CALLBACK : Final: %i, status:%i", isFinal, self.recognitionTask.state);
-        
+      
+      
     }];
 
-  //   recognitionTask = [speechRecognizer recognitionTaskWithRequest:recognitionRequest resultHandler:^(SFSpeechRecognitionResult * _Nullable result, NSError * _Nullable error) {
-  //   BOOL isFinal = NO;
-  //   if (result) {
-  //     // Whatever you say in the mic after pressing the button should be being logged
-  //     // in the console.
-  //     NSLog(@"RESULT:%@",result.bestTranscription.formattedString);
-  //     isFinal = !result.isFinal;
-  //   }
-  //   if (error) {
-  //     [audioEngine stop];
-  //     [inputNode removeTapOnBus:0];
-  //     recognitionRequest = nil;
-  //     recognitionTask = nil;
-  //   }
-  // }];
-
-
-
-    
     AVAudioFormat* recordingFormat = [inputNode outputFormatForBus:0];
     
     [inputNode installTapOnBus:0 bufferSize:1024 format:recordingFormat block:^(AVAudioPCMBuffer * _Nonnull buffer, AVAudioTime * _Nonnull when) {
@@ -140,35 +123,30 @@
         [self sendResult:RCTMakeError([audioSessionError localizedDescription], nil, nil) :nil :nil :nil];
         return;
     }
-    [self sendEventWithName:@"onSpeechEnd" body:@"true"];
 }
+
+
 
 - (NSArray<NSString *> *)supportedEvents
 {
-  return @[@"SpeechToText", @"onSpeechResults", @"onSpeechStart", @"onSpeechPartialResults", @"onSpeechError", @"onSpeechEnd", @"onSpeechRecognized"];
+  return @[@"onSpeechResults", @"onSpeechStart", @"onSpeechPartialResults", @"onSpeechError", @"onSpeechEnd", @"onSpeechRecognized", @"onSpeechVolumeChanged"];
 }
 
 - (void) sendResult:(NSDictionary*)error :(NSDictionary*)bestTranscription :(NSArray*)transcriptions :(NSNumber*)isFinal {
-    NSMutableDictionary* result = [[NSMutableDictionary alloc] init];
     if (error != nil && error != [NSNull null]) {
-        result[@"error"] = error;
-        [self sendEventWithName:@"onSpeechError" body:result[@"error"]];
+        [self sendEventWithName:@"onSpeechError" body:@{@"error": error[@"message"]}];
     }
     if (bestTranscription != nil) {
-        result[@"bestTranscription"] = @[bestTranscription[@"formattedString"]];
-        [self sendEventWithName:@"onSpeechResults" body:result[@"bestTranscription"]];
+        [self sendEventWithName:@"onSpeechResults" body:@{@"value":@[bestTranscription]} ];
     }
     if (transcriptions != nil) {
-        result[@"transcriptions"] = transcriptions;
-        [self sendEventWithName:@"onSpeechPartialResults" body:result[@"transcriptions"]];
+        [self sendEventWithName:@"onSpeechPartialResults" body:@{@"value":transcriptions} ];
     }
     if (isFinal != nil) {
-        result[@"isFinal"] = isFinal;
-       
-        [self sendEventWithName:@"onSpeechRecognized" body:result[@"isFinal"]];
+        [self sendEventWithName:@"onSpeechRecognized" body:@true];
     }
-    [self sendEventWithName:@"SpeechToText" body:result];
 }
+
 
 - (void) teardown {
     [self.recognitionTask cancel];
@@ -176,7 +154,6 @@
     [self.audioSession setCategory:AVAudioSessionCategoryAmbient error:nil];
     self.audioSession = nil;
 
-    
     
     if (self.audioEngine.isRunning) {
         [self.audioEngine stop];
@@ -187,25 +164,6 @@
     self.recognitionRequest = nil;
 }
 
-- (NSDictionary*) dicFromTranscription:(SFTranscription*) transcription {
-    NSMutableArray* secgmentsDics = [NSMutableArray new];
-    for (SFTranscriptionSegment* segment in transcription.segments) {
-        id dic = @{@"substring":segment.substring,
-                   @"substringRange":@{@"location":@(segment.substringRange.location),
-                                       @"length":@(segment.substringRange.length)},
-                   @"timestamp":@(segment.timestamp),
-                   @"duration":@(segment.duration),
-
-                   @"confidence":@(segment.confidence),
-                   @"alternativeSubstrings":segment.alternativeSubstrings,
-                   };
-        [secgmentsDics addObject:dic];
-    }
-    
-    return @{@"formattedString":transcription.formattedString,
-             @"segments":secgmentsDics};
-}
-
 
 // Called when the availability of the given recognizer changes
 - (void)speechRecognizer:(SFSpeechRecognizer *)speechRecognizer availabilityDidChange:(BOOL)available {
@@ -214,17 +172,47 @@
     }
 }
 
-RCT_EXPORT_METHOD(finishRecognition:(RCTResponseSenderBlock)callback)
+RCT_EXPORT_METHOD(stopRecognition:(RCTResponseSenderBlock)callback)
 {
-    // lets finish it
     [self.recognitionTask finish];
     callback(false);
 }
 
 
-RCT_EXPORT_METHOD(stopSpeech:(RCTResponseSenderBlock)callback) {
+RCT_EXPORT_METHOD(cancelSpeech:(RCTResponseSenderBlock)callback) {
+    [self.recognitionTask cancel];
+    callback(false);
+}
+
+RCT_EXPORT_METHOD(destroySpeech:(RCTResponseSenderBlock)callback) {
     [self teardown];
     callback(false);
+}
+
+RCT_EXPORT_METHOD(isSpeechAvailable:(RCTResponseSenderBlock)callback) {
+  [SFSpeechRecognizer requestAuthorization:^(SFSpeechRecognizerAuthorizationStatus status) {
+    switch (status) {
+      case SFSpeechRecognizerAuthorizationStatusAuthorized:
+        callback(@[@true]);
+        break;
+      default:
+        callback(@[@false]);
+    }
+  }];
+}
+RCT_EXPORT_METHOD(isRecognizing:(RCTResponseSenderBlock)callback) {
+  if (self.recognitionTask != nil){
+    switch (self.recognitionTask.state) {
+      case SFSpeechRecognitionTaskStateRunning:
+        callback(@[@true]);
+        break;
+      default:
+        callback(@[@false]);
+    }
+  }
+  else {
+    callback(@[@false]);
+  }
 }
 
 RCT_EXPORT_METHOD(startSpeech:(NSString*)localeStr callback:(RCTResponseSenderBlock)callback) {
@@ -232,9 +220,7 @@ RCT_EXPORT_METHOD(startSpeech:(NSString*)localeStr callback:(RCTResponseSenderBl
         [self sendResult:RCTMakeError(@"Speech recognition already started!", nil, nil) :nil :nil :nil];
         return;
     }
-    
-
-
+  
     [SFSpeechRecognizer requestAuthorization:^(SFSpeechRecognizerAuthorizationStatus status) {
         switch (status) {
             case SFSpeechRecognizerAuthorizationStatusNotDetermined:
@@ -251,16 +237,8 @@ RCT_EXPORT_METHOD(startSpeech:(NSString*)localeStr callback:(RCTResponseSenderBl
                 break;
         }
     }];
-
-
-
-
-    
-    callback(false);
-    
+    callback(@[@false]);
 }
-
-
 
 
 - (dispatch_queue_t)methodQueue {
