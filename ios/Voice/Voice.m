@@ -99,7 +99,7 @@
             for (SFTranscription* transcription in result.transcriptions) {
                 [transcriptionDics addObject:transcription.formattedString];
             }
-            [self sendResult:[NSNull null] :result.bestTranscription.formattedString :transcriptionDics :@(isFinal)];
+            [self sendResult:nil:result.bestTranscription.formattedString :transcriptionDics :@(isFinal)];
         }
       
         if (isFinal == YES) {
@@ -132,8 +132,8 @@
   return @[@"onSpeechResults", @"onSpeechStart", @"onSpeechPartialResults", @"onSpeechError", @"onSpeechEnd", @"onSpeechRecognized", @"onSpeechVolumeChanged"];
 }
 
-- (void) sendResult:(NSDictionary*)error :(NSDictionary*)bestTranscription :(NSArray*)transcriptions :(NSNumber*)isFinal {
-    if (error != nil && error != [NSNull null]) {
+- (void) sendResult:(NSDictionary*)error :(NSString*)bestTranscription :(NSArray*)transcriptions :(NSNumber*)isFinal {
+    if (error != nil) {
         [self sendEventWithName:@"onSpeechError" body:@{@"error": error[@"message"]}];
     }
     if (bestTranscription != nil) {
