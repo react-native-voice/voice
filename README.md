@@ -112,6 +112,7 @@ While the included `VoiceTest` app works without explicit permissions checks and
 
 ## iOS Permissions
 Need to include permissions for `NSMicrophoneUsageDescription` and `NSSpeechRecognitionUsageDescription` inside Info.plist for iOS. See the included `VoiceTest` for how to handle these cases.
+
 ```xml
 <dict>
   ...
@@ -119,7 +120,6 @@ Need to include permissions for `NSMicrophoneUsageDescription` and `NSSpeechReco
   <string>Description of why you require the use of the microphone</string>
   <key>NSSpeechRecognitionUsageDescription</key>
   <string>Description of why you require the use of the speech recognition</string>
-  <key>UILaunchStoryboardName</key>
   ...
 </dict>
 ```
