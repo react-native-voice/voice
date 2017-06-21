@@ -111,7 +111,8 @@ onSpeechVolumeChanged(event)  | Invoked when pitch that is recognized changed.  
 While the included `VoiceTest` app works without explicit permissions checks and requests, it may be necessary to add a permission request for `RECORD_AUDIO` for some configurations.
 
 ## iOS Permissions
-Need to include permissions for NSMicrophoneUsageDescription and NSSpeechRecognitionUsageDescription inside Info.plist for iOS. See the included `VoiceTest` for how to handle these cases.
+Need to include permissions for `NSMicrophoneUsageDescription` and `NSSpeechRecognitionUsageDescription` inside Info.plist for iOS. See the included `VoiceTest` for how to handle these cases.
+
 ```xml
 <dict>
   ...
@@ -119,7 +120,6 @@ Need to include permissions for NSMicrophoneUsageDescription and NSSpeechRecogni
   <string>Description of why you require the use of the microphone</string>
   <key>NSSpeechRecognitionUsageDescription</key>
   <string>Description of why you require the use of the speech recognition</string>
-  <key>UILaunchStoryboardName</key>
   ...
 </dict>
 ```

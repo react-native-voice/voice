@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 
 import Voice from 'react-native-voice';
-// import Voice from './voice';
 
 class VoiceTest extends Component {
   constructor(props) {
@@ -32,9 +31,34 @@ class VoiceTest extends Component {
     Voice.onSpeechVolumeChanged = this.onSpeechVolumeChanged.bind(this);
   }
   componentWillUnmount() {
-    if (Voic.subscription != null) {
-      Voic.subscription.remove();
-      Voic.subscription = null;
+    const error = Voice.destroy();
+    if (Voice.onSpeechStart != null) {
+      Voice.onSpeechStart.remove();
+      Voice.onSpeechStart = null;
+    }
+    if (Voice.onSpeechRecognized != null) {
+      Voice.onSpeechRecognized.remove();
+      Voice.onSpeechRecognized = null;
+    }
+    if (Voice.onSpeechEnd != null) {
+      Voice.onSpeechEnd.remove();
+      Voice.onSpeechEnd = null;
+    }
+    if (Voice.onSpeechError != null) {
+      Voice.onSpeechError.remove();
+      Voice.onSpeechError = null;
+    }
+    if (Voice.onSpeechResults != null) {
+      Voice.onSpeechResults.remove();
+      Voice.onSpeechResults = null;
+    }
+    if (Voice.onSpeechPartialResults != null) {
+      Voice.onSpeechPartialResults.remove();
+      Voice.onSpeechPartialResults = null;
+    }
+    if (Voice.onSpeechVolumeChanged != null) {
+      Voice.onSpeechVolumeChanged.remove();
+      Voice.onSpeechVolumeChanged = null;
     }
   }
   onSpeechStart(e) {
@@ -53,20 +77,16 @@ class VoiceTest extends Component {
     });
   }
   onSpeechError(e) {
-    console.log("ERROR!!!!: ", e);
     this.setState({
       error: e.error,
     });
   }
   onSpeechResults(e) {
-    console.log("RRREESSULLLTTT!!!!: ", e);
     this.setState({
       results: e.value,
     });
   }
   onSpeechPartialResults(e) {
-    console.log("PARTIAL!!!!: ", e);
-
     this.setState({
       partialResults: e.value,
     });
@@ -84,6 +104,7 @@ class VoiceTest extends Component {
       started: '',
       results: [],
       partialResults: [],
+      end: ''
     });
     const error = Voice.start('en-US');
   }
@@ -94,6 +115,15 @@ class VoiceTest extends Component {
     const error = Voice.cancel();
   }
   _destroyRecognizer(e) {
+    this.setState({
+      recognized: '',
+      pitch: '',
+      error: '',
+      started: '',
+      results: [],
+      partialResults: [],
+      end: ''
+    });
     const error = Voice.destroy();
   }
   render() {
