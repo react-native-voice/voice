@@ -1,6 +1,6 @@
 {
   "name": "react-native-voice",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "React Native Native Voice library for iOS and Android",
   "main": "index.js",
   "author": "Sam Wenke <samwenke@gmail.com>",
