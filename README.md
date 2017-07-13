@@ -1,11 +1,9 @@
-<div align="center">
-  [![npm][npm]][npm-url]
-  [![deps][deps]][deps-url]
-</div>
+[![npm][npm]][npm-url]
+[![deps][deps]][deps-url]
 
 <h1 align="center">React Native Voice</h1>
 
-<p align="center">A speech-to-text library for [React Native](https://facebook.github.io/react-native/).</p>
+<p align="center">A speech-to-text library for <a href="https://facebook.github.io/react-native/">React Native.</a></p>
 
 ```sh
 npm i react-native-voice --save
@@ -82,7 +80,7 @@ public class MainActivity extends ReactActivity {
 
 <h2 align="center">Usage</h2>
 
-<p align="center">[Full example for Android and iOS](/VoiceTest).</p>
+<p align="center"><a href="https://github.com/wenkesj/react-native-voice/tree/master/VoiceTest">Full example for Android and iOS.</a></p>
 
 ### Example
 
@@ -118,6 +116,7 @@ Voice.destroy()             | Destroys the current SpeechRecognizer instance. Re
 Voice.isRecognizing()       | Return if the SpeechRecognizer is recognizing.                                      | Android, iOS
 
 <h2 align="center">Events</h2>
+
 <p align="center">Callbacks that are invoked when a native event emitted.</p>
 
 Event Name                          | Description                                            | Event                                           | Platform
@@ -131,6 +130,7 @@ Voice.onSpeechPartialResults(event) | Invoked when any results are computed.    
 Voice.onSpeechVolumeChanged(event)  | Invoked when pitch that is recognized changed.         | `{ value: pitch in dB }`                        | Android
 
 <h2 align="center">Permissions</h2>
+
 <p align="center">Arguably the most important part.</p>
 
 ### Android
@@ -159,7 +159,8 @@ Please see the documentation provided by ReactNative for this: [PermissionsAndro
 [deps-url]: https://david-dm.org/wenkesj/react-native-voice.svg
 
 <h2 align="center">Contibutors</h2>
-* @BrendanFDMoore
-* @brudny
-* @rudiedev6
-* @wenkesj
+
+  * @BrendanFDMoore
+  * @brudny
+  * @rudiedev6
+  * @wenkesj
