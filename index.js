@@ -62,13 +62,12 @@ class RCTVoice {
       return null;
     }
 
-    if (!this._loaded && !this._listeners) {
-      return Voice.cancelSpeech((error) => {
-        if (error) {
-          return error;
-        }
-        return null;
-      });
+    return Voice.cancelSpeech((error) => {
+      if (error) {
+        return error;
+      }
+      return null;
+    });
   }
   isAvailable(callback) {
     Voice.isSpeechAvailable(callback);
