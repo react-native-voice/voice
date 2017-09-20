@@ -22,6 +22,10 @@ class RCTVoice {
     };
   }
   destroy() {
+    if (!this._loaded && !this._listeners) {
+      return null;
+    }
+
     return Voice.destroySpeech((error) => {
       if (error) {
         return error;
@@ -54,12 +58,17 @@ class RCTVoice {
     });
   }
   cancel() {
-    return Voice.cancelSpeech((error) => {
-      if (error) {
-        return error;
-      }
+    if (!this._loaded && !this._listeners) {
       return null;
-    });
+    }
+
+    if (!this._loaded && !this._listeners) {
+      return Voice.cancelSpeech((error) => {
+        if (error) {
+          return error;
+        }
+        return null;
+      });
   }
   isAvailable(callback) {
     Voice.isSpeechAvailable(callback);
