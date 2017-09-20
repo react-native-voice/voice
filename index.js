@@ -22,6 +22,10 @@ class RCTVoice {
     };
   }
   destroy() {
+    if (!this._loaded && !this._listeners) {
+      return null;
+    }
+
     return Voice.destroySpeech((error) => {
       if (error) {
         return error;
@@ -54,6 +58,10 @@ class RCTVoice {
     });
   }
   cancel() {
+    if (!this._loaded && !this._listeners) {
+      return null;
+    }
+
     return Voice.cancelSpeech((error) => {
       if (error) {
         return error;
