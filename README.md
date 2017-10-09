@@ -95,7 +95,7 @@ class VoiceTest extends Component {
     Voice.onSpeechResults = this.onSpeechResultsHandler.bind(this);
   }
   onStartButtonPress(e){
-    const error = Voice.start('en');
+    Voice.start('en');
   }
   ...
 }
@@ -110,7 +110,7 @@ class VoiceTest extends Component {
 
 Method Name                 | Description                                                                         | Platform
 --------------------------- | ----------------------------------------------------------------------------------- | --------
-Voice.isAvailable(callback) | Checks whether a speech recognition service is available on the system.             | Android, iOS
+Voice.isAvailable()         | Checks whether a speech recognition service is available on the system.             | Android, iOS
 Voice.start(locale)         | Starts listening for speech for a specific locale. Returns null if no error occurs. | Android, iOS
 Voice.stop()                | Stops listening for speech. Returns null if no error occurs.                        | Android, iOS
 Voice.cancel()              | Cancels the speech recognition. Returns null if no error occurs.                    | Android, iOS
