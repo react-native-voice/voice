@@ -64,11 +64,11 @@ class RCTVoice {
         }
       };
       if (Platform.OS === 'android') {
-        Voice.startSpeech(locale, Object.assign(options, {
+        Voice.startSpeech(locale, Object.assign({
           EXTRA_LANGUAGE_MODEL: "LANGUAGE_MODEL_FREE_FORM",
           EXTRA_MAX_RESULTS: 5,
           EXTRA_PARTIAL_RESULTS: true,
-        }), callback);
+        }, options), callback);
       } else {
         Voice.startSpeech(locale, callback);
       }
