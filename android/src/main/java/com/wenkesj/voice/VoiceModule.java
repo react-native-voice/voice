@@ -77,20 +77,23 @@ public class VoiceModule extends ReactContextBaseJavaModule implements Recogniti
           }
           break;
         case "EXTRA_MAX_RESULTS":
-          Double extraResults = opts.getDouble(key);
-          intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, extraResults.intValue());
+          Double extras = opts.getDouble(key);
+          intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, extras.intValue());
           break;
         case "EXTRA_PARTIAL_RESULTS":
           intent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, opts.getBoolean(key));
           break;
         case "EXTRA_SPEECH_INPUT_MINIMUM_LENGTH_MILLIS":
-          intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_MINIMUM_LENGTH_MILLIS, opts.getInt(key));
+          Double extras = opts.getDouble(key);
+          intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_MINIMUM_LENGTH_MILLIS, extras.intValue());
           break;
         case "EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS":
-          intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS, opts.getInt(key));
+          Double extras = opts.getDouble(key);
+          intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS, extras.intValue());
           break;
         case "EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS":
-          intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS, opts.getInt(key));
+          Double extras = opts.getDouble(key);
+          intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS, extras.intValue());
           break;
       }
     }
