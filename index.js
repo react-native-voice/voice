@@ -1,7 +1,8 @@
 'use strict';
 import React, {
   NativeModules,
-  NativeEventEmitter
+  NativeEventEmitter,
+  Platform,
 } from 'react-native';
 
 const { Voice } = NativeModules;
@@ -21,51 +22,102 @@ class RCTVoice {
       'onSpeechVolumeChanged': this._onSpeechVolumeChanged.bind(this)
     };
   }
+  removeAllListeners() {
+    Voice.onSpeechStart = null;
+    Voice.onSpeechRecognized = null;
+    Voice.onSpeechEnd = null;
+    Voice.onSpeechError = null;
+    Voice.onSpeechResults = null;
+    Voice.onSpeechPartialResults = null;
+    Voice.onSpeechVolumeChanged = null;
+  }
   destroy() {
-    return Voice.destroySpeech((error) => {
-      if (error) {
-        return error;
-      }
-      if (this._listeners) {
-        this._listeners.map((listener, index) => listener.remove());
-        this._listeners = null;
-      }
-      return null;
+    if (!this._loaded && !this._listeners) {
+      return;
+    }
+    return new Promise((resolve, reject) => {
+      Voice.destroySpeech((error) => {
+        if (error) {
+          reject(new Error(error));
+        } else {
+          if (this._listeners) {
+            this._listeners.map((listener, index) => listener.remove());
+            this._listeners = null;
+          }
+          resolve();
+        }
+      });
     });
   }
-  start(locale) {
+  start(locale, options = {}) {
     if (!this._loaded && !this._listeners) {
       this._listeners = Object.keys(this._events)
         .map((key, index) => voiceEmitter.addListener(key, this._events[key]));
     }
-    return Voice.startSpeech(locale, (error) => {
-      if (error) {
-        return error;
+
+    return new Promise((resolve, reject) => {
+      const callback = (error) => {
+        if (error) {
+          reject(new Error(error));
+        } else {
+          resolve();
+        }
+      };
+      if (Platform.OS === 'android') {
+        Voice.startSpeech(locale, Object.assign({
+          EXTRA_LANGUAGE_MODEL: "LANGUAGE_MODEL_FREE_FORM",
+          EXTRA_MAX_RESULTS: 5,
+          EXTRA_PARTIAL_RESULTS: true,
+          REQUEST_PERMISSIONS_AUTO: true,
+        }, options), callback);
+      } else {
+        Voice.startSpeech(locale, callback);
       }
-      return null;
     });
   }
   stop() {
-    return Voice.stopSpeech((error) => {
-      if (error) {
-        return error;
-      }
-      return null;
+    if (!this._loaded && !this._listeners) {
+      return;
+    }
+    return new Promise((resolve, reject) => {
+      Voice.stopSpeech((error) => {
+        if (error) {
+          reject(new Error(error));
+        } else {
+          resolve();
+        }
+      });
     });
   }
   cancel() {
-    return Voice.cancelSpeech((error) => {
-      if (error) {
-        return error;
-      }
-      return null;
+    if (!this._loaded && !this._listeners) {
+      return;
+    }
+    return new Promise((resolve, reject) => {
+      Voice.cancelSpeech((error) => {
+        if (error) {
+          reject(new Error(error));
+        } else {
+          resolve();
+        }
+      });
     });
   }
-  isAvailable(callback) {
-    Voice.isSpeechAvailable(callback);
+  isAvailable() {
+    return new Promise((resolve, reject) => {
+      Voice.isSpeechAvailable((isAvailable, error) => {
+        if (error) {
+          reject(new Error(error));
+        } else {
+          resolve(isAvailable);
+        }
+      });
+    });
   }
   isRecognizing() {
-    return Voice.isRecognizing(isRecognizing => isRecognizing);
+    return new Promise((resolve, reject) => {
+      Voice.isRecognizing(isRecognizing => resolve(isRecognizing));
+    });
   }
   _onSpeechStart(e) {
     if (this.onSpeechStart) {
@@ -104,4 +156,4 @@ class RCTVoice {
   }
 }
 
-module.exports = new RCTVoice();
+export default new RCTVoice();

@@ -1,17 +1,16 @@
 import React, { Component } from 'react';
 import {
-  AppRegistry,
   StyleSheet,
   Text,
   View,
   Image,
+  AppRegistry,
   TouchableHighlight,
-  ToastAndroid,
 } from 'react-native';
 
 import Voice from 'react-native-voice';
 
-class VoiceTest extends Component {
+export default class VoiceTest extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -31,42 +30,54 @@ class VoiceTest extends Component {
     Voice.onSpeechPartialResults = this.onSpeechPartialResults.bind(this);
     Voice.onSpeechVolumeChanged = this.onSpeechVolumeChanged.bind(this);
   }
+
+  componentWillUnmount() {
+    Voice.destroy().then(Voice.removeAllListeners);
+  }
+
   onSpeechStart(e) {
     this.setState({
       started: '√',
     });
   }
+
   onSpeechRecognized(e) {
     this.setState({
       recognized: '√',
     });
   }
+
   onSpeechEnd(e) {
     this.setState({
       end: '√',
     });
   }
+
   onSpeechError(e) {
     this.setState({
-      error: e.error,
+      error: JSON.stringify(e.error),
     });
   }
+
   onSpeechResults(e) {
     this.setState({
       results: e.value,
     });
   }
+
   onSpeechPartialResults(e) {
     this.setState({
       partialResults: e.value,
     });
   }
+
   onSpeechVolumeChanged(e) {
     this.setState({
       pitch: e.value,
     });
   }
-  _startRecognizing(e) {
+
+  async _startRecognizing(e) {
     this.setState({
       recognized: '',
       pitch: '',
@@ -74,30 +85,48 @@ class VoiceTest extends Component {
       started: '',
       results: [],
       partialResults: [],
+      end: ''
     });
-    const error = Voice.start('en');
-    if (error) {
-      ToastAndroid.show(error, ToastAndroid.SHORT);
+    try {
+      await Voice.start('en-US');
+    } catch (e) {
+      console.error(e);
     }
   }
-  _stopRecognizing(e) {
-    const error = Voice.stop();
-    if (error) {
-      ToastAndroid.show(error, ToastAndroid.SHORT);
+
+  async _stopRecognizing(e) {
+    try {
+      await Voice.stop();
+    } catch (e) {
+      console.error(e);
     }
   }
-  _cancelRecognizing(e) {
-    const error = Voice.cancel();
-    if (error) {
-      ToastAndroid.show(error, ToastAndroid.SHORT);
+
+  async _cancelRecognizing(e) {
+    try {
+      await Voice.cancel();
+    } catch (e) {
+      console.error(e);
     }
   }
-  _destroyRecognizer(e) {
-    const error = Voice.destroy();
-    if (error) {
-      ToastAndroid.show(error, ToastAndroid.SHORT);
+
+  async _destroyRecognizer(e) {
+    try {
+      await Voice.destroy();
+    } catch (e) {
+      console.error(e);
     }
+    this.setState({
+      recognized: '',
+      pitch: '',
+      error: '',
+      started: '',
+      results: [],
+      partialResults: [],
+      end: ''
+    });
   }
+
   render() {
     return (
       <View style={styles.container}>
@@ -105,7 +134,7 @@ class VoiceTest extends Component {
           Welcome to React Native Voice!
         </Text>
         <Text style={styles.instructions}>
-          Press the button and start speaking when you hear the beep.
+          Press the button and start speaking.
         </Text>
         <Text
           style={styles.stat}>
