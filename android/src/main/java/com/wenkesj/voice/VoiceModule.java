@@ -6,9 +6,12 @@ import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.ReadableMapKeySetIterator;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -30,10 +33,70 @@ public class VoiceModule extends ReactContextBaseJavaModule implements Recogniti
   final ReactApplicationContext reactContext;
   private SpeechRecognizer speech = null;
   private boolean isRecognizing = false;
+  private String locale = null;
 
   public VoiceModule(ReactApplicationContext reactContext) {
     super(reactContext);
     this.reactContext = reactContext;
+  }
+
+  private String getLocale(String locale){
+    if(locale != null && !locale.equals("")){
+      return locale;
+    }
+
+    return Locale.getDefault().toString();
+  }
+
+  private void startListening(ReadableMap opts) {
+    if (speech != null) {
+      speech.destroy();
+      speech = null;
+    }
+    speech = SpeechRecognizer.createSpeechRecognizer(this.reactContext);
+    speech.setRecognitionListener(this);
+
+    final Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+
+    // Load the intent with options from JS
+    ReadableMapKeySetIterator iterator = opts.keySetIterator();
+    while (iterator.hasNextKey()) {
+      String key = iterator.nextKey();
+      switch (key) {
+        case "EXTRA_LANGUAGE_MODEL":
+          switch (opts.getString(key)) {
+            case "LANGUAGE_MODEL_FREE_FORM":
+              intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+              break;
+            case "LANGUAGE_MODEL_WEB_SEARCH":
+              intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_WEB_SEARCH);
+              break;
+            default:
+              intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+              break;
+          }
+          break;
+        case "EXTRA_MAX_RESULTS":
+          Double extraResults = opts.getDouble(key);
+          intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, extraResults.intValue());
+          break;
+        case "EXTRA_PARTIAL_RESULTS":
+          intent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, opts.getBoolean(key));
+          break;
+        case "EXTRA_SPEECH_INPUT_MINIMUM_LENGTH_MILLIS":
+          intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_MINIMUM_LENGTH_MILLIS, opts.getInt(key));
+          break;
+        case "EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS":
+          intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS, opts.getInt(key));
+          break;
+        case "EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS":
+          intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS, opts.getInt(key));
+          break;
+      }
+    }
+
+    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, getLocale(this.locale));
+    speech.startListening(intent);
   }
 
   @Override
@@ -42,38 +105,19 @@ public class VoiceModule extends ReactContextBaseJavaModule implements Recogniti
   }
 
   @ReactMethod
-  public void startSpeech(final String locale, final Callback callback) {
-    final VoiceModule self = this;
+  public void startSpeech(final String locale, final ReadableMap opts, final Callback callback) {
+    this.locale = locale;
     Handler mainHandler = new Handler(this.reactContext.getMainLooper());
     mainHandler.post(new Runnable() {
-
-      private String getLocale(String locale){
-        if(locale != null && !locale.equals("")){
-          return locale;
-        }
-
-        return Locale.getDefault().toString();
-      }
-
       @Override
       public void run() {
         try {
-          speech = SpeechRecognizer.createSpeechRecognizer(self.reactContext);
-        } catch(Exception e) {
-          callback.invoke(e);
+          startListening(opts);
+          isRecognizing = true;
+          callback.invoke(false);
+        } catch (Exception e) {
+          callback.invoke(e.getMessage());
         }
-
-        speech.setRecognitionListener(self);
-
-        final Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, getLocale(locale));
-        intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 5);
-        intent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true);
-
-        speech.startListening(intent);
-        isRecognizing = true;
-        callback.invoke(false);
       }
     });
   }
@@ -86,9 +130,10 @@ public class VoiceModule extends ReactContextBaseJavaModule implements Recogniti
       public void run() {
         try {
           speech.stopListening();
+          isRecognizing = false;
           callback.invoke(false);
         } catch(Exception e) {
-          callback.invoke(e);
+          callback.invoke(e.getMessage());
         }
       }
     });
@@ -105,7 +150,7 @@ public class VoiceModule extends ReactContextBaseJavaModule implements Recogniti
           isRecognizing = false;
           callback.invoke(false);
         } catch(Exception e) {
-          callback.invoke(e);
+          callback.invoke(e.getMessage());
         }
       }
     });
@@ -119,10 +164,11 @@ public class VoiceModule extends ReactContextBaseJavaModule implements Recogniti
       public void run() {
         try {
           speech.destroy();
+          speech = null;
           isRecognizing = false;
           callback.invoke(false);
         } catch(Exception e) {
-          callback.invoke(e);
+          callback.invoke(e.getMessage());
         }
       }
     });
@@ -139,7 +185,7 @@ public class VoiceModule extends ReactContextBaseJavaModule implements Recogniti
           Boolean isSpeechAvailable = SpeechRecognizer.isRecognitionAvailable(self.reactContext);
           callback.invoke(isSpeechAvailable, false);
         } catch(Exception e) {
-          callback.invoke(false, e);
+          callback.invoke(false, e.getMessage());
         }
       }
     });
@@ -147,14 +193,13 @@ public class VoiceModule extends ReactContextBaseJavaModule implements Recogniti
 
   @ReactMethod
   public void isRecognizing(Callback callback) {
-    final VoiceModule self = this;
     callback.invoke(isRecognizing);
   }
 
   private void sendEvent(String eventName, @Nullable WritableMap params) {
     this.reactContext
-    .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-    .emit(eventName, params);
+      .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+      .emit(eventName, params);
   }
 
   @Override
@@ -162,6 +207,7 @@ public class VoiceModule extends ReactContextBaseJavaModule implements Recogniti
     WritableMap event = Arguments.createMap();
     event.putBoolean("error", false);
     sendEvent("onSpeechStart", event);
+    Log.d("ASR", "onBeginningOfSpeech()");
   }
 
   @Override
@@ -169,6 +215,7 @@ public class VoiceModule extends ReactContextBaseJavaModule implements Recogniti
     WritableMap event = Arguments.createMap();
     event.putBoolean("error", false);
     sendEvent("onSpeechRecognized", event);
+    Log.d("ASR", "onBufferReceived()");
   }
 
   @Override
@@ -176,14 +223,19 @@ public class VoiceModule extends ReactContextBaseJavaModule implements Recogniti
     WritableMap event = Arguments.createMap();
     event.putBoolean("error", false);
     sendEvent("onSpeechEnd", event);
+    Log.d("ASR", "onEndOfSpeech()");
+    isRecognizing = false;
   }
 
   @Override
   public void onError(int errorCode) {
-    String errorMessage = getErrorText(errorCode);
+    String errorMessage = String.format("%d/%s", errorCode, getErrorText(errorCode));
+    WritableMap error = Arguments.createMap();
+    error.putString("message", errorMessage);
     WritableMap event = Arguments.createMap();
-    event.putString("error", errorMessage);
+    event.putMap("error", error);
     sendEvent("onSpeechError", event);
+    Log.d("ASR", "onError() - " + errorMessage);
   }
 
   @Override
@@ -201,6 +253,7 @@ public class VoiceModule extends ReactContextBaseJavaModule implements Recogniti
     WritableMap event = Arguments.createMap();
     event.putArray("value", arr);
     sendEvent("onSpeechPartialResults", event);
+    Log.d("ASR", "onPartialResults()");
   }
 
   @Override
@@ -208,6 +261,7 @@ public class VoiceModule extends ReactContextBaseJavaModule implements Recogniti
     WritableMap event = Arguments.createMap();
     event.putBoolean("error", false);
     sendEvent("onSpeechStart", event);
+    Log.d("ASR", "onReadyForSpeech()");
   }
 
   @Override
@@ -222,6 +276,7 @@ public class VoiceModule extends ReactContextBaseJavaModule implements Recogniti
     WritableMap event = Arguments.createMap();
     event.putArray("value", arr);
     sendEvent("onSpeechResults", event);
+    Log.d("ASR", "onResults()");
   }
 
   @Override
@@ -235,35 +290,35 @@ public class VoiceModule extends ReactContextBaseJavaModule implements Recogniti
     String message;
     switch (errorCode) {
       case SpeechRecognizer.ERROR_AUDIO:
-      message = "Audio recording error";
-      break;
+        message = "Audio recording error";
+        break;
       case SpeechRecognizer.ERROR_CLIENT:
-      message = "Client side error";
-      break;
+        message = "Client side error";
+        break;
       case SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS:
-      message = "Insufficient permissions";
-      break;
+        message = "Insufficient permissions";
+        break;
       case SpeechRecognizer.ERROR_NETWORK:
-      message = "Network error";
-      break;
+        message = "Network error";
+        break;
       case SpeechRecognizer.ERROR_NETWORK_TIMEOUT:
-      message = "Network timeout";
-      break;
+        message = "Network timeout";
+        break;
       case SpeechRecognizer.ERROR_NO_MATCH:
-      message = "No match";
-      break;
+        message = "No match";
+        break;
       case SpeechRecognizer.ERROR_RECOGNIZER_BUSY:
-      message = "RecognitionService busy";
-      break;
+        message = "RecognitionService busy";
+        break;
       case SpeechRecognizer.ERROR_SERVER:
-      message = "error from server";
-      break;
+        message = "error from server";
+        break;
       case SpeechRecognizer.ERROR_SPEECH_TIMEOUT:
-      message = "No speech input";
-      break;
+        message = "No speech input";
+        break;
       default:
-      message = "Didn't understand, please try again.";
-      break;
+        message = "Didn't understand, please try again.";
+        break;
     }
     return message;
   }
