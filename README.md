@@ -165,5 +165,8 @@ Please see the documentation provided by ReactNative for this: [PermissionsAndro
 
   * @BrendanFDMoore
   * @brudny
+  * @chitezh
+  * @jamsch
+  * @ohtangza and the folks at @hayanmind
   * @rudiedev6
   * @wenkesj
