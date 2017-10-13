@@ -9,24 +9,20 @@ import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.support.annotation.NonNull;
-
-import com.facebook.react.ReactActivity;
-
-import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 
-import com.facebook.react.modules.core.DeviceEventManagerModule;
-import com.facebook.react.modules.core.PermissionListener;
-import com.facebook.react.bridge.WritableMap;
-import com.facebook.react.bridge.ReadableMap;
-import com.facebook.react.bridge.ReadableMapKeySetIterator;
-import com.facebook.react.bridge.WritableArray;
+import com.facebook.react.ReactActivity;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.ReadableMapKeySetIterator;
+import com.facebook.react.bridge.WritableArray;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
+import com.facebook.react.modules.core.PermissionListener;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -81,25 +77,29 @@ public class VoiceModule extends ReactContextBaseJavaModule implements Recogniti
               break;
           }
           break;
-        case "EXTRA_MAX_RESULTS":
+        case "EXTRA_MAX_RESULTS": {
           Double extras = opts.getDouble(key);
           intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, extras.intValue());
           break;
+        }
         case "EXTRA_PARTIAL_RESULTS":
           intent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, opts.getBoolean(key));
           break;
-        case "EXTRA_SPEECH_INPUT_MINIMUM_LENGTH_MILLIS":
+        case "EXTRA_SPEECH_INPUT_MINIMUM_LENGTH_MILLIS": {
           Double extras = opts.getDouble(key);
           intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_MINIMUM_LENGTH_MILLIS, extras.intValue());
           break;
-        case "EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS":
+        }
+        case "EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS": {
           Double extras = opts.getDouble(key);
           intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS, extras.intValue());
           break;
-        case "EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS":
+        }
+        case "EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS": {
           Double extras = opts.getDouble(key);
           intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS, extras.intValue());
           break;
+        }
       }
     }
 
@@ -114,7 +114,7 @@ public class VoiceModule extends ReactContextBaseJavaModule implements Recogniti
 
   @ReactMethod
   public void startSpeech(final String locale, final ReadableMap opts, final Callback callback) {
-    if (!isPermissionGranted() && opts.getBool("REQUEST_PERMISSIONS_AUTO")) {
+    if (!isPermissionGranted() && opts.getBoolean("REQUEST_PERMISSIONS_AUTO")) {
       String[] PERMISSIONS = {Manifest.permission.RECORD_AUDIO};
       if (this.getCurrentActivity() != null) {
         ((ReactActivity) this.getCurrentActivity()).requestPermissions(PERMISSIONS, 1, new PermissionListener() {
