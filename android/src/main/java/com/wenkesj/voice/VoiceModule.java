@@ -41,8 +41,8 @@ public class VoiceModule extends ReactContextBaseJavaModule implements Recogniti
     this.reactContext = reactContext;
   }
 
-  private String getLocale(String locale){
-    if(locale != null && !locale.equals("")){
+  private String getLocale(String locale) {
+    if (locale != null && !locale.equals("")) {
       return locale;
     }
 
@@ -82,9 +82,10 @@ public class VoiceModule extends ReactContextBaseJavaModule implements Recogniti
           intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, extras.intValue());
           break;
         }
-        case "EXTRA_PARTIAL_RESULTS":
+        case "EXTRA_PARTIAL_RESULTS": {
           intent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, opts.getBoolean(key));
           break;
+        }
         case "EXTRA_SPEECH_INPUT_MINIMUM_LENGTH_MILLIS": {
           Double extras = opts.getDouble(key);
           intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_MINIMUM_LENGTH_MILLIS, extras.intValue());
