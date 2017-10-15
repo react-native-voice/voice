@@ -165,10 +165,11 @@ Please see the documentation provided by ReactNative for this: [PermissionsAndro
 
 <h2 align="center">Contibutors</h2>
 
+  * @asafron
   * @BrendanFDMoore
   * @brudny
   * @chitezh
   * @jamsch
-  * @ohtangza and the folks at @hayanmind
+  * @ohtangza & @hayanmind
   * @rudiedev6
   * @wenkesj
