@@ -1,30 +1,31 @@
 package com.wenkesj.voice;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Bundle;
+import android.os.Handler;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
-import android.os.Bundle;
-import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.facebook.react.modules.core.DeviceEventManagerModule;
-import com.facebook.react.bridge.WritableMap;
-import com.facebook.react.bridge.ReadableMap;
-import com.facebook.react.bridge.ReadableMapKeySetIterator;
-import com.facebook.react.bridge.WritableArray;
+import com.facebook.react.ReactActivity;
 import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
-import com.facebook.react.bridge.Callback;
+import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.ReadableMapKeySetIterator;
+import com.facebook.react.bridge.WritableArray;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
+import com.facebook.react.modules.core.PermissionListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
-import java.lang.Exception;
-import java.lang.Runnable;
 
 import javax.annotation.Nullable;
 
@@ -114,7 +115,28 @@ public class VoiceModule extends ReactContextBaseJavaModule implements Recogniti
 
   @ReactMethod
   public void startSpeech(final String locale, final ReadableMap opts, final Callback callback) {
+    if (!isPermissionGranted() && opts.getBoolean("REQUEST_PERMISSIONS_AUTO")) {
+      String[] PERMISSIONS = {Manifest.permission.RECORD_AUDIO};
+      if (this.getCurrentActivity() != null) {
+        ((ReactActivity) this.getCurrentActivity()).requestPermissions(PERMISSIONS, 1, new PermissionListener() {
+          public boolean onRequestPermissionsResult(final int requestCode,
+                                                    @NonNull final String[] permissions,
+                                                    @NonNull final int[] grantResults) {
+            boolean permissionsGranted = true;
+            for (int i = 0; i < permissions.length; i++) {
+              final boolean granted = grantResults[i] == PackageManager.PERMISSION_GRANTED;
+              permissionsGranted = permissionsGranted && granted;
+            }
+
+            return permissionsGranted;
+          }
+        });
+      }
+      return;
+    }
+
     this.locale = locale;
+
     Handler mainHandler = new Handler(this.reactContext.getMainLooper());
     mainHandler.post(new Runnable() {
       @Override
@@ -197,6 +219,12 @@ public class VoiceModule extends ReactContextBaseJavaModule implements Recogniti
         }
       }
     });
+  }
+
+  private boolean isPermissionGranted() {
+    String permission = Manifest.permission.RECORD_AUDIO;
+    int res = getReactApplicationContext().checkCallingOrSelfPermission(permission);
+    return res == PackageManager.PERMISSION_GRANTED;
   }
 
   @ReactMethod

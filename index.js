@@ -68,6 +68,7 @@ class RCTVoice {
           EXTRA_LANGUAGE_MODEL: "LANGUAGE_MODEL_FREE_FORM",
           EXTRA_MAX_RESULTS: 5,
           EXTRA_PARTIAL_RESULTS: true,
+          REQUEST_PERMISSIONS_AUTO: true,
         }, options), callback);
       } else {
         Voice.startSpeech(locale, callback);
