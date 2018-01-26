@@ -45,7 +45,7 @@ project(':VoiceModule').projectDir = new File(rootProject.projectDir, '../node_m
 ...
 dependencies {
     ...
-    compile project(':react-native-voice')
+    compile project(':VoiceModule')
 }
 ```
 
