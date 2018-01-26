@@ -53,13 +53,14 @@ dependencies {
 
 ```java
 
-import com.facebook.react.ReactApplication
+import android.app.Application;
+import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactPackage;
 ...
 import com.wenkesj.voice.VoicePackage; // <------ Add this!
 ...
 
-public class MainActivity extends ReactActivity {
+public class MainActivity extends Activity implements ReactApplication {
 ...
     @Override
     protected List<ReactPackage> getPackages() {
