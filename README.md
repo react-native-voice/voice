@@ -35,8 +35,8 @@ react-native link react-native-voice
 
 ```gradle
 ...
-include ':VoiceModule', ':app'
-project(':VoiceModule').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-voice/android')
+include ':react-native-voice', ':app'
+project(':react-native-voice').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-voice/android')
 ```
 
 - In `android/app/build.gradle`
@@ -45,7 +45,7 @@ project(':VoiceModule').projectDir = new File(rootProject.projectDir, '../node_m
 ...
 dependencies {
     ...
-    compile project(':VoiceModule')
+    compile project(':react-native-voice')
 }
 ```
 
