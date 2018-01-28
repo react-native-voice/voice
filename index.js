@@ -33,7 +33,7 @@ class RCTVoice {
   }
   destroy() {
     if (!this._loaded && !this._listeners) {
-      return;
+      return Promise.resolve();
     }
     return new Promise((resolve, reject) => {
       Voice.destroySpeech((error) => {
@@ -77,7 +77,7 @@ class RCTVoice {
   }
   stop() {
     if (!this._loaded && !this._listeners) {
-      return;
+      return Promise.resolve();
     }
     return new Promise((resolve, reject) => {
       Voice.stopSpeech((error) => {
@@ -91,7 +91,7 @@ class RCTVoice {
   }
   cancel() {
     if (!this._loaded && !this._listeners) {
-      return;
+      return Promise.resolve();
     }
     return new Promise((resolve, reject) => {
       Voice.cancelSpeech((error) => {
