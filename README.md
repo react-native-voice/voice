@@ -35,8 +35,8 @@ react-native link react-native-voice
 
 ```gradle
 ...
-include ':VoiceModule', ':app'
-project(':VoiceModule').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-voice/android')
+include ':react-native-voice', ':app'
+project(':react-native-voice').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-voice/android')
 ```
 
 - In `android/app/build.gradle`
@@ -53,13 +53,14 @@ dependencies {
 
 ```java
 
-import com.facebook.react.ReactApplication
+import android.app.Application;
+import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactPackage;
 ...
 import com.wenkesj.voice.VoicePackage; // <------ Add this!
 ...
 
-public class MainActivity extends ReactActivity {
+public class MainActivity extends Activity implements ReactApplication {
 ...
     @Override
     protected List<ReactPackage> getPackages() {
