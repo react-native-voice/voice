@@ -8,9 +8,7 @@ import React, {
 const { Voice } = NativeModules;
 
 // NativeEventEmitter is only availabe on React Native platforms, so this conditional is used to avoid import conflicts in the browser/server
-if (Platform.OS !== "web") {
-  const voiceEmitter = new NativeEventEmitter(Voice);
-}
+const voiceEmitter = Platform.OS !== "web" ? new NativeEventEmitter(Voice) : null;
 
 class RCTVoice {
   constructor() {
@@ -54,7 +52,7 @@ class RCTVoice {
     });
   }
   start(locale, options = {}) {
-    if (!this._loaded && !this._listeners) {
+    if (!this._loaded && !this._listeners && voiceEmitter !== null) {
       this._listeners = Object.keys(this._events)
         .map((key, index) => voiceEmitter.addListener(key, this._events[key]));
     }
