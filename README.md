@@ -172,6 +172,9 @@ Please see the documentation provided by ReactNative for this: [PermissionsAndro
   * @chitezh
   * @ifsnow
   * @jamsch
+  * @misino
+  * @Noitidart
   * @ohtangza & @hayanmind
   * @rudiedev6
+  * @tdonia
   * @wenkesj
