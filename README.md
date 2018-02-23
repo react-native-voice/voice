@@ -156,7 +156,7 @@ Need to include permissions for `NSMicrophoneUsageDescription` and `NSSpeechReco
 </dict>
 ```
 
-Please see the documentation provided by ReactNative for this: [PermissionsAndroid](http://facebook.github.io/react-native/releases/0.38/docs/permissionsandroid.html)
+Please see the documentation provided by ReactNative for this: [PermissionsAndroid](http://facebook.github.io/react-native/docs/permissionsandroid.html)
 
 [npm]: https://img.shields.io/npm/v/react-native-voice.svg
 [npm-url]: https://npmjs.com/package/react-native-voice
