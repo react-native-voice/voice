@@ -37,6 +37,9 @@
 
     NSError* audioSessionError = nil;
     self.audioSession = [AVAudioSession sharedInstance];
+    
+    // Allow other audio players in the app to play nicely together!
+    [self.audioSession setCategory:AVAudioSessionCategoryPlayAndRecord withOptions:AVAudioSessionCategoryOptionMixWithOthers error:nil];
 
     if (audioSessionError != nil) {
         [self sendResult:RCTMakeError([audioSessionError localizedDescription], nil, nil) :nil :nil :nil];
