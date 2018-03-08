@@ -21,9 +21,10 @@ class RCTVoice {
       'onSpeechPartialResults': this._onSpeechPartialResults.bind(this),
       'onSpeechVolumeChanged': this._onSpeechVolumeChanged.bind(this)
     };
+    voiceEmitter.addListener("onSpeechStart",this._onSpeechStart.bind(this));
   }
   removeAllListeners() {
-    Voice.onSpeechStart = null;
+    // Voice.onSpeechStart = null;
     Voice.onSpeechRecognized = null;
     Voice.onSpeechEnd = null;
     Voice.onSpeechError = null;
@@ -32,9 +33,9 @@ class RCTVoice {
     Voice.onSpeechVolumeChanged = null;
   }
   destroy() {
-    if (!this._loaded && !this._listeners) {
-      return;
-    }
+    // if (!this._loaded && !this._listeners) {
+    //   return;
+    // }
     return new Promise((resolve, reject) => {
       Voice.destroySpeech((error) => {
         if (error) {

@@ -13,6 +13,7 @@
 @property (nonatomic) SFSpeechRecognitionTask* recognitionTask;
 @property (nonatomic) AVAudioSession* audioSession;
 @property (nonatomic) double rate;
+@property BOOL flag;
 @end
 
 @implementation Voice
@@ -25,7 +26,7 @@
 }
 - (void) setupAndStartRecognizing:(NSString*)localeStr {
     [self teardown];
-    
+    self.flag = true;
     NSLocale* locale = nil;
     if ([localeStr length] > 0) {
         locale = [NSLocale localeWithLocaleIdentifier:localeStr];
@@ -44,6 +45,7 @@
     
     if (audioSessionError != nil) {
         [self sendResult:RCTMakeError([audioSessionError localizedDescription], nil, nil) :nil :nil :nil];
+        self.flag=false;
         return;
     }
     
@@ -51,6 +53,7 @@
     
     if (self.recognitionRequest == nil){
         [self sendResult:RCTMakeError(@"Unable to created a SFSpeechAudioBufferRecognitionRequest object", nil, nil) :nil :nil :nil];
+        self.flag=false;
         return;
     }
     
@@ -61,13 +64,14 @@
     AVAudioInputNode* inputNode = self.audioEngine.inputNode;
     if (inputNode == nil) {
         [self sendResult:RCTMakeError(@"Audio engine has no input node", nil, nil) :nil :nil :nil];
+        self.flag=false;
         return;
     }
     
     // Configure request so that results are returned before audio recording is finished
     self.recognitionRequest.shouldReportPartialResults = YES;
     
-    [self sendEventWithName:@"onSpeechStart" body:@true];
+    
     
     // A recognition task represents a speech recognition session.
     // We keep a reference to the task so that it can be cancelled.
@@ -76,6 +80,7 @@
             NSString *errorMessage = [NSString stringWithFormat:@"%ld/%@", error.code, [error localizedDescription]];
             [self sendResult:RCTMakeError(errorMessage, nil, nil) :nil :nil :nil];
             [self teardown];
+            self.flag=false;
             return;
         }
         
@@ -128,6 +133,9 @@
         [self sendResult:RCTMakeError([audioSessionError localizedDescription], nil, nil) :nil :nil :nil];
         return;
     }
+    NSLog(@"===test%d",self.flag);
+    NSNumber *key = [NSNumber numberWithBool:self.flag];
+    [self sendEventWithName:@"onSpeechStart" body:@[key]];
 }
 
 - (NSArray<NSString *> *)supportedEvents
@@ -178,6 +186,8 @@
 - (void)speechRecognizer:(SFSpeechRecognizer *)speechRecognizer availabilityDidChange:(BOOL)available {
     if (available == false) {
         [self sendResult:RCTMakeError(@"Speech recognition is not available now", nil, nil) :nil :nil :nil];
+        NSNumber *key = [NSNumber numberWithBool:false];
+        //        [self sendEventWithName:@"onSpeechStart" body:@[key]];
     }
 }
 
@@ -227,6 +237,8 @@ RCT_EXPORT_METHOD(isRecognizing:(RCTResponseSenderBlock)callback) {
 RCT_EXPORT_METHOD(startSpeech:(NSString*)localeStr callback:(RCTResponseSenderBlock)callback) {
     if (self.recognitionTask != nil) {
         [self sendResult:RCTMakeError(@"Speech recognition already started!", nil, nil) :nil :nil :nil];
+        NSNumber *key = [NSNumber numberWithBool:true];
+        [self sendEventWithName:@"onSpeechStart" body:@[key]];
         return;
     }
     
