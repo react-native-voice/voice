@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BFE39F1B20520F2F00492793 /* AudioSession.m in Sources */ = {isa = PBXBuildFile; fileRef = BFE39F1A20520F2F00492793 /* AudioSession.m */; };
 		DC0729BA1EF78E41004EBC83 /* Voice.m in Sources */ = {isa = PBXBuildFile; fileRef = DC0729B91EF78E41004EBC83 /* Voice.m */; };
 		DC0729BB1EF78E41004EBC83 /* Voice.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = DC0729B81EF78E41004EBC83 /* Voice.h */; };
 /* End PBXBuildFile section */
@@ -25,6 +26,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		BFE39F1920520F2F00492793 /* AudioSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioSession.h; sourceTree = "<group>"; };
+		BFE39F1A20520F2F00492793 /* AudioSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioSession.m; sourceTree = "<group>"; };
 		DC0729B51EF78E41004EBC83 /* libVoice.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libVoice.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC0729B81EF78E41004EBC83 /* Voice.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Voice.h; sourceTree = "<group>"; };
 		DC0729B91EF78E41004EBC83 /* Voice.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Voice.m; sourceTree = "<group>"; };
@@ -62,6 +65,8 @@
 			children = (
 				DC0729B81EF78E41004EBC83 /* Voice.h */,
 				DC0729B91EF78E41004EBC83 /* Voice.m */,
+				BFE39F1920520F2F00492793 /* AudioSession.h */,
+				BFE39F1A20520F2F00492793 /* AudioSession.m */,
 			);
 			path = Voice;
 			sourceTree = "<group>";
@@ -125,6 +130,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DC0729BA1EF78E41004EBC83 /* Voice.m in Sources */,
+				BFE39F1B20520F2F00492793 /* AudioSession.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
