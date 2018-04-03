@@ -4,6 +4,7 @@
 #import <React/RCTUtils.h>
 #import <React/RCTEventEmitter.h>
 #import <Speech/Speech.h>
+#import <Accelerate/Accelerate.h>
 
 @interface Voice () <SFSpeechRecognizerDelegate>
 
@@ -13,6 +14,8 @@
 @property (nonatomic) SFSpeechRecognitionTask* recognitionTask;
 @property (nonatomic) AVAudioSession* audioSession;
 @property (nonatomic) double rate;
+@property float averagePowerForChannel0;
+@property float averagePowerForChannel1;
 @property BOOL flag;
 @end
 
@@ -111,21 +114,39 @@
     }
     recordingFormat = [recordingFormat initStandardFormatWithSampleRate:self.rate channels:1];
     
-    NSLog(@"lalala%@", recordingFormat);
-    
-    
     [tempNode installTapOnBus:0 bufferSize:1024 format:recordingFormat block:^(AVAudioPCMBuffer * _Nonnull buffer, AVAudioTime * _Nonnull when) {
+        
+        //===volume metering level====
+        [buffer setFrameLength:1024];
+        UInt32 inNumberFrames = buffer.frameLength;
+        float LEVEL_LOWPASS_TRIG = 0.5;
+        if(buffer.format.channelCount>0)
+        {
+            Float32* samples = (Float32*)buffer.floatChannelData[0];
+            Float32 avgValue = 0;
+            
+            vDSP_meamgv((Float32*)samples, 1, &avgValue, inNumberFrames);
+            self.averagePowerForChannel0 = (LEVEL_LOWPASS_TRIG*((avgValue==0)?-100:20.0*log10f(avgValue))) + ((1-LEVEL_LOWPASS_TRIG)*self.averagePowerForChannel0) ;
+            self.averagePowerForChannel1 = self.averagePowerForChannel0;
+            
+        }
+        
+        if(buffer.format.channelCount>1)
+        {
+            Float32* samples = (Float32*)buffer.floatChannelData[1];
+            Float32 avgValue = 0;
+            
+            vDSP_meamgv((Float32*)samples, 1, &avgValue, inNumberFrames);
+            self.averagePowerForChannel1 = (LEVEL_LOWPASS_TRIG*((avgValue==0)?-100:20.0*log10f(avgValue))) + ((1-LEVEL_LOWPASS_TRIG)*self.averagePowerForChannel1) ;
+            
+        }
+        NSLog(@"===test===%.2f", self.averagePowerForChannel1);
+        //===end volume metering level====
+        
         if (self.recognitionRequest != nil) {
             [self.recognitionRequest appendAudioPCMBuffer:buffer];
         }
     }];
-    //    AVAudioFormat* recordingFormat = [inputNode outputFormatForBus:0];
-    //
-    //    [inputNode installTapOnBus:0 bufferSize:1024 format:recordingFormat block:^(AVAudioPCMBuffer * _Nonnull buffer, AVAudioTime * _Nonnull when) {
-    //        if (self.recognitionRequest != nil) {
-    //            [self.recognitionRequest appendAudioPCMBuffer:buffer];
-    //        }
-    //    }];
     
     [self.audioEngine prepare];
     [self.audioEngine startAndReturnError:&audioSessionError];
@@ -133,7 +154,6 @@
         [self sendResult:RCTMakeError([audioSessionError localizedDescription], nil, nil) :nil :nil :nil];
         return;
     }
-    NSLog(@"===test%d",self.flag);
     NSNumber *key = [NSNumber numberWithBool:self.flag];
     [self sendEventWithName:@"onSpeechStart" body:@[key]];
 }
