@@ -19,7 +19,8 @@ class RCTVoice {
       'onSpeechError': this._onSpeechError.bind(this),
       'onSpeechResults': this._onSpeechResults.bind(this),
       'onSpeechPartialResults': this._onSpeechPartialResults.bind(this),
-      'onSpeechVolumeChanged': this._onSpeechVolumeChanged.bind(this)
+      'onSpeechVolumeChanged': this._onSpeechVolumeChanged.bind(this),
+      'onSpeechVolumeLevel' : this._onSpeechVolumeLevel.bind(this),
     };
     voiceEmitter.addListener("onSpeechStart",this._onSpeechStart.bind(this));
   }
@@ -123,6 +124,11 @@ class RCTVoice {
   _onSpeechStart(e) {
     if (this.onSpeechStart) {
       this.onSpeechStart(e);
+    }
+  }
+  _onSpeechVolumeLevel(e) {
+    if (this.onSpeechVolumeLevel){
+      this.onSpeechVolumeLevel(e);
     }
   }
   _onSpeechRecognized(e) {

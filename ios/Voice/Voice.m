@@ -142,6 +142,7 @@
         }
         NSLog(@"===test===%.2f", self.averagePowerForChannel1);
         //===end volume metering level====
+        [self sendEventWithName:@"onSpeechVolumeLevel" body:@{@"level": value}];
         
         if (self.recognitionRequest != nil) {
             [self.recognitionRequest appendAudioPCMBuffer:buffer];
@@ -167,7 +168,8 @@
              @"onSpeechError",
              @"onSpeechEnd",
              @"onSpeechRecognized",
-             @"onSpeechVolumeChanged"
+             @"onSpeechVolumeChanged",
+             @"onSpeechVolumeLevel",
              ];
 }
 
