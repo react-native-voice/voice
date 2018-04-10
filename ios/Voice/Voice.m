@@ -142,6 +142,7 @@
         }
         NSLog(@"===test===%.2f", self.averagePowerForChannel1);
         //===end volume metering level====
+        NSNumber *value = [NSNumber numberWithFloat:self.averagePowerForChannel1];
         [self sendEventWithName:@"onSpeechVolumeLevel" body:@{@"level": value}];
         
         if (self.recognitionRequest != nil) {
@@ -209,7 +210,7 @@
     if (available == false) {
         [self sendResult:RCTMakeError(@"Speech recognition is not available now", nil, nil) :nil :nil :nil];
         NSNumber *key = [NSNumber numberWithBool:false];
-        //        [self sendEventWithName:@"onSpeechStart" body:@[key]];
+        [self sendEventWithName:@"onSpeechStart" body:@[key]];
     }
 }
 
