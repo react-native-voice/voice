@@ -71,7 +71,6 @@
         if (error != nil) {
             NSString *errorMessage = [NSString stringWithFormat:@"%ld/%@", error.code, [error localizedDescription]];
             [self sendResult:RCTMakeError(errorMessage, nil, nil) :nil :nil :nil];
-            [self teardown];
             return;
         }
 
