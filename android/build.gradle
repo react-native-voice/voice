@@ -1,5 +1,19 @@
 apply plugin: 'com.android.library'
 
+repositories {
+    mavenLocal()
+    jcenter()
+    maven {
+        // For developing the library outside the context of the example app, expect `react-native`
+        // to be installed at `./node_modules`.
+        url "$projectDir/../node_modules/react-native/android"
+    }
+    maven {
+        // For developing the example app.
+        url "$projectDir/../../react-native/android"
+    }
+}
+
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
