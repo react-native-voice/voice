@@ -11,7 +11,6 @@ import android.speech.SpeechRecognizer;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.facebook.react.ReactActivity;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -22,6 +21,7 @@ import com.facebook.react.bridge.ReadableMapKeySetIterator;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
+import com.facebook.react.modules.core.PermissionAwareActivity;
 import com.facebook.react.modules.core.PermissionListener;
 
 import java.util.ArrayList;
@@ -118,7 +118,7 @@ public class VoiceModule extends ReactContextBaseJavaModule implements Recogniti
     if (!isPermissionGranted() && opts.getBoolean("REQUEST_PERMISSIONS_AUTO")) {
       String[] PERMISSIONS = {Manifest.permission.RECORD_AUDIO};
       if (this.getCurrentActivity() != null) {
-        ((ReactActivity) this.getCurrentActivity()).requestPermissions(PERMISSIONS, 1, new PermissionListener() {
+        ((PermissionAwareActivity) this.getCurrentActivity()).requestPermissions(PERMISSIONS, 1, new PermissionListener() {
           public boolean onRequestPermissionsResult(final int requestCode,
                                                     @NonNull final String[] permissions,
                                                     @NonNull final int[] grantResults) {
