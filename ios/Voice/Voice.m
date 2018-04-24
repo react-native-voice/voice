@@ -12,7 +12,7 @@
 @property (nonatomic) AVAudioEngine* audioEngine;
 @property (nonatomic) SFSpeechRecognitionTask* recognitionTask;
 @property (nonatomic) AVAudioSession* audioSession;
-
+@property (nonatomic) NSString *sessionId;
 @end
 
 @implementation Voice
@@ -21,7 +21,8 @@
 
 - (void) setupAndStartRecognizing:(NSString*)localeStr {
     [self teardown];
-
+    self.sessionId = [[NSUUID UUID] UUIDString];
+    
     NSLocale* locale = nil;
     if ([localeStr length] > 0) {
         locale = [NSLocale localeWithLocaleIdentifier:localeStr];
@@ -67,7 +68,12 @@
 
     // A recognition task represents a speech recognition session.
     // We keep a reference to the task so that it can be cancelled.
+    NSString *taskSessionId = self.sessionId;
     self.recognitionTask = [self.speechRecognizer recognitionTaskWithRequest:self.recognitionRequest resultHandler:^(SFSpeechRecognitionResult * _Nullable result, NSError * _Nullable error) {
+        if (![taskSessionId isEqualToString:self.sessionId]) {
+            // session ID has changed, so ignore any capture results and error
+            return;
+        }
         if (error != nil) {
             NSString *errorMessage = [NSString stringWithFormat:@"%ld/%@", error.code, [error localizedDescription]];
             [self sendResult:RCTMakeError(errorMessage, nil, nil) :nil :nil :nil];
@@ -140,7 +146,8 @@
     [self.recognitionTask cancel];
     self.recognitionTask = nil;
     self.audioSession = nil;
-
+    self.sessionId = nil;
+    
     if (self.audioEngine.isRunning) {
         [self.audioEngine stop];
         [self.recognitionRequest endAudio];
