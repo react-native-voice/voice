@@ -96,7 +96,7 @@ class VoiceTest extends Component {
     Voice.onSpeechResults = this.onSpeechResultsHandler.bind(this);
   }
   onStartButtonPress(e){
-    Voice.start('en_US');
+    Voice.start('en-US'); // Sometimes "en-US" is not workng but "en_US" works.
   }
   ...
 }
