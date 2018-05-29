@@ -34,9 +34,9 @@ class RCTVoice {
     Voice.onSpeechVolumeChanged = null;
   }
   destroy() {
-    // if (!this._loaded && !this._listeners) {
-    //   return;
-    // }
+    if (Platform.OS === 'android' && !this._loaded && !this._listeners) {
+      return;
+    }
     return new Promise((resolve, reject) => {
       Voice.destroySpeech((error) => {
         if (error) {
