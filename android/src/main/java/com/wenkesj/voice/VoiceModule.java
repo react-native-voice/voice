@@ -159,7 +159,9 @@ public class VoiceModule extends ReactContextBaseJavaModule implements Recogniti
       @Override
       public void run() {
         try {
-          speech.stopListening();
+          if (speech != null) {
+            speech.stopListening();
+          }
           isRecognizing = false;
           callback.invoke(false);
         } catch(Exception e) {
@@ -176,7 +178,9 @@ public class VoiceModule extends ReactContextBaseJavaModule implements Recogniti
       @Override
       public void run() {
         try {
-          speech.cancel();
+          if (speech != null) {
+            speech.cancel();
+          }
           isRecognizing = false;
           callback.invoke(false);
         } catch(Exception e) {
@@ -193,7 +197,9 @@ public class VoiceModule extends ReactContextBaseJavaModule implements Recogniti
       @Override
       public void run() {
         try {
-          speech.destroy();
+          if (speech != null) {
+            speech.destroy();
+          }
           speech = null;
           isRecognizing = false;
           callback.invoke(false);
