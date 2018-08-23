@@ -4,6 +4,8 @@
 #import <React/RCTUtils.h>
 #import <React/RCTEventEmitter.h>
 #import <Speech/Speech.h>
+#import <Accelerate/Accelerate.h>
+
 
 @interface Voice () <SFSpeechRecognizerDelegate>
 
@@ -13,6 +15,9 @@
 @property (nonatomic) SFSpeechRecognitionTask* recognitionTask;
 @property (nonatomic) AVAudioSession* audioSession;
 @property (nonatomic) NSString *sessionId;
+
+@property float averagePowerForChannel0;
+@property float averagePowerForChannel1;
 @end
 
 @implementation Voice
@@ -27,45 +32,45 @@
     if ([localeStr length] > 0) {
         locale = [NSLocale localeWithLocaleIdentifier:localeStr];
     }
-
+    
     if (locale) {
         self.speechRecognizer = [[SFSpeechRecognizer alloc] initWithLocale:locale];
     } else {
         self.speechRecognizer = [[SFSpeechRecognizer alloc] init];
     }
-
+    
     self.speechRecognizer.delegate = self;
-
+    
     NSError* audioSessionError = nil;
     self.audioSession = [AVAudioSession sharedInstance];
-
+    
     if (audioSessionError != nil) {
         [self sendResult:RCTMakeError([audioSessionError localizedDescription], nil, nil) :nil :nil :nil];
         return;
     }
-
+    
     self.recognitionRequest = [[SFSpeechAudioBufferRecognitionRequest alloc] init];
-
+    
     if (self.recognitionRequest == nil){
         [self sendResult:RCTMakeError(@"Unable to created a SFSpeechAudioBufferRecognitionRequest object", nil, nil) :nil :nil :nil];
         return;
     }
-
+    
     if (self.audioEngine == nil) {
         self.audioEngine = [[AVAudioEngine alloc] init];
     }
-
+    
     AVAudioInputNode* inputNode = self.audioEngine.inputNode;
     if (inputNode == nil) {
         [self sendResult:RCTMakeError(@"Audio engine has no input node", nil, nil) :nil :nil :nil];
         return;
     }
-
+    
     // Configure request so that results are returned before audio recording is finished
     self.recognitionRequest.shouldReportPartialResults = YES;
-
+    
     [self sendEventWithName:@"onSpeechStart" body:@true];
-
+    
     // A recognition task represents a speech recognition session.
     // We keep a reference to the task so that it can be cancelled.
     NSString *taskSessionId = self.sessionId;
@@ -80,7 +85,7 @@
             [self teardown];
             return;
         }
-
+        
         BOOL isFinal = result.isFinal;
         if (result != nil) {
             NSMutableArray* transcriptionDics = [NSMutableArray new];
@@ -89,7 +94,7 @@
             }
             [self sendResult:nil:result.bestTranscription.formattedString :transcriptionDics :@(isFinal)];
         }
-
+        
         if (isFinal == YES) {
             if (self.recognitionTask.isCancelled || self.recognitionTask.isFinishing){
                 [self sendEventWithName:@"onSpeechEnd" body:@{@"error": @false}];
@@ -97,15 +102,41 @@
             [self teardown];
         }
     }];
-
+    
     AVAudioFormat* recordingFormat = [inputNode outputFormatForBus:0];
-
+    
     [inputNode installTapOnBus:0 bufferSize:1024 format:recordingFormat block:^(AVAudioPCMBuffer * _Nonnull buffer, AVAudioTime * _Nonnull when) {
+        //VOLUME METERING
+        [buffer setFrameLength:1024];
+        UInt32 inNumberFrames = buffer.frameLength;
+        float LEVEL_LOWPASS_TRIG = 0.5;
+        if(buffer.format.channelCount>0)
+        {
+            Float32* samples = (Float32*)buffer.floatChannelData[0];
+            Float32 avgValue = 0;
+            vDSP_meamgv((Float32*)samples, 1, &avgValue, inNumberFrames);
+            self.averagePowerForChannel0 = (LEVEL_LOWPASS_TRIG*((avgValue==0)?-100:20.0*log10f(avgValue))) + ((1-LEVEL_LOWPASS_TRIG)*self.averagePowerForChannel0) ;
+            self.averagePowerForChannel1 = self.averagePowerForChannel0;
+        }
+        
+        if(buffer.format.channelCount>1)
+        {
+            Float32* samples = (Float32*)buffer.floatChannelData[1];
+            Float32 avgValue = 0;
+            vDSP_meamgv((Float32*)samples, 1, &avgValue, inNumberFrames);
+            self.averagePowerForChannel1 = (LEVEL_LOWPASS_TRIG*((avgValue==0)?-100:20.0*log10f(avgValue))) + ((1-LEVEL_LOWPASS_TRIG)*self.averagePowerForChannel1) ;
+            
+        }
+        // normalized Value is made on scale of 0-10
+        self.averagePowerForChannel1 = [self _normalizedPowerLevelFromDecibels:self.averagePowerForChannel1]*10;
+        NSNumber *value = [NSNumber numberWithFloat:self.averagePowerForChannel1];
+        [self sendEventWithName:@"onSpeechVolumeChanged" body:@{@"value": value}];
+        
         if (self.recognitionRequest != nil) {
             [self.recognitionRequest appendAudioPCMBuffer:buffer];
         }
     }];
-
+    
     [self.audioEngine prepare];
     [self.audioEngine startAndReturnError:&audioSessionError];
     if (audioSessionError != nil) {
@@ -114,17 +145,25 @@
     }
 }
 
+- (CGFloat)_normalizedPowerLevelFromDecibels:(CGFloat)decibels {
+    if (decibels < -60.0f || decibels == 0.0f) {
+        return 0.0f;
+    }
+    
+    return powf((powf(10.0f, 0.05f * decibels) - powf(10.0f, 0.05f * -60.0f)) * (1.0f / (1.0f - powf(10.0f, 0.05f * -60.0f))), 1.0f / 2.0f);
+}
+
 - (NSArray<NSString *> *)supportedEvents
 {
     return @[
-        @"onSpeechResults",
-        @"onSpeechStart",
-        @"onSpeechPartialResults",
-        @"onSpeechError",
-        @"onSpeechEnd",
-        @"onSpeechRecognized",
-        @"onSpeechVolumeChanged"
-    ];
+             @"onSpeechResults",
+             @"onSpeechStart",
+             @"onSpeechPartialResults",
+             @"onSpeechError",
+             @"onSpeechEnd",
+             @"onSpeechRecognized",
+             @"onSpeechVolumeChanged"
+             ];
 }
 
 - (void) sendResult:(NSDictionary*)error :(NSString*)bestTranscription :(NSArray*)transcriptions :(NSNumber*)isFinal {
@@ -153,7 +192,7 @@
         [self.recognitionRequest endAudio];
         [self.audioEngine.inputNode removeTapOnBus:0];
     }
-
+    
     self.recognitionRequest = nil;
 }
 
@@ -212,7 +251,7 @@ RCT_EXPORT_METHOD(startSpeech:(NSString*)localeStr callback:(RCTResponseSenderBl
         [self sendResult:RCTMakeError(@"Speech recognition already started!", nil, nil) :nil :nil :nil];
         return;
     }
-
+    
     [SFSpeechRecognizer requestAuthorization:^(SFSpeechRecognizerAuthorizationStatus status) {
         switch (status) {
             case SFSpeechRecognizerAuthorizationStatusNotDetermined:
