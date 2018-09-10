@@ -158,6 +158,36 @@ Need to include permissions for `NSMicrophoneUsageDescription` and `NSSpeechReco
 
 Please see the documentation provided by ReactNative for this: [PermissionsAndroid](http://facebook.github.io/react-native/docs/permissionsandroid.html)
 
+### Steps to run the VoiceTest example
+1. In terminal, run:
+```sh
+create-react-native-app VoiceNative
+cd VoiceNative
+npm run eject
+```
+2. In terminal, run:
+```sh
+npm i react-native-voice --save
+react-native link react-native-voice
+```
+3. Copy the code from VoiceTest/index.js to the app.js file in your VoiceNative directory.
+4. Copy the button.png file in VoiceTest to your VoiceNative directory.
+5. In your text editor, navigate to build/VoiceNative/Info.plist.
+
+   Right below this:
+```xml
+   <key>CFBundleVersion</key>
+   <string>1</string>
+```
+   Paste the following:
+```xml
+   <key>NSMicrophoneUsageDescription</key>
+   <string>Description of why you require the use of the microphone</string>
+   <key>NSSpeechRecognitionUsageDescription</key>
+   <string>Description of why you require the use of the speech recognition</string>
+```
+6. In terminal, run: `react-native run-ios`
+
 [npm]: https://img.shields.io/npm/v/react-native-voice.svg
 [npm-url]: https://npmjs.com/package/react-native-voice
 
