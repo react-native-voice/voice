@@ -16,6 +16,7 @@ import android.util.Log;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Callback;
+import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
@@ -245,7 +246,7 @@ public class VoiceModule extends ReactContextBaseJavaModule implements Recogniti
   }
 
   @ReactMethod
-  public void getSpeechRecognitionServices(Callback callback) {
+  public void getSpeechRecognitionServices(Promise promise) {
     final List<ResolveInfo> services = this.reactContext.getPackageManager()
         .queryIntentServices(new Intent(RecognitionService.SERVICE_INTERFACE), 0);
     WritableArray serviceNames = Arguments.createArray();
@@ -253,7 +254,7 @@ public class VoiceModule extends ReactContextBaseJavaModule implements Recogniti
       serviceNames.pushString(service.serviceInfo.packageName);
     }
 
-    callback.invoke(serviceNames);
+    promise.resolve(serviceNames);
   }
 
   private boolean isPermissionGranted() {
