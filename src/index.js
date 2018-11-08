@@ -119,6 +119,18 @@ class RCTVoice {
       });
     });
   }
+
+  /**
+   * (Android) Get a list of the speech recognition engines available on the device
+   * */
+  getSpeechRecognitionServices() {
+    if (Platform.OS !== 'android') {
+      throw new Exception('Speech recognition services can be queried for only on Android');
+    }
+
+    return Voice.getSpeechRecognitionServices();
+  }
+
   isRecognizing() {
     return new Promise(resolve => {
       Voice.isRecognizing(isRecognizing => resolve(isRecognizing));

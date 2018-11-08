@@ -109,16 +109,16 @@ class VoiceTest extends Component {
 
 **All methods _now_ return a `new Promise` for `async/await` compatibility.**
 
-Method Name                 | Description                                                                         | Platform
---------------------------- | ----------------------------------------------------------------------------------- | --------
-Voice.isAvailable()         | Checks whether a speech recognition service is available on the system.             | Android, iOS
-Voice.start(locale)         | Starts listening for speech for a specific locale. Returns null if no error occurs. | Android, iOS
-Voice.stop()                | Stops listening for speech. Returns null if no error occurs.                        | Android, iOS
-Voice.cancel()              | Cancels the speech recognition. Returns null if no error occurs.                    | Android, iOS
-Voice.destroy()             | Destroys the current SpeechRecognizer instance. Returns null if no error occurs.    | Android, iOS
-Voice.removeAllListeners()  | Cleans/nullifies overridden `Voice` static methods.                                 | Android, iOS
-Voice.isRecognizing()       | Return if the SpeechRecognizer is recognizing.                                      | Android, iOS
-
+Method Name                          | Description                                                                                                                                                             | Platform
+------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------
+Voice.isAvailable()                  | Checks whether a speech recognition service is available on the system.                                                                                                 | Android, iOS
+Voice.start(locale)                  | Starts listening for speech for a specific locale. Returns null if no error occurs.                                                                                     | Android, iOS
+Voice.stop()                         | Stops listening for speech. Returns null if no error occurs.                                                                                                            | Android, iOS
+Voice.cancel()                       | Cancels the speech recognition. Returns null if no error occurs.                                                                                                        | Android, iOS
+Voice.destroy()                      | Destroys the current SpeechRecognizer instance. Returns null if no error occurs.                                                                                        | Android, iOS
+Voice.removeAllListeners()           | Cleans/nullifies overridden `Voice` static methods.                                                                                                                     | Android, iOS
+Voice.isRecognizing()                | Return if the SpeechRecognizer is recognizing.                                                                                                                          | Android, iOS
+Voice.getSpeechRecognitionServices() | Returns a list of the speech recognition engines available on the device. (Example: `['com.google.android.googlequicksearchbox']` if Google is the only one available.) | Android
 <h2 align="center">Events</h2>
 
 <p align="center">Callbacks that are invoked when a native event emitted.</p>
