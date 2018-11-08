@@ -118,7 +118,7 @@ Voice.cancel()              | Cancels the speech recognition. Returns null if no
 Voice.destroy()             | Destroys the current SpeechRecognizer instance. Returns null if no error occurs.    | Android, iOS
 Voice.removeAllListeners()  | Cleans/nullifies overridden `Voice` static methods.                                 | Android, iOS
 Voice.isRecognizing()       | Return if the SpeechRecognizer is recognizing.                                      | Android, iOS
-
+Voice.getSpeechRecognitionServices() | Returns a list of the speech recognition engines available on the device. (Example: `['com.google.android.googlequicksearchbox']` if Google is the only one available.) | Android
 <h2 align="center">Events</h2>
 
 <p align="center">Callbacks that are invoked when a native event emitted.</p>
