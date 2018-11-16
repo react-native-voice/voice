@@ -142,6 +142,23 @@ While the included `VoiceTest` app works without explicit permissions checks and
 Since Android M (6.0), [user need to grant permission at runtime (and not during app installation)](https://developer.android.com/training/permissions/requesting.html).
 By default, calling the `startSpeech` method will invoke `RECORD AUDIO` permission popup to the user. This can be disabled by passing `REQUEST_PERMISSIONS_AUTO: true` in the options argument.
 
+If you're running an ejected expo/expokit app, you may run into issues with permissions on Android and get the following error `host.exp.exponent.MainActivity cannot be cast to com.facebook.react.ReactActivity
+startSpeech`. This can be resolved by prompting for permssion using the `expo-permission` package before starting recogntion. 
+```js
+import { Permissions } from "expo";
+async componentDidMount() {
+	const { status, expires, permissions } = await Permissions.askAsync(
+		Permissions.AUDIO_RECORDING
+	);
+	if (status !== "granted") {
+		//Permissions not granted. Don't show the start recording button because it will cause problems if it's pressed.
+		this.setState({showRecordButton: false});
+	} else {
+		this.setState({showRecordButton: true});
+	}
+}
+```
+
 ### iOS
 Need to include permissions for `NSMicrophoneUsageDescription` and `NSSpeechRecognitionUsageDescription` inside Info.plist for iOS. See the included `VoiceTest` for how to handle these cases.
 
