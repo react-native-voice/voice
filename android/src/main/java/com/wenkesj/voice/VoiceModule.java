@@ -146,6 +146,10 @@ public class VoiceModule extends ReactContextBaseJavaModule implements Recogniti
               permissionsGranted = permissionsGranted && granted;
             }
 
+            if (!permissionsGranted) {
+              callback.invoke(SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS + "/ERROR_INSUFFICIENT_PERMISSIONS");
+            }
+
             return permissionsGranted;
           }
         });
