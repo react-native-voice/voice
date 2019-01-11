@@ -1,5 +1,12 @@
 apply plugin: 'com.android.library'
 
+def _ext = rootProject.ext;
+
+def _compileSdkVersion = _ext.has('compileSdkVersion') ? _ext.compileSdkVersion : 25;
+def _buildToolsVersion = _ext.has('buildToolsVersion') ? _ext.buildToolsVersion : '25.0.2';
+def _minSdkVersion = _ext.has('minSdkVersion') ? _ext.minSdkVersion : 16;
+def _targetSdkVersion = _ext.has('targetSdkVersion') ? _ext.targetSdkVersion : 25;
+
 repositories {
     mavenLocal()
     jcenter()
@@ -15,12 +22,12 @@ repositories {
 }
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    compileSdkVersion _compileSdkVersion
+    buildToolsVersion _buildToolsVersion
 
     defaultConfig {
-        minSdkVersion 15
-        targetSdkVersion 23
+        minSdkVersion _minSdkVersion
+        targetSdkVersion _targetSdkVersion
         versionCode 1
         versionName "1.0"
     }
