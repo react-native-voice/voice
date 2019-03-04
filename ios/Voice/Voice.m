@@ -52,7 +52,7 @@
 - (BOOL)isHeadsetPluggedIn {
     AVAudioSessionRouteDescription* route = [[AVAudioSession sharedInstance] currentRoute];
     for (AVAudioSessionPortDescription* desc in [route outputs]) {
-        if ([[desc portType] isEqualToString:AVAudioSessionPortHeadphones])
+        if ([[desc portType] isEqualToString:AVAudioSessionPortHeadphones] || [[desc portType] isEqualToString:AVAudioSessionPortBluetoothA2DP])
             return YES;
     }
     return NO;
