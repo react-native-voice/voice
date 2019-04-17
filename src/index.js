@@ -49,7 +49,7 @@ class RCTVoice {
   start(locale, options = {}) {
     if (!this._loaded && !this._listeners && voiceEmitter !== null) {
       this._listeners = Object.keys(this._events).map(key =>
-        voiceEmitter.addListener(key, this._events[key]),
+        voiceEmitter.addListener(`${key}_${options.COMPONENT_ID}`, this._events[key]),
       );
     }
 
@@ -173,4 +173,4 @@ class RCTVoice {
   }
 }
 
-export default new RCTVoice();
+export default RCTVoice;
