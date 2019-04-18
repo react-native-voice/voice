@@ -34,7 +34,7 @@ import java.util.Locale;
 
 import javax.annotation.Nullable;
 
-public class VoiceModule extends ReactContextBaseJavaModule {
+public class VoiceModule extends ReactContextBaseJavaModule implements RecognitionListener {
 
   final ReactApplicationContext reactContext;
   private SpeechRecognizer speech = null;
@@ -54,100 +54,12 @@ public class VoiceModule extends ReactContextBaseJavaModule {
     return Locale.getDefault().toString();
   }
 
-  private RecognitionListener createRecognitionListener(final String componentId) {
-    return new RecognitionListener() {
-      @Override
-      public void onBeginningOfSpeech() {
-        WritableMap event = Arguments.createMap();
-        event.putBoolean("error", false);
-        sendEvent("onSpeechStart_" + componentId, event);
-        Log.d("ASR", "onBeginningOfSpeech()");
-      }
-
-      @Override
-      public void onBufferReceived(byte[] buffer) {
-        WritableMap event = Arguments.createMap();
-        event.putBoolean("error", false);
-        sendEvent("onSpeechRecognized_" + componentId, event);
-        Log.d("ASR", "onBufferReceived()");
-      }
-
-      @Override
-      public void onEndOfSpeech() {
-        WritableMap event = Arguments.createMap();
-        event.putBoolean("error", false);
-        sendEvent("onSpeechEnd_" + componentId, event);
-        Log.d("ASR", "onEndOfSpeech()");
-        isRecognizing = false;
-      }
-
-      @Override
-      public void onError(int errorCode) {
-        String errorMessage = String.format("%d/%s", errorCode, getErrorText(errorCode));
-        WritableMap error = Arguments.createMap();
-        error.putString("message", errorMessage);
-        WritableMap event = Arguments.createMap();
-        event.putMap("error", error);
-        sendEvent("onSpeechError_" + componentId, event);
-        Log.d("ASR", "onError() - " + errorMessage);
-      }
-
-      @Override
-      public void onEvent(int arg0, Bundle arg1) { }
-
-      @Override
-      public void onPartialResults(Bundle results) {
-        WritableArray arr = Arguments.createArray();
-
-        ArrayList<String> matches = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-        for (String result : matches) {
-          arr.pushString(result);
-        }
-
-        WritableMap event = Arguments.createMap();
-        event.putArray("value", arr);
-        sendEvent("onSpeechPartialResults_" + componentId, event);
-        Log.d("ASR", "onPartialResults()");
-      }
-
-      @Override
-      public void onReadyForSpeech(Bundle arg0) {
-        WritableMap event = Arguments.createMap();
-        event.putBoolean("error", false);
-        sendEvent("onSpeechStart_" + componentId, event);
-        Log.d("ASR", "onReadyForSpeech()");
-      }
-
-      @Override
-      public void onResults(Bundle results) {
-        WritableArray arr = Arguments.createArray();
-
-        ArrayList<String> matches = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-        for (String result : matches) {
-          arr.pushString(result);
-        }
-
-        WritableMap event = Arguments.createMap();
-        event.putArray("value", arr);
-        sendEvent("onSpeechResults_" + componentId, event);
-        Log.d("ASR", "onResults()");
-      }
-
-      @Override
-      public void onRmsChanged(float rmsdB) {
-        WritableMap event = Arguments.createMap();
-        event.putDouble("value", (double) rmsdB);
-        sendEvent("onSpeechVolumeChanged_" + componentId, event);
-      }
-    };
-  }
-
-  private void startListening(final ReadableMap opts) {
+  private void startListening(ReadableMap opts) {
     if (speech != null) {
       speech.destroy();
       speech = null;
     }
-
+    
     if(opts.hasKey("RECOGNIZER_ENGINE")) {
       switch (opts.getString("RECOGNIZER_ENGINE")) {
         case "GOOGLE": {
@@ -161,7 +73,7 @@ public class VoiceModule extends ReactContextBaseJavaModule {
       speech = SpeechRecognizer.createSpeechRecognizer(this.reactContext);
     }
 
-    speech.setRecognitionListener(createRecognitionListener(opts.getString("COMPONENT_ID")));
+    speech.setRecognitionListener(this);
 
     final Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
 
@@ -244,8 +156,8 @@ public class VoiceModule extends ReactContextBaseJavaModule {
       if (this.getCurrentActivity() != null) {
         ((PermissionAwareActivity) this.getCurrentActivity()).requestPermissions(PERMISSIONS, 1, new PermissionListener() {
           public boolean onRequestPermissionsResult(final int requestCode,
-              @NonNull final String[] permissions,
-              @NonNull final int[] grantResults) {
+                                                    @NonNull final String[] permissions,
+                                                    @NonNull final int[] grantResults) {
             boolean permissionsGranted = true;
             for (int i = 0; i < permissions.length; i++) {
               final boolean granted = grantResults[i] == PackageManager.PERMISSION_GRANTED;
@@ -361,8 +273,92 @@ public class VoiceModule extends ReactContextBaseJavaModule {
 
   private void sendEvent(String eventName, @Nullable WritableMap params) {
     this.reactContext
-        .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-        .emit(eventName, params);
+      .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+      .emit(eventName, params);
+  }
+
+  @Override
+  public void onBeginningOfSpeech() {
+    WritableMap event = Arguments.createMap();
+    event.putBoolean("error", false);
+    sendEvent("onSpeechStart", event);
+    Log.d("ASR", "onBeginningOfSpeech()");
+  }
+
+  @Override
+  public void onBufferReceived(byte[] buffer) {
+    WritableMap event = Arguments.createMap();
+    event.putBoolean("error", false);
+    sendEvent("onSpeechRecognized", event);
+    Log.d("ASR", "onBufferReceived()");
+  }
+
+  @Override
+  public void onEndOfSpeech() {
+    WritableMap event = Arguments.createMap();
+    event.putBoolean("error", false);
+    sendEvent("onSpeechEnd", event);
+    Log.d("ASR", "onEndOfSpeech()");
+    isRecognizing = false;
+  }
+
+  @Override
+  public void onError(int errorCode) {
+    String errorMessage = String.format("%d/%s", errorCode, getErrorText(errorCode));
+    WritableMap error = Arguments.createMap();
+    error.putString("message", errorMessage);
+    WritableMap event = Arguments.createMap();
+    event.putMap("error", error);
+    sendEvent("onSpeechError", event);
+    Log.d("ASR", "onError() - " + errorMessage);
+  }
+
+  @Override
+  public void onEvent(int arg0, Bundle arg1) { }
+
+  @Override
+  public void onPartialResults(Bundle results) {
+    WritableArray arr = Arguments.createArray();
+
+    ArrayList<String> matches = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+    for (String result : matches) {
+      arr.pushString(result);
+    }
+
+    WritableMap event = Arguments.createMap();
+    event.putArray("value", arr);
+    sendEvent("onSpeechPartialResults", event);
+    Log.d("ASR", "onPartialResults()");
+  }
+
+  @Override
+  public void onReadyForSpeech(Bundle arg0) {
+    WritableMap event = Arguments.createMap();
+    event.putBoolean("error", false);
+    sendEvent("onSpeechStart", event);
+    Log.d("ASR", "onReadyForSpeech()");
+  }
+
+  @Override
+  public void onResults(Bundle results) {
+    WritableArray arr = Arguments.createArray();
+
+    ArrayList<String> matches = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+    for (String result : matches) {
+      arr.pushString(result);
+    }
+
+    WritableMap event = Arguments.createMap();
+    event.putArray("value", arr);
+    sendEvent("onSpeechResults", event);
+    Log.d("ASR", "onResults()");
+  }
+
+  @Override
+  public void onRmsChanged(float rmsdB) {
+    WritableMap event = Arguments.createMap();
+    event.putDouble("value", (double) rmsdB);
+    sendEvent("onSpeechVolumeChanged", event);
   }
 
   public static String getErrorText(int errorCode) {
