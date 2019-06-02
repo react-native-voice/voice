@@ -3,6 +3,7 @@
   "description": "React Native Native Voice library for iOS and Android",
   "version": "0.2.6",
   "author": "Sam Wenke <samwenke@gmail.com>",
+  "homepage": "https://github.com/wenkesj/react-native-voice",
   "devDependencies": {
     "eslint": "^5.3.0",
     "eslint-plugin-flowtype": "^2.50.0",
