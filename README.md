@@ -20,7 +20,7 @@ npm i react-native-voice --save
   * [Permissions](#permissions)
     * [Android](#android)
     * [iOS](#ios)
-  * [Contibutors](#contibutors)
+  * [Contributors](#contributors)
 
 <h2 align="center">Linking</h2>
 
@@ -143,7 +143,7 @@ Since Android M (6.0), [user need to grant permission at runtime (and not during
 By default, calling the `startSpeech` method will invoke `RECORD AUDIO` permission popup to the user. This can be disabled by passing `REQUEST_PERMISSIONS_AUTO: true` in the options argument.
 
 If you're running an ejected expo/expokit app, you may run into issues with permissions on Android and get the following error `host.exp.exponent.MainActivity cannot be cast to com.facebook.react.ReactActivity
-startSpeech`. This can be resolved by prompting for permssion using the `expo-permission` package before starting recogntion. 
+startSpeech`. This can be resolved by prompting for permssion using the `expo-permission` package before starting recognition. 
 ```js
 import { Permissions } from "expo";
 async componentDidMount() {
@@ -181,7 +181,7 @@ Please see the documentation provided by ReactNative for this: [PermissionsAndro
 [deps]: https://david-dm.org/wenkesj/react-native-voice.svg
 [deps-url]: https://david-dm.org/wenkesj/react-native-voice.svg
 
-<h2 align="center">Contibutors</h2>
+<h2 align="center">Contributors</h2>
 
   * @asafron
   * @BrendanFDMoore
