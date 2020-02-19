@@ -6,7 +6,7 @@
 <p align="center">A speech-to-text library for <a href="https://facebook.github.io/react-native/">React Native.</a></p>
 
 ```sh
-npm i react-native-voice --save
+npm i @react-native-community/voice --save
 ```
 
 ## Table of contents
@@ -27,7 +27,7 @@ npm i react-native-voice --save
 <p align="center">Manually or automatically link the NativeModule</p>
 
 ```sh
-react-native link react-native-voice
+react-native link @react-native-community/voice
 ```
 
 ### Manually Link Android
@@ -35,8 +35,8 @@ react-native link react-native-voice
 
 ```gradle
 ...
-include ':react-native-voice', ':app'
-project(':react-native-voice').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-voice/android')
+include ':@react-native-community_voice', ':app'
+project(':@react-native-community_voice').projectDir = new File(rootProject.projectDir, '../node_modules/voice/android')
 ```
 
 - In `android/app/build.gradle`
@@ -45,7 +45,7 @@ project(':react-native-voice').projectDir = new File(rootProject.projectDir, '..
 ...
 dependencies {
     ...
-    compile project(':react-native-voice')
+    compile project(':@react-native-community_voice')
 }
 ```
 
@@ -74,19 +74,19 @@ public class MainActivity extends Activity implements ReactApplication {
 
 ### Manually Link iOS
 
-- Drag the Voice.xcodeproj from the react-native-voice/ios folder to the Libraries group on Xcode in your poject. [Manual linking](https://facebook.github.io/react-native/docs/linking-libraries-ios.html)
+- Drag the Voice.xcodeproj from the @react-native-community/voice/ios folder to the Libraries group on Xcode in your poject. [Manual linking](https://facebook.github.io/react-native/docs/linking-libraries-ios.html)
 
 - Click on your main project file (the one that represents the .xcodeproj) select Build Phases and drag the static library, lib.Voice.a, from the Libraries/Voice.xcodeproj/Products folder to Link Binary With Libraries
 
 
 <h2 align="center">Usage</h2>
 
-<p align="center"><a href="https://github.com/wenkesj/react-native-voice/tree/master/VoiceTest">Full example for Android and iOS.</a></p>
+<p align="center"><a href="https://github.com/react-native-community/voice/tree/master/VoiceTest">Full example for Android and iOS.</a></p>
 
 ### Example
 
 ```javascript
-import Voice from 'react-native-voice';
+import Voice from '@react-native-community/voice';
 import React, {Component} from 'react';
 
 class VoiceTest extends Component {
