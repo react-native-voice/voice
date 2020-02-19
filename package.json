@@ -1,21 +1,17 @@
 {
-  "name": "react-native-voice",
+  "name": "@react-native-community/voice",
   "description": "React Native Native Voice library for iOS and Android",
   "version": "0.3.0",
   "author": "Sam Wenke <samwenke@gmail.com>",
-  "homepage": "https://github.com/react-native-community/react-native-voice",
+  "homepage": "https://github.com/react-native-community/voice",
   "devDependencies": {
-    "eslint": "^5.3.0",
-    "eslint-plugin-flowtype": "^2.50.0",
-    "eslint-plugin-import": "^2.13.0",
-    "eslint-plugin-react": "^7.10.0",
-    "eslint-plugin-react-native": "^3.2.1",
-    "pre-commit": "^1.2.2",
-    "prettier": "^1.12.0",
+    "@react-native-community/eslint-config": "^0.0.7",
+    "@semantic-release/git": "^9.0.0",
+    "eslint": "^6.8.0",
     "lint-staged": "^7.2.0",
-    "babel-eslint": "^8.2.6",
     "react": "16.4.2",
-    "react-native": "^0.56.0"
+    "react-native": "^0.56.0",
+    "semantic-release": "^17.0.4"
   },
   "keywords": [
     "android",
@@ -25,25 +21,19 @@
     "voice"
   ],
   "license": "MIT",
-  "lint-staged": {
-    "*.js": [
-      "yarn prettier",
-      "eslint --fix",
-      "git add"
-    ]
-  },
   "main": "src/index.js",
   "peerDependencies": {
     "react-native": ">=0.40.0"
   },
-  "pre-commit": "lint:staged",
   "repository": {
     "type": "git",
-    "url": "git://github.com/react-native-community/react-native-voice.git"
+    "url": "git://github.com/react-native-community/voice.git"
   },
   "scripts": {
-    "lint": "eslint src --max-warnings=0",
-    "lint:staged": "lint-staged",
-    "prettier": "prettier --write --single-quote true --trailing-comma all --print-width 100"
+    "lint": "eslint src/*",
+    "semantic-release": "semantic-release"
+  },
+  "dependencies": {
+    "invariant": "^2.2.4"
   }
 }
