@@ -6,7 +6,7 @@
 <p align="center">A speech-to-text library for <a href="https://facebook.github.io/react-native/">React Native.</a></p>
 
 ```sh
-npm i react-native-voice --save
+npm i @react-native-community/voice --save
 ```
 
 ## Table of contents
@@ -20,14 +20,14 @@ npm i react-native-voice --save
   * [Permissions](#permissions)
     * [Android](#android)
     * [iOS](#ios)
-  * [Contibutors](#contibutors)
+  * [Contributors](#contributors)
 
 <h2 align="center">Linking</h2>
 
 <p align="center">Manually or automatically link the NativeModule</p>
 
 ```sh
-react-native link react-native-voice
+react-native link @react-native-community/voice
 ```
 
 ### Manually Link Android
@@ -35,8 +35,8 @@ react-native link react-native-voice
 
 ```gradle
 ...
-include ':react-native-voice', ':app'
-project(':react-native-voice').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-voice/android')
+include ':@react-native-community_voice', ':app'
+project(':@react-native-community_voice').projectDir = new File(rootProject.projectDir, '../node_modules/voice/android')
 ```
 
 - In `android/app/build.gradle`
@@ -45,7 +45,7 @@ project(':react-native-voice').projectDir = new File(rootProject.projectDir, '..
 ...
 dependencies {
     ...
-    compile project(':react-native-voice')
+    compile project(':@react-native-community_voice')
 }
 ```
 
@@ -74,19 +74,19 @@ public class MainActivity extends Activity implements ReactApplication {
 
 ### Manually Link iOS
 
-- Drag the Voice.xcodeproj from the react-native-voice/ios folder to the Libraries group on Xcode in your poject. [Manual linking](https://facebook.github.io/react-native/docs/linking-libraries-ios.html)
+- Drag the Voice.xcodeproj from the @react-native-community/voice/ios folder to the Libraries group on Xcode in your poject. [Manual linking](https://facebook.github.io/react-native/docs/linking-libraries-ios.html)
 
 - Click on your main project file (the one that represents the .xcodeproj) select Build Phases and drag the static library, lib.Voice.a, from the Libraries/Voice.xcodeproj/Products folder to Link Binary With Libraries
 
 
 <h2 align="center">Usage</h2>
 
-<p align="center"><a href="https://github.com/wenkesj/react-native-voice/tree/master/VoiceTest">Full example for Android and iOS.</a></p>
+<p align="center"><a href="https://github.com/react-native-community/voice/tree/master/VoiceTest">Full example for Android and iOS.</a></p>
 
 ### Example
 
 ```javascript
-import Voice from 'react-native-voice';
+import Voice from '@react-native-community/voice';
 import React, {Component} from 'react';
 
 class VoiceTest extends Component {
@@ -143,7 +143,7 @@ Since Android M (6.0), [user need to grant permission at runtime (and not during
 By default, calling the `startSpeech` method will invoke `RECORD AUDIO` permission popup to the user. This can be disabled by passing `REQUEST_PERMISSIONS_AUTO: true` in the options argument.
 
 If you're running an ejected expo/expokit app, you may run into issues with permissions on Android and get the following error `host.exp.exponent.MainActivity cannot be cast to com.facebook.react.ReactActivity
-startSpeech`. This can be resolved by prompting for permssion using the `expo-permission` package before starting recogntion. 
+startSpeech`. This can be resolved by prompting for permssion using the `expo-permission` package before starting recognition. 
 ```js
 import { Permissions } from "expo";
 async componentDidMount() {
@@ -181,7 +181,7 @@ Please see the documentation provided by ReactNative for this: [PermissionsAndro
 [deps]: https://david-dm.org/wenkesj/react-native-voice.svg
 [deps-url]: https://david-dm.org/wenkesj/react-native-voice.svg
 
-<h2 align="center">Contibutors</h2>
+<h2 align="center">Contributors</h2>
 
   * @asafron
   * @BrendanFDMoore
