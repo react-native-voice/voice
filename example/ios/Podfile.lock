@@ -182,7 +182,7 @@ PODS:
     - React-cxxreact (= 0.61.5)
     - React-jsi (= 0.61.5)
   - React-jsinspector (0.61.5)
-  - react-native-voice (0.3.0):
+  - react-native-voice (1.0.5):
     - React
   - React-RCTActionSheet (0.61.5):
     - React-Core/RCTActionSheetHeaders (= 0.61.5)
@@ -326,7 +326,7 @@ SPEC CHECKSUMS:
   React-jsi: cb2cd74d7ccf4cffb071a46833613edc79cdf8f7
   React-jsiexecutor: d5525f9ed5f782fdbacb64b9b01a43a9323d2386
   React-jsinspector: fa0ecc501688c3c4c34f28834a76302233e29dc0
-  react-native-voice: c151434a8f738086c25c6da85f6527e5d16ebf67
+  react-native-voice: 9653d14e858753c854ffe14a9845bfde9a800e04
   React-RCTActionSheet: 600b4d10e3aea0913b5a92256d2719c0cdd26d76
   React-RCTAnimation: 791a87558389c80908ed06cc5dfc5e7920dfa360
   React-RCTBlob: d89293cc0236d9cb0933d85e430b0bbe81ad1d72
@@ -341,4 +341,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: cd466dcd295cd40a39b2ef83e3665da96b23fff6
 
-COCOAPODS: 1.8.3
+COCOAPODS: 1.8.4
