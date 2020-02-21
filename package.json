@@ -31,7 +31,10 @@
   },
   "scripts": {
     "lint": "eslint src/*",
-    "semantic-release": "semantic-release"
+    "semantic-release": "semantic-release",
+    "start": "yarn --cwd example start",
+    "ios":"yarn --cwd example ios",
+    "android":"yarn --cwd example android"
   },
   "dependencies": {
     "invariant": "^2.2.4"
