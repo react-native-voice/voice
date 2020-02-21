@@ -1,9 +1,11 @@
 import { NativeModules, NativeEventEmitter, Platform } from 'react-native';
+import invariant from 'invariant';
 
 const { Voice } = NativeModules;
 
 // NativeEventEmitter is only availabe on React Native platforms, so this conditional is used to avoid import conflicts in the browser/server
-const voiceEmitter = Platform.OS !== 'web' ? new NativeEventEmitter(Voice) : null;
+const voiceEmitter =
+  Platform.OS !== 'web' ? new NativeEventEmitter(Voice) : null;
 
 class RCTVoice {
   constructor() {
@@ -125,7 +127,10 @@ class RCTVoice {
    * */
   getSpeechRecognitionServices() {
     if (Platform.OS !== 'android') {
-      throw new Exception('Speech recognition services can be queried for only on Android');
+      invariant(
+        Voice,
+        'Speech recognition services can be queried for only on Android',
+      );
     }
 
     return Voice.getSpeechRecognitionServices();
