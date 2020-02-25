@@ -1,7 +1,7 @@
 {
   "name": "@react-native-community/voice",
   "description": "React Native Native Voice library for iOS and Android",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "author": "Sam Wenke <samwenke@gmail.com>",
   "homepage": "https://github.com/react-native-community/voice",
   "devDependencies": {
@@ -31,7 +31,10 @@
   },
   "scripts": {
     "lint": "eslint src/*",
-    "semantic-release": "semantic-release"
+    "semantic-release": "semantic-release",
+    "start": "yarn --cwd example start",
+    "ios":"yarn --cwd example ios",
+    "android":"yarn --cwd example android"
   },
   "dependencies": {
     "invariant": "^2.2.4"
