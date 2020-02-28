@@ -38,7 +38,7 @@ react-native link @react-native-community/voice
 ```gradle
 ...
 include ':@react-native-community_voice', ':app'
-project(':@react-native-community_voice').projectDir = new File(rootProject.projectDir, '../node_modules/voice/android')
+project(':@react-native-community_voice').projectDir = new File(rootProject.projectDir, '../node_modules/@react-native-community/voice/android')
 ```
 
 - In `android/app/build.gradle`
