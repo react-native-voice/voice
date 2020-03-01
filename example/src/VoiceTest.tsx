@@ -5,10 +5,13 @@ import {
   View,
   Image,
   TouchableHighlight,
-  Button,
 } from 'react-native';
 
-import Voice from '@react-native-community/voice';
+import Voice, {
+  SpeechRecognizedEvent,
+  SpeechResultsEvent,
+  SpeechErrorEvent,
+} from '@react-native-community/voice';
 
 type Props = {};
 type State = {
@@ -54,7 +57,7 @@ class VoiceTest extends Component<Props, State> {
     });
   };
 
-  onSpeechRecognized = (e: any) => {
+  onSpeechRecognized = (e: SpeechRecognizedEvent) => {
     console.log('onSpeechRecognized: ', e);
     this.setState({
       recognized: '√',
@@ -68,21 +71,21 @@ class VoiceTest extends Component<Props, State> {
     });
   };
 
-  onSpeechError = (e: any) => {
+  onSpeechError = (e: SpeechErrorEvent) => {
     console.log('onSpeechError: ', e);
     this.setState({
       error: JSON.stringify(e.error),
     });
   };
 
-  onSpeechResults = (e: any) => {
+  onSpeechResults = (e: SpeechResultsEvent) => {
     console.log('onSpeechResults: ', e);
     this.setState({
       results: e.value,
     });
   };
 
-  onSpeechPartialResults = (e: any) => {
+  onSpeechPartialResults = (e: SpeechResultsEvent) => {
     console.log('onSpeechPartialResults: ', e);
     this.setState({
       partialResults: e.value,
@@ -189,12 +192,6 @@ class VoiceTest extends Component<Props, State> {
         <TouchableHighlight onPress={this._destroyRecognizer}>
           <Text style={styles.action}>Destroy</Text>
         </TouchableHighlight>
-        <Button
-          title="test"
-          onPress={async () => {
-            console.log(await Voice.isRecognizing());
-          }}
-        />
       </View>
     );
   }
