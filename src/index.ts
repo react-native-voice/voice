@@ -6,6 +6,9 @@ import {
   SpeechRecognizedEvent,
   SpeechErrorEvent,
   SpeechResultsEvent,
+  SpeechStartEvent,
+  SpeechEndEvent,
+  SpeechVolumeChangeEvent,
 } from './VoiceModuleTypes';
 
 const Voice = NativeModules.Voice as VoiceModule;
@@ -157,7 +160,7 @@ class RCTVoice {
       Voice.isRecognizing((isRecognizing: 0 | 1) => resolve(isRecognizing));
     });
   }
-  onSpeechStart(e: any) {
+  onSpeechStart(e: SpeechStartEvent) {
     if (this.onSpeechStart) {
       this.onSpeechStart(e);
     }
@@ -167,7 +170,7 @@ class RCTVoice {
       this.onSpeechRecognized(e);
     }
   }
-  onSpeechEnd(e: any) {
+  onSpeechEnd(e: SpeechEndEvent) {
     if (this.onSpeechEnd) {
       this.onSpeechEnd(e);
     }
@@ -187,7 +190,7 @@ class RCTVoice {
       this.onSpeechPartialResults(e);
     }
   }
-  onSpeechVolumeChanged(e: any) {
+  onSpeechVolumeChanged(e: SpeechVolumeChangeEvent) {
     if (this.onSpeechVolumeChanged) {
       this.onSpeechVolumeChanged(e);
     }
@@ -195,9 +198,12 @@ class RCTVoice {
 }
 
 export {
+  SpeechEndEvent,
+  SpeechErrorEvent,
   SpeechEvents,
+  SpeechStartEvent,
   SpeechRecognizedEvent,
   SpeechResultsEvent,
-  SpeechErrorEvent,
+  SpeechVolumeChangeEvent,
 };
 export default new RCTVoice();

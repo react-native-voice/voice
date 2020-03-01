@@ -3,7 +3,11 @@ import { EventSubscriptionVendor } from 'react-native';
 type Callback = (error: string) => void;
 
 export type VoiceModule = {
-  getSpeechRecognitionServices: () => any[] | void;
+  /**
+   * Gets list of SpeechRecognitionServices used.
+   * @platform android
+   */
+  getSpeechRecognitionServices: () => Promise<string[]> | void;
   destroySpeech: (callback: Callback) => void;
   startSpeech: Function;
   stopSpeech: (callback: Callback) => void;
@@ -14,13 +18,17 @@ export type VoiceModule = {
   EventSubscriptionVendor;
 
 export type SpeechEvents = {
-  onSpeechStart?: (e: any) => void;
+  onSpeechStart?: (e: SpeechStartEvent) => void;
   onSpeechRecognized?: (e: SpeechRecognizedEvent) => void;
-  onSpeechEnd?: (e: any) => void;
+  onSpeechEnd?: (e: SpeechEndEvent) => void;
   onSpeechError?: (e: SpeechErrorEvent) => void;
   onSpeechResults?: (e: SpeechResultsEvent) => void;
   onSpeechPartialResults?: (e: SpeechResultsEvent) => void;
-  onSpeechVolumeChanged?: (e: any) => void;
+  onSpeechVolumeChanged?: (e: SpeechVolumeChangeEvent) => void;
+};
+
+export type SpeechStartEvent = {
+  error?: boolean;
 };
 
 export type SpeechRecognizedEvent = {
@@ -36,4 +44,12 @@ export type SpeechErrorEvent = {
     code?: 'string';
     message?: string;
   };
+};
+
+export type SpeechEndEvent = {
+  error?: boolean;
+};
+
+export type SpeechVolumeChangeEvent = {
+  value?: number;
 };
