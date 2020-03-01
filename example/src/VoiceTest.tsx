@@ -1,10 +1,27 @@
-// @flow
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Image, TouchableHighlight } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableHighlight,
+  Button,
+} from 'react-native';
 
-import Voice from 'react-native-voice';
+import Voice from '@react-native-community/voice';
 
-class VoiceTest extends Component {
+type Props = {};
+type State = {
+  recognized: string;
+  pitch: string;
+  error: string;
+  end: string;
+  started: string;
+  results: string[];
+  partialResults: string[];
+};
+
+class VoiceTest extends Component<Props, State> {
   state = {
     recognized: '',
     pitch: '',
@@ -15,7 +32,7 @@ class VoiceTest extends Component {
     partialResults: [],
   };
 
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
     Voice.onSpeechStart = this.onSpeechStart;
     Voice.onSpeechRecognized = this.onSpeechRecognized;
@@ -30,56 +47,49 @@ class VoiceTest extends Component {
     Voice.destroy().then(Voice.removeAllListeners);
   }
 
-  onSpeechStart = e => {
-    // eslint-disable-next-line
+  onSpeechStart = (e: any) => {
     console.log('onSpeechStart: ', e);
     this.setState({
       started: '√',
     });
   };
 
-  onSpeechRecognized = e => {
-    // eslint-disable-next-line
+  onSpeechRecognized = (e: any) => {
     console.log('onSpeechRecognized: ', e);
     this.setState({
       recognized: '√',
     });
   };
 
-  onSpeechEnd = e => {
-    // eslint-disable-next-line
+  onSpeechEnd = (e: any) => {
     console.log('onSpeechEnd: ', e);
     this.setState({
       end: '√',
     });
   };
 
-  onSpeechError = e => {
-    // eslint-disable-next-line
+  onSpeechError = (e: any) => {
     console.log('onSpeechError: ', e);
     this.setState({
       error: JSON.stringify(e.error),
     });
   };
 
-  onSpeechResults = e => {
-    // eslint-disable-next-line
+  onSpeechResults = (e: any) => {
     console.log('onSpeechResults: ', e);
     this.setState({
       results: e.value,
     });
   };
 
-  onSpeechPartialResults = e => {
-    // eslint-disable-next-line
+  onSpeechPartialResults = (e: any) => {
     console.log('onSpeechPartialResults: ', e);
     this.setState({
       partialResults: e.value,
     });
   };
 
-  onSpeechVolumeChanged = e => {
-    // eslint-disable-next-line
+  onSpeechVolumeChanged = (e: any) => {
     console.log('onSpeechVolumeChanged: ', e);
     this.setState({
       pitch: e.value,
@@ -100,7 +110,6 @@ class VoiceTest extends Component {
     try {
       await Voice.start('en-US');
     } catch (e) {
-      //eslint-disable-next-line
       console.error(e);
     }
   };
@@ -109,7 +118,6 @@ class VoiceTest extends Component {
     try {
       await Voice.stop();
     } catch (e) {
-      //eslint-disable-next-line
       console.error(e);
     }
   };
@@ -118,7 +126,6 @@ class VoiceTest extends Component {
     try {
       await Voice.cancel();
     } catch (e) {
-      //eslint-disable-next-line
       console.error(e);
     }
   };
@@ -127,7 +134,6 @@ class VoiceTest extends Component {
     try {
       await Voice.destroy();
     } catch (e) {
-      //eslint-disable-next-line
       console.error(e);
     }
     this.setState({
@@ -145,9 +151,13 @@ class VoiceTest extends Component {
     return (
       <View style={styles.container}>
         <Text style={styles.welcome}>Welcome to React Native Voice!</Text>
-        <Text style={styles.instructions}>Press the button and start speaking.</Text>
+        <Text style={styles.instructions}>
+          Press the button and start speaking.
+        </Text>
         <Text style={styles.stat}>{`Started: ${this.state.started}`}</Text>
-        <Text style={styles.stat}>{`Recognized: ${this.state.recognized}`}</Text>
+        <Text style={styles.stat}>{`Recognized: ${
+          this.state.recognized
+        }`}</Text>
         <Text style={styles.stat}>{`Pitch: ${this.state.pitch}`}</Text>
         <Text style={styles.stat}>{`Error: ${this.state.error}`}</Text>
         <Text style={styles.stat}>Results</Text>
@@ -179,6 +189,12 @@ class VoiceTest extends Component {
         <TouchableHighlight onPress={this._destroyRecognizer}>
           <Text style={styles.action}>Destroy</Text>
         </TouchableHighlight>
+        <Button
+          title="test"
+          onPress={async () => {
+            console.log(await Voice.isRecognizing());
+          }}
+        />
       </View>
     );
   }
