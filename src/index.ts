@@ -1,6 +1,12 @@
 import { NativeModules, NativeEventEmitter, Platform } from 'react-native';
 import invariant from 'invariant';
-import { VoiceModule, SpeechEvents } from './VoiceModuleTypes';
+import {
+  VoiceModule,
+  SpeechEvents,
+  SpeechRecognizedEvent,
+  SpeechErrorEvent,
+  SpeechResultsEvent,
+} from './VoiceModuleTypes';
 
 const Voice = NativeModules.Voice as VoiceModule;
 
@@ -119,9 +125,9 @@ class RCTVoice {
       });
     });
   }
-  isAvailable() {
+  isAvailable(): Promise<0 | 1> {
     return new Promise((resolve, reject) => {
-      Voice.isSpeechAvailable((isAvailable: boolean, error: string) => {
+      Voice.isSpeechAvailable((isAvailable: 0 | 1, error: string) => {
         if (error) {
           reject(new Error(error));
         } else {
@@ -140,14 +146,15 @@ class RCTVoice {
         Voice,
         'Speech recognition services can be queried for only on Android',
       );
+      return;
     }
 
     return Voice.getSpeechRecognitionServices();
   }
 
-  isRecognizing() {
+  isRecognizing(): Promise<0 | 1> {
     return new Promise(resolve => {
-      Voice.isRecognizing((isRecognizing: boolean) => resolve(isRecognizing));
+      Voice.isRecognizing((isRecognizing: 0 | 1) => resolve(isRecognizing));
     });
   }
   onSpeechStart(e: any) {
@@ -155,7 +162,7 @@ class RCTVoice {
       this.onSpeechStart(e);
     }
   }
-  onSpeechRecognized(e: any) {
+  onSpeechRecognized(e: SpeechRecognizedEvent) {
     if (this.onSpeechRecognized) {
       this.onSpeechRecognized(e);
     }
@@ -165,17 +172,17 @@ class RCTVoice {
       this.onSpeechEnd(e);
     }
   }
-  onSpeechError(e: any) {
+  onSpeechError(e: SpeechErrorEvent) {
     if (this.onSpeechError) {
       this.onSpeechError(e);
     }
   }
-  onSpeechResults(e: any) {
+  onSpeechResults(e: SpeechResultsEvent) {
     if (this.onSpeechResults) {
       this.onSpeechResults(e);
     }
   }
-  onSpeechPartialResults(e: any) {
+  onSpeechPartialResults(e: SpeechResultsEvent) {
     if (this.onSpeechPartialResults) {
       this.onSpeechPartialResults(e);
     }
@@ -187,4 +194,10 @@ class RCTVoice {
   }
 }
 
+export {
+  SpeechEvents,
+  SpeechRecognizedEvent,
+  SpeechResultsEvent,
+  SpeechErrorEvent,
+};
 export default new RCTVoice();

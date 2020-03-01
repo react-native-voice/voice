@@ -15,10 +15,25 @@ export type VoiceModule = {
 
 export type SpeechEvents = {
   onSpeechStart?: (e: any) => void;
-  onSpeechRecognized?: (e: any) => void;
+  onSpeechRecognized?: (e: SpeechRecognizedEvent) => void;
   onSpeechEnd?: (e: any) => void;
-  onSpeechError?: (e: any) => void;
-  onSpeechResults?: (e: any) => void;
-  onSpeechPartialResults?: (e: any) => void;
+  onSpeechError?: (e: SpeechErrorEvent) => void;
+  onSpeechResults?: (e: SpeechResultsEvent) => void;
+  onSpeechPartialResults?: (e: SpeechResultsEvent) => void;
   onSpeechVolumeChanged?: (e: any) => void;
+};
+
+export type SpeechRecognizedEvent = {
+  isFinal?: boolean;
+};
+
+export type SpeechResultsEvent = {
+  value?: string[];
+};
+
+export type SpeechErrorEvent = {
+  error?: {
+    code?: 'string';
+    message?: string;
+  };
 };
