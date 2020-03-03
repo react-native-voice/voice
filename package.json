@@ -40,7 +40,9 @@
     "ios": "yarn --cwd example ios",
     "android": "yarn --cwd example android",
     "prepare":"yarn build",
-    "build":"tsc"
+    "build":"tsc",
+    "type-check":"tsc -noEmit",
+    "dev-sync":"cp -r ./dist example/node_modules/@react-native-community/voice"
   },
   "dependencies": {
     "invariant": "^2.2.4"
