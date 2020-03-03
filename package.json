@@ -1,7 +1,7 @@
 {
   "name": "@react-native-community/voice",
   "description": "React Native Native Voice library for iOS and Android",
-  "version": "1.0.6",
+  "version": "1.1.0",
   "author": "Sam Wenke <samwenke@gmail.com>",
   "homepage": "https://github.com/react-native-community/voice",
   "devDependencies": {
@@ -25,7 +25,7 @@
   ],
   "license": "MIT",
   "main": "dist/index.js",
-  "types":"dist/index.d.ts",
+  "types": "dist/index.d.ts",
   "peerDependencies": {
     "react-native": ">=0.40.0"
   },
@@ -39,10 +39,10 @@
     "start": "yarn --cwd example start",
     "ios": "yarn --cwd example ios",
     "android": "yarn --cwd example android",
-    "prepare":"yarn build",
-    "build":"tsc",
-    "type-check":"tsc -noEmit",
-    "dev-sync":"cp -r ./dist example/node_modules/@react-native-community/voice"
+    "prepare": "yarn build",
+    "build": "tsc",
+    "type-check": "tsc -noEmit",
+    "dev-sync": "cp -r ./dist example/node_modules/@react-native-community/voice"
   },
   "dependencies": {
     "invariant": "^2.2.4"
