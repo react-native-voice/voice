@@ -1,5 +1,5 @@
+![CircleCI branch][circle-ci-badge]
 [![npm][npm]][npm-url]
-[![deps][deps]][deps-url]
 
 <h1 align="center">React Native Voice</h1>
 
@@ -178,10 +178,9 @@ Need to include permissions for `NSMicrophoneUsageDescription` and `NSSpeechReco
 
 Please see the documentation provided by ReactNative for this: [PermissionsAndroid](https://reactnative.dev/docs/permissionsandroid.html)
 
-[npm]: https://img.shields.io/npm/v/react-native-voice.svg
-[npm-url]: https://npmjs.com/package/react-native-voice
-[deps]: https://david-dm.org/wenkesj/react-native-voice.svg
-[deps-url]: https://david-dm.org/wenkesj/react-native-voice.svg
+[npm]: https://img.shields.io/npm/v/@react-native-community/voice.svg?style=flat-square
+[npm-url]: https://npmjs.com/package/@react-native-community/voice
+[circle-ci-badge]: https://img.shields.io/circleci/project/github/react-native-community/voice/master.svg?style=flat-square
 
 <h2 align="center">Contributors</h2>
 
