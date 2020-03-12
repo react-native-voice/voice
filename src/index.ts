@@ -1,41 +1,58 @@
 import { NativeModules, NativeEventEmitter, Platform } from 'react-native';
 import invariant from 'invariant';
+import {
+  VoiceModule,
+  SpeechEvents,
+  SpeechRecognizedEvent,
+  SpeechErrorEvent,
+  SpeechResultsEvent,
+  SpeechStartEvent,
+  SpeechEndEvent,
+  SpeechVolumeChangeEvent,
+} from './VoiceModuleTypes';
 
-const { Voice } = NativeModules;
+const Voice = NativeModules.Voice as VoiceModule;
 
 // NativeEventEmitter is only availabe on React Native platforms, so this conditional is used to avoid import conflicts in the browser/server
 const voiceEmitter =
   Platform.OS !== 'web' ? new NativeEventEmitter(Voice) : null;
+type SpeechEvent = keyof SpeechEvents;
 
 class RCTVoice {
+  _loaded: boolean;
+  _listeners: any[] | null;
+  _events: Required<SpeechEvents>;
+
   constructor() {
     this._loaded = false;
     this._listeners = null;
     this._events = {
-      onSpeechStart: this._onSpeechStart.bind(this),
-      onSpeechRecognized: this._onSpeechRecognized.bind(this),
-      onSpeechEnd: this._onSpeechEnd.bind(this),
-      onSpeechError: this._onSpeechError.bind(this),
-      onSpeechResults: this._onSpeechResults.bind(this),
-      onSpeechPartialResults: this._onSpeechPartialResults.bind(this),
-      onSpeechVolumeChanged: this._onSpeechVolumeChanged.bind(this),
+      onSpeechStart: this.onSpeechStart.bind(this),
+      onSpeechRecognized: this.onSpeechRecognized.bind(this),
+      onSpeechEnd: this.onSpeechEnd.bind(this),
+      onSpeechError: this.onSpeechError.bind(this),
+      onSpeechResults: this.onSpeechResults.bind(this),
+      onSpeechPartialResults: this.onSpeechPartialResults.bind(this),
+      onSpeechVolumeChanged: this.onSpeechVolumeChanged.bind(this),
     };
   }
+
   removeAllListeners() {
-    Voice.onSpeechStart = null;
-    Voice.onSpeechRecognized = null;
-    Voice.onSpeechEnd = null;
-    Voice.onSpeechError = null;
-    Voice.onSpeechResults = null;
-    Voice.onSpeechPartialResults = null;
-    Voice.onSpeechVolumeChanged = null;
+    Voice.onSpeechStart = undefined;
+    Voice.onSpeechRecognized = undefined;
+    Voice.onSpeechEnd = undefined;
+    Voice.onSpeechError = undefined;
+    Voice.onSpeechResults = undefined;
+    Voice.onSpeechPartialResults = undefined;
+    Voice.onSpeechVolumeChanged = undefined;
   }
+
   destroy() {
     if (!this._loaded && !this._listeners) {
       return Promise.resolve();
     }
     return new Promise((resolve, reject) => {
-      Voice.destroySpeech(error => {
+      Voice.destroySpeech((error: string) => {
         if (error) {
           reject(new Error(error));
         } else {
@@ -48,15 +65,16 @@ class RCTVoice {
       });
     });
   }
-  start(locale, options = {}) {
+
+  start(locale: any, options = {}) {
     if (!this._loaded && !this._listeners && voiceEmitter !== null) {
-      this._listeners = Object.keys(this._events).map(key =>
-        voiceEmitter.addListener(key, this._events[key]),
+      this._listeners = (Object.keys(this._events) as SpeechEvent[]).map(
+        (key: SpeechEvent) => voiceEmitter.addListener(key, this._events[key]),
       );
     }
 
     return new Promise((resolve, reject) => {
-      const callback = error => {
+      const callback = (error: string) => {
         if (error) {
           reject(new Error(error));
         } else {
@@ -110,9 +128,9 @@ class RCTVoice {
       });
     });
   }
-  isAvailable() {
+  isAvailable(): Promise<0 | 1> {
     return new Promise((resolve, reject) => {
-      Voice.isSpeechAvailable((isAvailable, error) => {
+      Voice.isSpeechAvailable((isAvailable: 0 | 1, error: string) => {
         if (error) {
           reject(new Error(error));
         } else {
@@ -131,51 +149,61 @@ class RCTVoice {
         Voice,
         'Speech recognition services can be queried for only on Android',
       );
+      return;
     }
 
     return Voice.getSpeechRecognitionServices();
   }
 
-  isRecognizing() {
+  isRecognizing(): Promise<0 | 1> {
     return new Promise(resolve => {
-      Voice.isRecognizing(isRecognizing => resolve(isRecognizing));
+      Voice.isRecognizing((isRecognizing: 0 | 1) => resolve(isRecognizing));
     });
   }
-  _onSpeechStart(e) {
+  onSpeechStart(e: SpeechStartEvent) {
     if (this.onSpeechStart) {
       this.onSpeechStart(e);
     }
   }
-  _onSpeechRecognized(e) {
+  onSpeechRecognized(e: SpeechRecognizedEvent) {
     if (this.onSpeechRecognized) {
       this.onSpeechRecognized(e);
     }
   }
-  _onSpeechEnd(e) {
+  onSpeechEnd(e: SpeechEndEvent) {
     if (this.onSpeechEnd) {
       this.onSpeechEnd(e);
     }
   }
-  _onSpeechError(e) {
+  onSpeechError(e: SpeechErrorEvent) {
     if (this.onSpeechError) {
       this.onSpeechError(e);
     }
   }
-  _onSpeechResults(e) {
+  onSpeechResults(e: SpeechResultsEvent) {
     if (this.onSpeechResults) {
       this.onSpeechResults(e);
     }
   }
-  _onSpeechPartialResults(e) {
+  onSpeechPartialResults(e: SpeechResultsEvent) {
     if (this.onSpeechPartialResults) {
       this.onSpeechPartialResults(e);
     }
   }
-  _onSpeechVolumeChanged(e) {
+  onSpeechVolumeChanged(e: SpeechVolumeChangeEvent) {
     if (this.onSpeechVolumeChanged) {
       this.onSpeechVolumeChanged(e);
     }
   }
 }
 
+export {
+  SpeechEndEvent,
+  SpeechErrorEvent,
+  SpeechEvents,
+  SpeechStartEvent,
+  SpeechRecognizedEvent,
+  SpeechResultsEvent,
+  SpeechVolumeChangeEvent,
+};
 export default new RCTVoice();

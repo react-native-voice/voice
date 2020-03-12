@@ -21,6 +21,17 @@ jobs:
           name: Run ESLint
           command: yarn lint
 
+  type_check:
+    executor: rn/linux_js
+    steps:
+      - attach_workspace:
+          at: .
+      - rn/yarn_install
+      - run:
+          name: Check for Typings
+          command: yarn type-check
+
+
   release:
     executor: rn/linux_js
     steps:
@@ -38,9 +49,13 @@ workflows:
     - analyse_js:
         requires:
         - checkout_code
+    - type_check:
+        requires:
+        - checkout_code
     - release:
         requires:
         - analyse_js
+        - type_check
         filters:
             branches:
               only: master
