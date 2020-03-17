@@ -21,20 +21,12 @@ type SpeechEvent = keyof SpeechEvents;
 class RCTVoice {
   _loaded: boolean;
   _listeners: any[] | null;
-  _events: Required<SpeechEvents>;
+  _events: SpeechEvents;
 
   constructor() {
     this._loaded = false;
     this._listeners = null;
-    this._events = {
-      onSpeechStart: this.onSpeechStart.bind(this),
-      onSpeechRecognized: this.onSpeechRecognized.bind(this),
-      onSpeechEnd: this.onSpeechEnd.bind(this),
-      onSpeechError: this.onSpeechError.bind(this),
-      onSpeechResults: this.onSpeechResults.bind(this),
-      onSpeechPartialResults: this.onSpeechPartialResults.bind(this),
-      onSpeechVolumeChanged: this.onSpeechVolumeChanged.bind(this),
-    };
+    this._events = {};
   }
 
   removeAllListeners() {
@@ -68,8 +60,8 @@ class RCTVoice {
 
   start(locale: any, options = {}) {
     if (!this._loaded && !this._listeners && voiceEmitter !== null) {
-      this._listeners = (Object.keys(this._events) as SpeechEvent[]).map(
-        (key: SpeechEvent) => voiceEmitter.addListener(key, this._events[key]),
+      this._listeners = Object.keys(this._events).map(key =>
+        voiceEmitter.addListener(key, this._events[key]),
       );
     }
 
@@ -160,40 +152,28 @@ class RCTVoice {
       Voice.isRecognizing((isRecognizing: 0 | 1) => resolve(isRecognizing));
     });
   }
-  onSpeechStart(e: SpeechStartEvent) {
-    if (this.onSpeechStart) {
-      this.onSpeechStart(e);
-    }
+
+  set onSpeechStart(fn: (e: SpeechStartEvent) => void) {
+    this._events.onSpeechStart = fn;
   }
-  onSpeechRecognized(e: SpeechRecognizedEvent) {
-    if (this.onSpeechRecognized) {
-      this.onSpeechRecognized(e);
-    }
+
+  set onSpeechRecognized(fn: (e: SpeechRecognizedEvent) => void) {
+    this._events.onSpeechRecognized = fn;
   }
-  onSpeechEnd(e: SpeechEndEvent) {
-    if (this.onSpeechEnd) {
-      this.onSpeechEnd(e);
-    }
+  set onSpeechEnd(fn: (e: SpeechEndEvent) => void) {
+    this._events.onSpeechEnd = fn;
   }
-  onSpeechError(e: SpeechErrorEvent) {
-    if (this.onSpeechError) {
-      this.onSpeechError(e);
-    }
+  set onSpeechError(fn: (e: SpeechErrorEvent) => void) {
+    this._events.onSpeechError = fn;
   }
-  onSpeechResults(e: SpeechResultsEvent) {
-    if (this.onSpeechResults) {
-      this.onSpeechResults(e);
-    }
+  set onSpeechResults(fn: (e: SpeechResultsEvent) => void) {
+    this._events.onSpeechResults = fn;
   }
-  onSpeechPartialResults(e: SpeechResultsEvent) {
-    if (this.onSpeechPartialResults) {
-      this.onSpeechPartialResults(e);
-    }
+  set onSpeechPartialResults(fn: (e: SpeechResultsEvent) => void) {
+    this._events.onSpeechPartialResults = fn;
   }
-  onSpeechVolumeChanged(e: SpeechVolumeChangeEvent) {
-    if (this.onSpeechVolumeChanged) {
-      this.onSpeechVolumeChanged(e);
-    }
+  set onSpeechVolumeChanged(fn: (e: SpeechVolumeChangeEvent) => void) {
+    this._events.onSpeechVolumeChanged = fn;
   }
 }
 
