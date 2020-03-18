@@ -18,7 +18,6 @@ export type VoiceModule = {
   EventSubscriptionVendor;
 
 export type SpeechEvents = {
-  [key: string]: any;
   onSpeechStart?: (e: SpeechStartEvent) => void;
   onSpeechRecognized?: (e: SpeechRecognizedEvent) => void;
   onSpeechEnd?: (e: SpeechEndEvent) => void;

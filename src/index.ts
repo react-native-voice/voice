@@ -21,12 +21,20 @@ type SpeechEvent = keyof SpeechEvents;
 class RCTVoice {
   _loaded: boolean;
   _listeners: any[] | null;
-  _events: SpeechEvents;
+  _events: Required<SpeechEvents>;
 
   constructor() {
     this._loaded = false;
     this._listeners = null;
-    this._events = {};
+    this._events = {
+      onSpeechStart: () => {},
+      onSpeechRecognized: () => {},
+      onSpeechEnd: () => {},
+      onSpeechError: () => {},
+      onSpeechResults: () => {},
+      onSpeechPartialResults: () => {},
+      onSpeechVolumeChanged: () => {},
+    };
   }
 
   removeAllListeners() {
@@ -60,8 +68,8 @@ class RCTVoice {
 
   start(locale: any, options = {}) {
     if (!this._loaded && !this._listeners && voiceEmitter !== null) {
-      this._listeners = Object.keys(this._events).map(key =>
-        voiceEmitter.addListener(key, this._events[key]),
+      this._listeners = (Object.keys(this._events) as SpeechEvent[]).map(
+        (key: SpeechEvent) => voiceEmitter.addListener(key, this._events[key]),
       );
     }
 
