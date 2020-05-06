@@ -6,7 +6,17 @@
 <p align="center">A speech-to-text library for <a href="https://reactnative.dev/">React Native.</a></p>
 
 ```sh
+yarn add @react-native-community/voice
+
+# or 
+
 npm i @react-native-community/voice --save
+```
+
+Link the iOS package
+
+```sh
+npx pod-install
 ```
 
 ## Table of contents
