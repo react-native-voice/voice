@@ -62,6 +62,6 @@ def supportVersion = rootProject.hasProperty('supportLibVersion') ? rootProject.
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     testImplementation 'junit:junit:4.12'
-    implementation 'com.android.support:appcompat-v7:${supportVersion}'
+    implementation "com.android.support:appcompat-v7:${supportVersion}"
     implementation 'com.facebook.react:react-native:+'
 }
