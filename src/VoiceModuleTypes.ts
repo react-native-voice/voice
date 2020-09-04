@@ -41,7 +41,7 @@ export type SpeechResultsEvent = {
 
 export type SpeechErrorEvent = {
   error?: {
-    code?: 'string';
+    code?: string;
     message?: string;
   };
 };
