@@ -4,8 +4,9 @@
 <h1 align="center">React Native Voice</h1>
 <p align="center">A speech-to-text library for <a href="https://reactnative.dev/">React Native.</a></p>
 
-![Discord](https://img.shields.io/discord/764994995098615828?label=Discord&logo=Discord&style=for-the-badge)
-
+<a href="https://discord.gg/CJHKVeW6sp">
+<img src="https://img.shields.io/discord/764994995098615828?label=Discord&logo=Discord&style=for-the-badge"
+            alt="chat on Discord"></a>
 
 ```sh
 yarn add @react-native-community/voice
