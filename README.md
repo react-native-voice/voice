@@ -2,8 +2,10 @@
 [![npm][npm]][npm-url]
 
 <h1 align="center">React Native Voice</h1>
-
 <p align="center">A speech-to-text library for <a href="https://reactnative.dev/">React Native.</a></p>
+
+![Discord](https://img.shields.io/discord/764994995098615828?label=Discord&logo=Discord&style=for-the-badge)
+
 
 ```sh
 yarn add @react-native-community/voice
