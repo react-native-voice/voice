@@ -95,7 +95,7 @@ public class MainActivity extends Activity implements ReactApplication {
 
 <h2 align="center">Usage</h2>
 
-<p align="center"><a href="https://github.com/react-native-voice/voice/tree/master/example/src/VoiceTest.js">Full example for Android and iOS.</a></p>
+<p align="center"><a href="https://github.com/react-native-voice/voice/blob/master/example/src/VoiceTest.tsx">Full example for Android and iOS.</a></p>
 
 ### Example
 
