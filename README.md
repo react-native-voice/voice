@@ -2,15 +2,18 @@
 [![npm][npm]][npm-url]
 
 <h1 align="center">React Native Voice</h1>
-
 <p align="center">A speech-to-text library for <a href="https://reactnative.dev/">React Native.</a></p>
 
+<a href="https://discord.gg/CJHKVeW6sp">
+<img src="https://img.shields.io/discord/764994995098615828?label=Discord&logo=Discord&style=for-the-badge"
+            alt="chat on Discord"></a>
+
 ```sh
-yarn add @react-native-community/voice
+yarn add @react-native-voice/voice
 
 # or 
 
-npm i @react-native-community/voice --save
+npm i @react-native-voice/voice --save
 ```
 
 Link the iOS package
@@ -38,7 +41,7 @@ npx pod-install
 <p align="center">Manually or automatically link the NativeModule</p>
 
 ```sh
-react-native link @react-native-community/voice
+react-native link @react-native-voice/voice
 ```
 
 ### Manually Link Android
@@ -47,8 +50,8 @@ react-native link @react-native-community/voice
 
 ```gradle
 ...
-include ':@react-native-community_voice', ':app'
-project(':@react-native-community_voice').projectDir = new File(rootProject.projectDir, '../node_modules/@react-native-community/voice/android')
+include ':@react-native-voice_voice', ':app'
+project(':@react-native-voice_voice').projectDir = new File(rootProject.projectDir, '../node_modules/@react-native-voice/voice/android')
 ```
 
 - In `android/app/build.gradle`
@@ -57,7 +60,7 @@ project(':@react-native-community_voice').projectDir = new File(rootProject.proj
 ...
 dependencies {
     ...
-    compile project(':@react-native-community_voice')
+    compile project(':@react-native-voice_voice')
 }
 ```
 
@@ -86,18 +89,18 @@ public class MainActivity extends Activity implements ReactApplication {
 
 ### Manually Link iOS
 
-- Drag the Voice.xcodeproj from the @react-native-community/voice/ios folder to the Libraries group on Xcode in your poject. [Manual linking](https://reactnative.dev/docs/linking-libraries-ios.html)
+- Drag the Voice.xcodeproj from the @react-native-voice/voice/ios folder to the Libraries group on Xcode in your poject. [Manual linking](https://reactnative.dev/docs/linking-libraries-ios.html)
 
 - Click on your main project file (the one that represents the .xcodeproj) select Build Phases and drag the static library, lib.Voice.a, from the Libraries/Voice.xcodeproj/Products folder to Link Binary With Libraries
 
 <h2 align="center">Usage</h2>
 
-<p align="center"><a href="https://github.com/react-native-community/voice/tree/master/example/src/VoiceTest.js">Full example for Android and iOS.</a></p>
+<p align="center"><a href="https://github.com/react-native-voice/voice/blob/master/example/src/VoiceTest.tsx">Full example for Android and iOS.</a></p>
 
 ### Example
 
 ```javascript
-import Voice from '@react-native-community/voice';
+import Voice from '@react-native-voice/voice';
 import React, {Component} from 'react';
 
 class VoiceTest extends Component {
@@ -200,9 +203,9 @@ Need to include permissions for `NSMicrophoneUsageDescription` and `NSSpeechReco
 
 Please see the documentation provided by ReactNative for this: [PermissionsAndroid](https://reactnative.dev/docs/permissionsandroid.html)
 
-[npm]: https://img.shields.io/npm/v/@react-native-community/voice.svg?style=flat-square
-[npm-url]: https://npmjs.com/package/@react-native-community/voice
-[circle-ci-badge]: https://img.shields.io/circleci/project/github/react-native-community/voice/master.svg?style=flat-square
+[npm]: https://img.shields.io/npm/v/@react-native-voice/voice.svg?style=flat-square
+[npm-url]: https://npmjs.com/package/@react-native-voice/voice
+[circle-ci-badge]: https://img.shields.io/circleci/project/github/react-native-voice/voice/master.svg?style=flat-square
 
 <h2 align="center">Contributors</h2>
 
