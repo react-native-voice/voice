@@ -1,9 +1,10 @@
 {
-  "name": "@react-native-community/voice",
+  "name": "@react-native-voice/voice",
   "description": "React Native Native Voice library for iOS and Android",
   "version": "1.1.9",
   "author": "Sam Wenke <samwenke@gmail.com>",
-  "homepage": "https://github.com/react-native-community/voice",
+  "private": false,
+  "homepage": "https://github.com/react-native-voice/voice",
   "devDependencies": {
     "@react-native-community/eslint-config": "^0.0.7",
     "@semantic-release/git": "^9.0.0",
@@ -31,7 +32,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/react-native-community/voice.git"
+    "url": "git://github.com/react-native-voice/voice.git"
   },
   "scripts": {
     "lint": "eslint src/*",
@@ -42,7 +43,7 @@
     "prepare": "yarn build",
     "build": "tsc",
     "type-check": "tsc -noEmit",
-    "dev-sync": "cp -r ./dist example/node_modules/@react-native-community/voice"
+    "dev-sync": "cp -r ./dist example/node_modules/@react-native-voice/voice"
   },
   "dependencies": {
     "invariant": "^2.2.4"
