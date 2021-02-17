@@ -11,7 +11,7 @@
   "dependencies": {
     "react": "16.9.0",
     "react-native": "0.61.5",
-    "@react-native-community/voice": "file:../"
+    "@react-native-voice/voice": "file:../"
   },
   "devDependencies": {
     "@babel/core": "^7.6.2",
