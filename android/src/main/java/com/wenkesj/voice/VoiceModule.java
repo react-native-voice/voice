@@ -302,7 +302,7 @@ public class VoiceModule extends ReactContextBaseJavaModule implements Recogniti
     isRecognizing = false;
   }
 
-   @Override
+  @Override
   public void onError(int errorCode) {
     String errorMessage = String.format("%d/%s", errorCode, getErrorText(errorCode));
     WritableMap error = Arguments.createMap();
