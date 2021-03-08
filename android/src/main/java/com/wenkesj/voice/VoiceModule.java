@@ -307,6 +307,7 @@ public class VoiceModule extends ReactContextBaseJavaModule implements Recogniti
     String errorMessage = String.format("%d/%s", errorCode, getErrorText(errorCode));
     WritableMap error = Arguments.createMap();
     error.putString("message", errorMessage);
+    error.putString("code", String.valueOf(errorCode));
     WritableMap event = Arguments.createMap();
     event.putMap("error", error);
     sendEvent("onSpeechError", event);
