@@ -1,4 +1,12 @@
 {
   "name": "VoiceTest",
-  "displayName": "VoiceTest"
+  "displayName": "VoiceTest",
+  "expo": {
+    "plugins": [
+      ["@react-native-voice/voice", {
+        "microphone": "CUSTOM: Allow $(PRODUCT_NAME) to access the microphone",
+        "speechRecognition": "CUSTOM: Allow $(PRODUCT_NAME) to securely recognize user speech"
+      }]
+    ]
+  }
 }
