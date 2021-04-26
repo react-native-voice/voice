@@ -1,5 +1,7 @@
-import { AppRegistry } from 'react-native';
-import VoiceTest from './src/VoiceTest';
-import { name as appName } from './app.json';
+import { registerRootComponent } from 'expo';
+import App from './src/VoiceTest';
 
-AppRegistry.registerComponent(appName, () => VoiceTest);
+// registerRootComponent calls AppRegistry.registerComponent('main', () => App);
+// It also ensures that whether you load the app in the Expo client or in a native build,
+// the environment is set up appropriately
+registerRootComponent(App);

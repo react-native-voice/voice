@@ -32,6 +32,7 @@
   "peerDependencies": {
     "react-native": ">= 0.60.2"
   },
+ 
   "repository": {
     "type": "git",
     "url": "git://github.com/react-native-voice/voice.git"

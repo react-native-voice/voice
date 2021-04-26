@@ -20,8 +20,8 @@ type State = {
   error: string;
   end: string;
   started: string;
-  results: string[];
-  partialResults: string[];
+  results?: string[];
+  partialResults?: string[];
 };
 
 class VoiceTest extends Component<Props, State> {
@@ -158,13 +158,12 @@ class VoiceTest extends Component<Props, State> {
           Press the button and start speaking.
         </Text>
         <Text style={styles.stat}>{`Started: ${this.state.started}`}</Text>
-        <Text style={styles.stat}>{`Recognized: ${
-          this.state.recognized
-        }`}</Text>
+        <Text style={styles.stat}>{`Recognized: ${this.state.recognized
+          }`}</Text>
         <Text style={styles.stat}>{`Pitch: ${this.state.pitch}`}</Text>
         <Text style={styles.stat}>{`Error: ${this.state.error}`}</Text>
         <Text style={styles.stat}>Results</Text>
-        {this.state.results.map((result, index) => {
+        {this.state.results?.map((result, index) => {
           return (
             <Text key={`result-${index}`} style={styles.stat}>
               {result}
@@ -172,7 +171,7 @@ class VoiceTest extends Component<Props, State> {
           );
         })}
         <Text style={styles.stat}>Partial Results</Text>
-        {this.state.partialResults.map((result, index) => {
+        {this.state.partialResults?.map((result, index) => {
           return (
             <Text key={`partial-result-${index}`} style={styles.stat}>
               {result}
