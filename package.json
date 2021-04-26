@@ -43,16 +43,16 @@
     "start": "yarn --cwd example start",
     "ios": "yarn --cwd example ios",
     "android": "yarn --cwd example android",
-    "prepare": "yarn build && yarn build:plugin",
+    "prepare": "yarn build && yarn clean:plugin && yarn build:plugin",
     "build": "tsc",
     "type-check": "tsc -noEmit",
-    "dev-sync": "cp -r ./dist example/node_modules/@react-native-voice/voice",
     "build:plugin": "EXPO_NONINTERACTIVE=1 expo-module build plugin",
     "clean:plugin": "expo-module clean plugin",
     "lint:plugin": "expo-module lint plugin",
     "test:plugin": "expo-module test plugin"
   },
   "dependencies": {
-    "invariant": "^2.2.4"
+    "invariant": "^2.2.4",
+    "@expo/config-plugins": "^1.0.28"
   }
 }
