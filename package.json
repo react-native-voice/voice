@@ -48,8 +48,7 @@
     "type-check": "tsc -noEmit",
     "build:plugin": "EXPO_NONINTERACTIVE=1 expo-module build plugin",
     "clean:plugin": "expo-module clean plugin",
-    "lint:plugin": "expo-module lint plugin",
-    "test:plugin": "expo-module test plugin"
+    "lint:plugin": "expo-module lint plugin"
   },
   "dependencies": {
     "invariant": "^2.2.4",
