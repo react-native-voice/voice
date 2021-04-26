@@ -6,7 +6,6 @@
   "private": false,
   "homepage": "https://github.com/react-native-voice/voice",
   "devDependencies": {
-    "@expo/config-plugins": "^1.0.26",
     "@react-native-community/eslint-config": "^0.0.7",
     "@semantic-release/git": "^9.0.0",
     "@types/invariant": "^2.2.31",
@@ -46,9 +45,9 @@
     "prepare": "yarn build && yarn clean:plugin && yarn build:plugin",
     "build": "tsc",
     "type-check": "tsc -noEmit",
-    "build:plugin": "EXPO_NONINTERACTIVE=1 expo-module build plugin",
+    "build:plugin": "tsc --build plugin",
     "clean:plugin": "expo-module clean plugin",
-    "lint:plugin": "expo-module lint plugin"
+    "lint:plugin": "eslint plugin/src/*"
   },
   "dependencies": {
     "invariant": "^2.2.4",
