@@ -15,12 +15,12 @@ export type Props = {
   /**
    * `NSSpeechRecognitionUsageDescription` message.
    */
-  speechRecognition?: string;
+  speechRecognition?: string | false;
 
   /**
    * `NSMicrophoneUsageDescription` message.
    */
-  microphone?: string;
+  microphone?: string | false;
 };
 
 /**
@@ -41,14 +41,18 @@ export const withPermissionsIOS: ConfigPlugin<Props> = (
     config.ios.infoPlist = {};
   }
 
-  config.ios.infoPlist.NSMicrophoneUsageDescription =
-    microphone ||
-    config.ios.infoPlist.NSMicrophoneUsageDescription ||
-    MICROPHONE;
-  config.ios.infoPlist.NSSpeechRecognitionUsageDescription =
-    speechRecognition ||
-    config.ios.infoPlist.NSSpeechRecognitionUsageDescription ||
-    SPEECH_RECOGNITION;
+  if (microphone !== false) {
+    config.ios.infoPlist.NSMicrophoneUsageDescription =
+      microphone ||
+      config.ios.infoPlist.NSMicrophoneUsageDescription ||
+      MICROPHONE;
+  }
+  if (speechRecognition !== false) {
+    config.ios.infoPlist.NSSpeechRecognitionUsageDescription =
+      speechRecognition ||
+      config.ios.infoPlist.NSSpeechRecognitionUsageDescription ||
+      SPEECH_RECOGNITION;
+  }
 
   return config;
 };
@@ -63,8 +67,11 @@ export const withPermissionsAndroid: ConfigPlugin = config => {
 };
 
 const withVoice: ConfigPlugin<Props | void> = (config, props = {}) => {
-  config = withPermissionsIOS(config, props ? props : {});
-  config = withPermissionsAndroid(config);
+  const _props = props ? props : {};
+  config = withPermissionsIOS(config, _props);
+  if (_props.microphone !== false) {
+    config = withPermissionsAndroid(config);
+  }
   return config;
 };
 
