@@ -128,8 +128,8 @@ The plugin provides props for extra customization. Every time you change the pro
     [
       "@react-native-voice/voice",
       {
-        "microphone": "CUSTOM: Allow $(PRODUCT_NAME) to access the microphone",
-        "speechRecognition": "CUSTOM: Allow $(PRODUCT_NAME) to securely recognize user speech"
+        "microphonePermission": "CUSTOM: Allow $(PRODUCT_NAME) to access the microphone",
+        "speechRecognitionPermission": "CUSTOM: Allow $(PRODUCT_NAME) to securely recognize user speech"
       }
     ]
   ]
