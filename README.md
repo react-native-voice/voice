@@ -96,7 +96,7 @@ public class MainActivity extends Activity implements ReactApplication {
 
 <h2 align="center">Config Plugin</h2>
 
-This package cannot be used in the [Expo Go](https://expo.io/tools) app, but it can be used with custom managed apps.
+This package cannot be used in the [Expo Go](https://expo.io/client) app, but it can be used with custom managed apps.
 Just add the [config plugin](https://docs.expo.io/guides/config-plugins/) to the `plugins` array of your `app.json` or `app.config.js`:
 
 ```json
