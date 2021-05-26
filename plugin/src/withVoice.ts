@@ -2,6 +2,7 @@ import {
   AndroidConfig,
   ConfigPlugin,
   createRunOncePlugin,
+  withInfoPlist,
 } from '@expo/config-plugins';
 
 const pkg = require('@react-native-voice/voice/package.json');
@@ -30,37 +31,32 @@ export type Props = {
  * @param props.microphonePermission microphone permission message
  * @returns
  */
-export const withPermissionsIOS: ConfigPlugin<Props> = (
-  config,
+const withIosPermissions: ConfigPlugin<Props> = (
+  c,
   { microphonePermission, speechRecognitionPermission } = {},
 ) => {
-  if (!config.ios) {
-    config.ios = {};
-  }
-  if (!config.ios.infoPlist) {
-    config.ios.infoPlist = {};
-  }
+  return withInfoPlist(c, config => {
+    if (microphonePermission !== false) {
+      config.modResults.NSMicrophoneUsageDescription =
+        microphonePermission ||
+        config.modResults.NSMicrophoneUsageDescription ||
+        MICROPHONE;
+    }
+    if (speechRecognitionPermission !== false) {
+      config.modResults.NSSpeechRecognitionUsageDescription =
+        speechRecognitionPermission ||
+        config.modResults.NSSpeechRecognitionUsageDescription ||
+        SPEECH_RECOGNITION;
+    }
 
-  if (microphonePermission !== false) {
-    config.ios.infoPlist.NSMicrophoneUsageDescription =
-      microphonePermission ||
-      config.ios.infoPlist.NSMicrophoneUsageDescription ||
-      MICROPHONE;
-  }
-  if (speechRecognitionPermission !== false) {
-    config.ios.infoPlist.NSSpeechRecognitionUsageDescription =
-      speechRecognitionPermission ||
-      config.ios.infoPlist.NSSpeechRecognitionUsageDescription ||
-      SPEECH_RECOGNITION;
-  }
-
-  return config;
+    return config;
+  });
 };
 
 /**
  * Adds the following to the `AndroidManifest.xml`: `<uses-permission android:name="android.permission.RECORD_AUDIO" />`
  */
-export const withPermissionsAndroid: ConfigPlugin = config => {
+const withAndroidPermissions: ConfigPlugin = config => {
   return AndroidConfig.Permissions.withPermissions(config, [
     'android.permission.RECORD_AUDIO',
   ]);
@@ -68,9 +64,9 @@ export const withPermissionsAndroid: ConfigPlugin = config => {
 
 const withVoice: ConfigPlugin<Props | void> = (config, props = {}) => {
   const _props = props ? props : {};
-  config = withPermissionsIOS(config, _props);
+  config = withIosPermissions(config, _props);
   if (_props.microphonePermission !== false) {
-    config = withPermissionsAndroid(config);
+    config = withAndroidPermissions(config);
   }
   return config;
 };

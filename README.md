@@ -27,7 +27,7 @@ npx pod-install
 - [Linking](#linking)
   - [Manually Link Android](#manually-link-android)
   - [Manually Link iOS](#manually-link-ios)
-- [Config Plugin](#config-plugin)
+- [Prebuild Plugin](#prebuild-plugin)
 - [Usage](#usage)
   - [Example](#example)
 - [API](#api)
@@ -94,10 +94,10 @@ public class MainActivity extends Activity implements ReactApplication {
 
 - Click on your main project file (the one that represents the .xcodeproj) select Build Phases and drag the static library, lib.Voice.a, from the Libraries/Voice.xcodeproj/Products folder to Link Binary With Libraries
 
-<h2 align="center">Config Plugin</h2>
+<h2 align="center">Prebuild Plugin</h2>
 
-This package cannot be used in the [Expo Go](https://expo.io/client) app, but it can be used with custom managed apps.
-Just add the [config plugin](https://docs.expo.io/guides/config-plugins/) to the `plugins` array of your `app.json` or `app.config.js`:
+This package cannot be used in the [Expo Go](https://expo.io/client) app, but it can be used with Expo prebuild.
+Just add the [prebuild plugin](https://docs.expo.io/guides/config-plugins/) to the `plugins` array of your `app.json` or `app.config.js`:
 
 ```json
 {
@@ -108,10 +108,10 @@ Just add the [config plugin](https://docs.expo.io/guides/config-plugins/) to the
 Then rebuild the native app:
 
 - Run `expo prebuild`
-  - This will apply the config plugin using [prebuilding](https://expo.fyi/prebuilding).
-- Rebuild the app
+  - This will apply the plugin using [prebuilding](https://expo.fyi/prebuilding).
+- Build the app
   - `yarn android` -- Build on Android.
-  - `yarn ios` -- Build on iOS, this requires a MacOS computer (see cloud builds for more options).
+  - `yarn ios` -- Build on iOS, this requires a MacOS computer.
 
 ### Props
 
