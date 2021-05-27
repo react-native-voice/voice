@@ -96,22 +96,19 @@ public class MainActivity extends Activity implements ReactApplication {
 
 <h2 align="center">Prebuild Plugin</h2>
 
-This package cannot be used in the [Expo Go](https://expo.io/client) app, but it can be used with Expo prebuild.
-Just add the [prebuild plugin](https://docs.expo.io/guides/config-plugins/) to the `plugins` array of your `app.json` or `app.config.js`:
+> This package cannot be used in the "Expo Go" app because [it requires custom native code](https://docs.expo.io/workflow/customizing/).
+
+After installing this npm package, add the [config plugin](https://docs.expo.io/guides/config-plugins/) to the [`plugins`](https://docs.expo.io/versions/latest/config/app/#plugins) array of your `app.json` or `app.config.js`:
 
 ```json
 {
-  "plugins": ["@react-native-voice/voice"]
+  "expo": {
+    "plugins": ["@react-native-voice/voice"]
+  }
 }
 ```
 
-Then rebuild the native app:
-
-- Run `expo prebuild`
-  - This will apply the plugin using [prebuilding](https://expo.fyi/prebuilding).
-- Build the app
-  - `yarn android` -- Build on Android.
-  - `yarn ios` -- Build on iOS, this requires a MacOS computer.
+Next, rebuild your app as described in the ["Adding custom native code"](https://docs.expo.io/workflow/customizing/) guide.
 
 ### Props
 
