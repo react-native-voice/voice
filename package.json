@@ -44,6 +44,7 @@
     "android": "yarn --cwd example android",
     "prepare": "yarn build && yarn clean:plugin && yarn build:plugin",
     "build": "tsc",
+    "dev-sync": "cp -r ./dist example/node_modules/@react-native-voice/voice",
     "type-check": "tsc -noEmit",
     "build:plugin": "tsc --build plugin",
     "clean:plugin": "expo-module clean plugin",

@@ -1,29 +1,4 @@
 {
-  "expo": {
-    "name": "Voice",
-    "slug": "voice",
-    "icon": "./assets/icon.png",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "cover"
-    },
-    "plugins": [
-      [
-        "@react-native-voice/voice",
-        {
-          "microphonePermission": "CUSTOM: Allow $(PRODUCT_NAME) to access the microphone",
-          "speechRecognitionPermission": "CUSTOM: Allow $(PRODUCT_NAME) to securely recognize user speech"
-        }
-      ]
-    ],
-    "android": {
-      "package": "com.demo.react.voice"
-    },
-    "ios": {
-      "bundleIdentifier": "com.demo.react.voice"
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
-    }
-  }
+  "name": "VoiceTest",
+  "displayName": "VoiceTest"
 }
