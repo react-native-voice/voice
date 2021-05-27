@@ -1,8 +1,9 @@
 {
-    "extends": "expo-module-scripts/tsconfig.plugin",
+    "extends": "@tsconfig/node10/tsconfig.json",
     "compilerOptions": {
       "outDir": "build",
-      "rootDir": "src"
+      "rootDir": "src",
+      "declaration": true
     },
     "include": ["./src"],
     "exclude": ["**/__mocks__/*", "**/__tests__/*"]
