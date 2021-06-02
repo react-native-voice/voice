@@ -8,6 +8,7 @@
   "devDependencies": {
     "@react-native-community/eslint-config": "^0.0.7",
     "@semantic-release/git": "^9.0.0",
+    "@tsconfig/node10": "^1.0.7",
     "@types/invariant": "^2.2.31",
     "@types/react-native": "0.61.17",
     "eslint": "^6.8.0",
@@ -30,6 +31,7 @@
   "peerDependencies": {
     "react-native": ">= 0.60.2"
   },
+ 
   "repository": {
     "type": "git",
     "url": "git://github.com/react-native-voice/voice.git"
@@ -40,12 +42,15 @@
     "start": "yarn --cwd example start",
     "ios": "yarn --cwd example ios",
     "android": "yarn --cwd example android",
-    "prepare": "yarn build",
+    "prepare": "yarn build && yarn build:plugin",
     "build": "tsc",
+    "dev-sync": "cp -r ./dist example/node_modules/@react-native-voice/voice",
     "type-check": "tsc -noEmit",
-    "dev-sync": "cp -r ./dist example/node_modules/@react-native-voice/voice"
+    "build:plugin": "tsc --build plugin",
+    "lint:plugin": "eslint plugin/src/*"
   },
   "dependencies": {
-    "invariant": "^2.2.4"
+    "invariant": "^2.2.4",
+    "@expo/config-plugins": "^2.0.0"
   }
 }
