@@ -1,7 +1,7 @@
 {
   "name": "@react-native-voice/voice",
   "description": "React Native Native Voice library for iOS and Android",
-  "version": "3.1.5",
+  "version": "3.2.0",
   "author": "Sam Wenke <samwenke@gmail.com>",
   "private": false,
   "homepage": "https://github.com/react-native-voice/voice",
@@ -31,7 +31,6 @@
   "peerDependencies": {
     "react-native": ">= 0.60.2"
   },
- 
   "repository": {
     "type": "git",
     "url": "git://github.com/react-native-voice/voice.git"
