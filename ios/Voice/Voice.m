@@ -163,6 +163,7 @@
         self.audioEngine = [[AVAudioEngine alloc] init];
     }
     
+    @try {
     AVAudioInputNode* inputNode = self.audioEngine.inputNode;
     if (inputNode == nil) {
         [self sendResult:@{@"code": @"input"} :nil :nil :nil];
@@ -224,7 +225,7 @@
         [mixer installTapOnBus:0 bufferSize:1024 format:recordingFormat block:^(AVAudioPCMBuffer * _Nonnull buffer, AVAudioTime * _Nonnull when) {
             //Volume Level Metering
             //Buffer frame can be reduced, if you need more output values
-            [buffer setFrameLength: buffer.frameCapacity];
+            // [buffer setFrameLength: buffer.frameCapacity];
             UInt32 inNumberFrames = buffer.frameLength;
             float LEVEL_LOWPASS_TRIG = 0.5;
             if(buffer.format.channelCount>0)
@@ -272,6 +273,11 @@
         [self teardown];
         return;
     }
+    @catch (NSException *exception) {
+    NSLog(@"[Error] - %@ %@", exception.name, exception.reason);
+    [self sendResult:@{@"code": @"start_recording", @"message": [exception reason]} :nil :nil :nil];
+    return;
+  }
 }
 
 - (CGFloat)_normalizedPowerLevelFromDecibels:(CGFloat)decibels {
