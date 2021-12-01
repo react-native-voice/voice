@@ -275,7 +275,6 @@
     }
     }
     @catch (NSException *exception) {
-    NSLog(@"[Error] - %@ %@", exception.name, exception.reason);
     [self sendResult:@{@"code": @"start_recording", @"message": [exception reason]} :nil :nil :nil];
     return;
   }
