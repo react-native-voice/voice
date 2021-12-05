@@ -224,8 +224,6 @@
     @try {
         [mixer installTapOnBus:0 bufferSize:1024 format:recordingFormat block:^(AVAudioPCMBuffer * _Nonnull buffer, AVAudioTime * _Nonnull when) {
             //Volume Level Metering
-            //Buffer frame can be reduced, if you need more output values
-            // [buffer setFrameLength: buffer.frameCapacity];
             UInt32 inNumberFrames = buffer.frameLength;
             float LEVEL_LOWPASS_TRIG = 0.5;
             if(buffer.format.channelCount>0)
