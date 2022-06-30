@@ -62,12 +62,19 @@ const withAndroidPermissions: ConfigPlugin = config => {
   ]);
 };
 
+const withAndroidManifestFixForAndroid11: ConfigPlugin = config => {
+  return AndroidConfig.IntentFilters.withAndroidIntentFilters(config, [
+    'android.speech.RecognitionService',
+  ])
+}
+
 const withVoice: ConfigPlugin<Props | void> = (config, props = {}) => {
   const _props = props ? props : {};
   config = withIosPermissions(config, _props);
   if (_props.microphonePermission !== false) {
     config = withAndroidPermissions(config);
   }
+  config = withAndroidManifestFixForAndroid11(config)
   return config;
 };
 
