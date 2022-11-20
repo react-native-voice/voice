@@ -19,8 +19,8 @@ export type VoiceModule = {
   isRecognizing: Function;
   isSpeechAvailable: Function;
 } & SpeechEvents &
-  TranscriptionEvents;
-EventSubscriptionVendor;
+  TranscriptionEvents &
+  EventSubscriptionVendor;
 
 export type SpeechEvents = {
   onSpeechStart?: (e: SpeechStartEvent) => void;
