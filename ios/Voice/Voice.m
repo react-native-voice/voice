@@ -166,7 +166,7 @@
   [self sendEventWithName:@"onTranscriptionError"
                      body:@{
                        @"error" :
-                           @{@"code" : @"fake_error", @"message" : @(filePath)}
+                           @{@"code" : @"fake_error", @"message" : filePath}
                      }];
   // Set up recognition request
   self.recognitionUrlRequest = [[SFSpeechURLRecognitionRequest alloc]
@@ -208,7 +208,7 @@
                                               @"error" : @{
                                                 @"code" : @"recognition_fail_o",
                                                 @"message" : errorMessage,
-                                                @"filePaTH" : filePath
+                                                @"filePath" : filePath
                                               }
                                             }];
                          [self teardown];
