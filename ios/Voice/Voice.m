@@ -288,6 +288,13 @@
     self.speechRecognizer = [[SFSpeechRecognizer alloc] init];
   }
 
+  if (self.speechRecognizer == nil) {
+      NSString *errorMessage = [NSString stringWithFormat: @"recognition is not supported for locale %@", localeStr];
+      [self sendResult:@{@"code": @"recognition_fail", @"message": errorMessage} :nil :nil :nil];
+      [self teardown];
+      return;
+    }
+
   self.speechRecognizer.delegate = self;
 
   // Start audio session...
