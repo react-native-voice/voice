@@ -98,7 +98,7 @@ class RCTVoice {
     });
   }
 
-  start(locale: any, options = {}) {
+  start(locale: any, options = {}, hotWords?: string[]) {
     if (!this._loaded && !this._listeners && voiceEmitter !== null) {
       this._listeners = (Object.keys(this._events) as SpeechEvent[]).map(
         (key: SpeechEvent) => voiceEmitter.addListener(key, this._events[key]),
@@ -122,13 +122,15 @@ class RCTVoice {
               EXTRA_MAX_RESULTS: 5,
               EXTRA_PARTIAL_RESULTS: true,
               REQUEST_PERMISSIONS_AUTO: true,
+              EXTRA_BIASING_STRINGS: hotWords || [],
+              EXTRA_ENABLE_FORMATTING: 'android.speech.extra.ENABLE_FORMATTING',
             },
             options,
           ),
           callback,
         );
       } else {
-        Voice.startSpeech(locale, callback);
+        Voice.startSpeech(locale, hotWords || [], callback);
       }
     });
   }
