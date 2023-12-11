@@ -1,5 +1,5 @@
 {
-  "name": "@mnvoice-react-native-voice/voice",
+  "name": "react-native-voice-matenote",
   "description": "A React Native native voice library with customizable hotwords support for iOS and Android",
   "version": "3.2.4",
   "author": "Yinjg <yinjg1997@163.com>",
