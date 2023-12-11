@@ -1,7 +1,7 @@
 {
   "name": "@mnvoice-react-native-voice/voice",
   "description": "A React Native native voice library with customizable hotwords support for iOS and Android",
-  "version": "3.2.7",
+  "version": "3.2.4",
   "author": "Yinjg <yinjg1997@163.com>",
   "private": false,
   "homepage": "https://github.com/react-native-voice/voice",
