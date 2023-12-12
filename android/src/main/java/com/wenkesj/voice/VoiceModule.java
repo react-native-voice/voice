@@ -121,7 +121,10 @@ public class VoiceModule extends ReactContextBaseJavaModule implements Recogniti
         }
         // 设置热词
         case "EXTRA_BIASING_STRINGS": {
-          ArrayList<String> biasingStrings = opts.getArray(key).toArrayList();
+        ArrayList<Object> objectList = opts.getArray(key).toArrayList();
+        ArrayList<String> biasingStrings = objectList.stream()
+                                                     .map(Object::toString)
+                                                     .collect(Collectors.toCollection(ArrayList::new));
           if (biasingStrings != null && !biasingStrings.isEmpty()) {
               intent.putExtra(RecognizerIntent.EXTRA_BIASING_STRINGS, biasingStrings.toArray(new String[0]));
           }
@@ -138,7 +141,7 @@ public class VoiceModule extends ReactContextBaseJavaModule implements Recogniti
     intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, getLocale(this.locale));
     speech.startListening(intent);
   }
-
+ // uncompitable
   private void startSpeechWithPermissions(final String locale, final ReadableMap opts, final Callback callback) {
     this.locale = locale;
 
