@@ -141,7 +141,6 @@ public class VoiceModule extends ReactContextBaseJavaModule implements Recogniti
     intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, getLocale(this.locale));
     speech.startListening(intent);
   }
- // uncompitable
   private void startSpeechWithPermissions(final String locale, final ReadableMap opts, final Callback callback) {
     this.locale = locale;
 
