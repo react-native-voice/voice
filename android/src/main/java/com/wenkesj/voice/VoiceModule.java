@@ -119,13 +119,28 @@ public class VoiceModule extends ReactContextBaseJavaModule implements Recogniti
           intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS, extras.intValue());
           break;
         }
+        // 设置热词
+        case "EXTRA_BIASING_STRINGS": {
+        ArrayList<Object> objectList = opts.getArray(key).toArrayList();
+        ArrayList<String> biasingStrings = objectList.stream()
+                                                     .map(Object::toString)
+                                                     .collect(Collectors.toCollection(ArrayList::new));
+          if (biasingStrings != null && !biasingStrings.isEmpty()) {
+              intent.putExtra(RecognizerIntent.EXTRA_BIASING_STRINGS, biasingStrings.toArray(new String[0]));
+          }
+          break;
+        }
+        // 设置标点
+        case "EXTRA_ENABLE_FORMATTING": {
+          intent.putExtra(RecognizerIntent.EXTRA_BIASING_STRINGS,opts.getString(key));
+          break;
+        }
       }
     }
 
     intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, getLocale(this.locale));
     speech.startListening(intent);
   }
-
   private void startSpeechWithPermissions(final String locale, final ReadableMap opts, final Callback callback) {
     this.locale = locale;
 

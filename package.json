@@ -1,8 +1,8 @@
 {
-  "name": "@react-native-voice/voice",
-  "description": "React Native Native Voice library for iOS and Android",
-  "version": "3.2.4",
-  "author": "Sam Wenke <samwenke@gmail.com>",
+  "name": "react-native-voice-matenote",
+  "description": "A React Native native voice library with customizable hotwords support for iOS and Android",
+  "version": "3.2.5",
+  "author": "Yinjg <yinjg1997@163.com>",
   "private": false,
   "homepage": "https://github.com/react-native-voice/voice",
   "devDependencies": {
@@ -33,7 +33,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/react-native-voice/voice.git"
+    "url": "git://github.com/yinjg1997/voice.git"
   },
   "scripts": {
     "lint": "eslint src/*",

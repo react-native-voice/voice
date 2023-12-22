@@ -5,7 +5,7 @@
 #import <React/RCTUtils.h>
 #import <Speech/Speech.h>
 #import <UIKit/UIKit.h>
-
+@implementation RCTVoice
 @interface Voice () <SFSpeechRecognizerDelegate>
 
 @property(nonatomic) SFSpeechRecognizer *speechRecognizer;
@@ -66,7 +66,6 @@
 
   return YES;
 }
-
 - (BOOL)isHeadsetPluggedIn {
   AVAudioSessionRouteDescription *route =
       [[AVAudioSession sharedInstance] currentRoute];
@@ -77,7 +76,21 @@
   }
   return NO;
 }
+RCT_EXPORT_MODULE();
 
+- (NSTimeInterval)speechDuration {
+  // 在这里添加获取 speechDuration 的代码，可能需要使用 setupAndTranscribeFile 方法中的一部分代码
+  // 返回获取到的 speechDuration
+  return 0.0; // 请替换为实际的 speechDuration
+}
+
+RCT_REMAP_METHOD(getSpeechDuration,
+                 getSpeechDurationWithResolver:(RCTPromiseResolveBlock)resolve
+                 rejecter:(RCTPromiseRejectBlock)reject)
+{
+  NSTimeInterval speechDuration = [self speechDuration];
+  resolve(@(speechDuration));
+}
 - (BOOL)isHeadSetBluetooth {
   NSArray *arrayInputs = [[AVAudioSession sharedInstance] availableInputs];
   for (AVAudioSessionPortDescription *port in arrayInputs) {
@@ -192,6 +205,12 @@
                      resultHandler:^(
                          SFSpeechRecognitionResult *_Nullable result,
                          NSError *_Nullable error) {
+                         // 获取 SFSpeechRecognitionMetadata
+                         SFSpeechRecognitionMetadata *metadata = result.bestTranscription.speechRecognitionMetadata;
+
+                         // 获取 speechDuration
+                         NSTimeInterval speechDuration = metadata.speechDuration;
+                         NSLog(@"Speech Duration: %f", speechDuration);
                        if (![taskSessionId isEqualToString:self.sessionId]) {
                          // session ID has changed, so ignore any capture
                          // results and error
@@ -268,8 +287,8 @@
   } @finally {
   }
 }
-
-- (void)setupAndStartRecognizing:(NSString *)localeStr {
+// 开始语音识别
+- (void)setupAndStartRecognizing:(NSString *)localeStr hotWords:(NSArray<NSString *> *)hotWords {
   self.audioSession = [AVAudioSession sharedInstance];
   self.priorAudioCategory = [self.audioSession category];
   // Tear down resources before starting speech recognition..
@@ -301,6 +320,10 @@
   // Configure request so that results are returned before audio
   // recording is finished
   self.recognitionRequest.shouldReportPartialResults = YES;
+  // 设置是否添加标点符号
+  self.recognitionRequest.addsPunctuation = YES;
+  // 设置热词
+  self.recognitionRequest.contextualStrings = hotWords;
 
   if (self.recognitionRequest == nil) {
     [self sendResult:@{@"code" : @"recognition_init"}:nil:nil:nil];
@@ -581,6 +604,7 @@ RCT_EXPORT_METHOD(isRecognizing : (RCTResponseSenderBlock)callback) {
 
 RCT_EXPORT_METHOD(startSpeech
                   : (NSString *)localeStr callback
+                  : (NSArray<NSString *> *)hotWords callback
                   : (RCTResponseSenderBlock)callback) {
   if (self.recognitionTask != nil) {
     [self sendResult:RCTMakeError(@"Speech recognition already started!", nil,
@@ -605,7 +629,13 @@ RCT_EXPORT_METHOD(startSpeech
                            nil):nil:nil:nil];
       break;
     case SFSpeechRecognizerAuthorizationStatusAuthorized:
-      [self setupAndStartRecognizing:localeStr];
+      // 调用 setupAndStartRecognizing 方法时传递热词数组
+//        NSLog(@"hotWords: %@", hotWords);
+//        hotWords: (
+//            "\U738b\U709c",
+//            "\U5218\U6d2a\U58ee"
+//        )
+      [self setupAndStartRecognizing:localeStr hotWords:hotWords];
       break;
     }
   }];
