@@ -14,6 +14,7 @@
 @property(nonatomic) AVAudioEngine *audioEngine;
 @property(nonatomic) SFSpeechRecognitionTask *recognitionTask;
 @property(nonatomic) AVAudioSession *audioSession;
+@property(nonatomic, readonly) NSTimeInterval speechDuration;
 /** Whether speech recognition is finishing.. */
 @property(nonatomic) BOOL isTearingDown;
 @property(nonatomic) BOOL continuous;
@@ -192,6 +193,12 @@
                      resultHandler:^(
                          SFSpeechRecognitionResult *_Nullable result,
                          NSError *_Nullable error) {
+                         // 获取 SFSpeechRecognitionMetadata
+                         SFSpeechRecognitionMetadata *metadata = result.bestTranscription.speechRecognitionMetadata;
+
+                         // 获取 speechDuration
+                         NSTimeInterval speechDuration = metadata.speechDuration;
+                         NSLog(@"Speech Duration: %f", speechDuration);
                        if (![taskSessionId isEqualToString:self.sessionId]) {
                          // session ID has changed, so ignore any capture
                          // results and error

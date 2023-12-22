@@ -258,6 +258,17 @@ class RCTVoice {
       Voice.isRecognizing((isRecognizing: 0 | 1) => resolve(isRecognizing));
     });
   }
+  async getSpeechDuration() {
+    return new Promise((resolve, reject) => {
+      Voice.getSpeechDuration((duration:any, error:any) => {
+        if (error) {
+          reject(new Error(error));
+        } else {
+          resolve(duration);
+        }
+      });
+    });
+  }
 
   set onSpeechStart(fn: (e: SpeechStartEvent) => void) {
     this._events.onSpeechStart = fn;
