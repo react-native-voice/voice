@@ -5,7 +5,7 @@
 #import <React/RCTUtils.h>
 #import <Speech/Speech.h>
 #import <UIKit/UIKit.h>
-
+@implementation RCTVoice
 @interface Voice () <SFSpeechRecognizerDelegate>
 
 @property(nonatomic) SFSpeechRecognizer *speechRecognizer;
@@ -14,7 +14,6 @@
 @property(nonatomic) AVAudioEngine *audioEngine;
 @property(nonatomic) SFSpeechRecognitionTask *recognitionTask;
 @property(nonatomic) AVAudioSession *audioSession;
-@property(nonatomic, readonly) NSTimeInterval speechDuration;
 /** Whether speech recognition is finishing.. */
 @property(nonatomic) BOOL isTearingDown;
 @property(nonatomic) BOOL continuous;
@@ -67,7 +66,6 @@
 
   return YES;
 }
-
 - (BOOL)isHeadsetPluggedIn {
   AVAudioSessionRouteDescription *route =
       [[AVAudioSession sharedInstance] currentRoute];
@@ -78,7 +76,21 @@
   }
   return NO;
 }
+RCT_EXPORT_MODULE();
 
+- (NSTimeInterval)speechDuration {
+  // 在这里添加获取 speechDuration 的代码，可能需要使用 setupAndTranscribeFile 方法中的一部分代码
+  // 返回获取到的 speechDuration
+  return 0.0; // 请替换为实际的 speechDuration
+}
+
+RCT_REMAP_METHOD(getSpeechDuration,
+                 getSpeechDurationWithResolver:(RCTPromiseResolveBlock)resolve
+                 rejecter:(RCTPromiseRejectBlock)reject)
+{
+  NSTimeInterval speechDuration = [self speechDuration];
+  resolve(@(speechDuration));
+}
 - (BOOL)isHeadSetBluetooth {
   NSArray *arrayInputs = [[AVAudioSession sharedInstance] availableInputs];
   for (AVAudioSessionPortDescription *port in arrayInputs) {
