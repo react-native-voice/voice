@@ -9,12 +9,17 @@ export type VoiceModule = {
    */
   getSpeechRecognitionServices: () => Promise<string[]> | void;
   destroySpeech: (callback: Callback) => void;
+  destroyTranscription: (callback: Callback) => void;
   startSpeech: Function;
+  startTranscription: Function;
   stopSpeech: (callback: Callback) => void;
+  stopTranscription: (callback: Callback) => void;
   cancelSpeech: (callback: Callback) => void;
+  cancelTranscription: (callback: Callback) => void;
   isRecognizing: Function;
   isSpeechAvailable: Function;
 } & SpeechEvents &
+  TranscriptionEvents &
   EventSubscriptionVendor;
 
 export type SpeechEvents = {
@@ -27,7 +32,18 @@ export type SpeechEvents = {
   onSpeechVolumeChanged?: (e: SpeechVolumeChangeEvent) => void;
 };
 
+export type TranscriptionEvents = {
+  onTranscriptionStart?: (e: TranscriptionStartEvent) => void;
+  onTranscriptionEnd?: (e: TranscriptionEndEvent) => void;
+  onTranscriptionError?: (e: TranscriptionErrorEvent) => void;
+  onTranscriptionResults?: (e: TranscriptionResultsEvent) => void;
+};
+
 export type SpeechStartEvent = {
+  error?: boolean;
+};
+
+export type TranscriptionStartEvent = {
   error?: boolean;
 };
 
@@ -39,6 +55,12 @@ export type SpeechResultsEvent = {
   value?: string[];
 };
 
+export type TranscriptionResultsEvent = {
+  segments?: string[];
+  transcription?: string;
+  isFinal?: boolean;
+};
+
 export type SpeechErrorEvent = {
   error?: {
     code?: string;
@@ -46,7 +68,18 @@ export type SpeechErrorEvent = {
   };
 };
 
+export type TranscriptionErrorEvent = {
+  error?: {
+    code?: string;
+    message?: string;
+  };
+};
+
 export type SpeechEndEvent = {
+  error?: boolean;
+};
+
+export type TranscriptionEndEvent = {
   error?: boolean;
 };
 

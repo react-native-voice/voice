@@ -16,3 +16,8 @@ VoiceModule.iml
 yarn-error.log
 
 dist
+
+plugin/build
+
+# user-specific files
+local.properties

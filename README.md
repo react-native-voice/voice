@@ -11,7 +11,7 @@
 ```sh
 yarn add @react-native-voice/voice
 
-# or 
+# or
 
 npm i @react-native-voice/voice --save
 ```
@@ -27,6 +27,7 @@ npx pod-install
 - [Linking](#linking)
   - [Manually Link Android](#manually-link-android)
   - [Manually Link iOS](#manually-link-ios)
+- [Prebuild Plugin](#prebuild-plugin)
 - [Usage](#usage)
   - [Example](#example)
 - [API](#api)
@@ -92,6 +93,45 @@ public class MainActivity extends Activity implements ReactApplication {
 - Drag the Voice.xcodeproj from the @react-native-voice/voice/ios folder to the Libraries group on Xcode in your poject. [Manual linking](https://reactnative.dev/docs/linking-libraries-ios.html)
 
 - Click on your main project file (the one that represents the .xcodeproj) select Build Phases and drag the static library, lib.Voice.a, from the Libraries/Voice.xcodeproj/Products folder to Link Binary With Libraries
+
+<h2 align="center">Prebuild Plugin</h2>
+
+> This package cannot be used in the "Expo Go" app because [it requires custom native code](https://docs.expo.io/workflow/customizing/).
+
+After installing this npm package, add the [config plugin](https://docs.expo.io/guides/config-plugins/) to the [`plugins`](https://docs.expo.io/versions/latest/config/app/#plugins) array of your `app.json` or `app.config.js`:
+
+```json
+{
+  "expo": {
+    "plugins": ["@react-native-voice/voice"]
+  }
+}
+```
+
+Next, rebuild your app as described in the ["Adding custom native code"](https://docs.expo.io/workflow/customizing/) guide.
+
+### Props
+
+The plugin provides props for extra customization. Every time you change the props or plugins, you'll need to rebuild (and `prebuild`) the native app. If no extra properties are added, defaults will be used.
+
+- `speechRecognition` (_string | false_): Sets the message for the `NSSpeechRecognitionUsageDescription` key in the `Info.plist` message. When undefined, a default permission message will be used. When `false`, the permission will be skipped.
+- `microphone` (_string | false_): Sets the message for the `NSMicrophoneUsageDescription` key in the `Info.plist`. When undefined, a default permission message will be used. When `false`, the `android.permission.RECORD_AUDIO` will not be added to the `AndroidManifest.xml` and the iOS permission will be skipped.
+
+### Example
+
+```json
+{
+  "plugins": [
+    [
+      "@react-native-voice/voice",
+      {
+        "microphonePermission": "CUSTOM: Allow $(PRODUCT_NAME) to access the microphone",
+        "speechRecognitionPermission": "CUSTOM: Allow $(PRODUCT_NAME) to securely recognize user speech"
+      }
+    ]
+  ]
+}
+```
 
 <h2 align="center">Usage</h2>
 
