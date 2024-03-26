@@ -19,8 +19,8 @@ function VoiceTest() {
   const [error, setError] = useState('');
   const [end, setEnd] = useState('');
   const [started, setStarted] = useState('');
-  const [results, setResults] = useState([]);
-  const [partialResults, setPartialResults] = useState([]);
+  const [results, setResults] = useState<string[] | undefined>([]);
+  const [partialResults, setPartialResults] = useState<string[] | undefined>([]);
 
   useEffect(() => {
     Voice.onSpeechStart = onSpeechStart;
@@ -127,7 +127,7 @@ function VoiceTest() {
       <Text style={styles.stat}>{`Volume: ${volume}`}</Text>
       <Text style={styles.stat}>{`Error: ${error}`}</Text>
       <Text style={styles.stat}>Results</Text>
-      {results.map((result, index) => {
+      {results?.map((result, index) => {
         return (
           <Text key={`result-${index}`} style={styles.stat}>
             {result}
@@ -135,7 +135,7 @@ function VoiceTest() {
         );
       })}
       <Text style={styles.stat}>Partial Results</Text>
-      {partialResults.map((result, index) => {
+      {partialResults?.map((result, index) => {
         return (
           <Text key={`partial-result-${index}`} style={styles.stat}>
             {result}
