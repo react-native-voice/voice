@@ -144,6 +144,15 @@ public class VoiceModule extends ReactContextBaseJavaModule implements Recogniti
     });
   }
 
+
+  @ReactMethod
+  public void addListener(String eventName) {
+  }
+
+  @ReactMethod
+  public void removeListeners(Integer count) {
+  }
+
   @Override
   public String getName() {
     return "RCTVoice";
