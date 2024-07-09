@@ -33,9 +33,9 @@ export type Props = {
  */
 const withIosPermissions: ConfigPlugin<Props> = (
   c,
-  { microphonePermission, speechRecognitionPermission } = {},
+  { microphonePermission, speechRecognitionPermission } = {}
 ) => {
-  return withInfoPlist(c, config => {
+  return withInfoPlist(c, (config) => {
     if (microphonePermission !== false) {
       config.modResults.NSMicrophoneUsageDescription =
         microphonePermission ||
@@ -56,7 +56,7 @@ const withIosPermissions: ConfigPlugin<Props> = (
 /**
  * Adds the following to the `AndroidManifest.xml`: `<uses-permission android:name="android.permission.RECORD_AUDIO" />`
  */
-const withAndroidPermissions: ConfigPlugin = config => {
+const withAndroidPermissions: ConfigPlugin = (config) => {
   return AndroidConfig.Permissions.withPermissions(config, [
     'android.permission.RECORD_AUDIO',
   ]);

@@ -5,12 +5,13 @@ import {
   View,
   Image,
   TouchableHighlight,
+  Platform,
 } from 'react-native';
 
 import Voice, {
-  SpeechRecognizedEvent,
-  SpeechResultsEvent,
-  SpeechErrorEvent,
+  type SpeechRecognizedEvent,
+  type SpeechResultsEvent,
+  type SpeechErrorEvent,
 } from '@react-native-voice/voice';
 
 type Props = {};
@@ -47,7 +48,10 @@ class VoiceTest extends Component<Props, State> {
   }
 
   componentWillUnmount() {
-    Voice.destroy().then(Voice.removeAllListeners);
+    Voice.destroySpeech().then(Voice.removeAllListeners);
+    if (Platform.OS === 'ios') {
+      Voice.destroyTranscription().then(Voice.removeAllListeners);
+    }
   }
 
   onSpeechStart = (e: any) => {
@@ -81,14 +85,14 @@ class VoiceTest extends Component<Props, State> {
   onSpeechResults = (e: SpeechResultsEvent) => {
     console.log('onSpeechResults: ', e);
     this.setState({
-      results: e.value,
+      results: e.value || [],
     });
   };
 
   onSpeechPartialResults = (e: SpeechResultsEvent) => {
     console.log('onSpeechPartialResults: ', e);
     this.setState({
-      partialResults: e.value,
+      partialResults: e.value || [],
     });
   };
 
@@ -100,6 +104,7 @@ class VoiceTest extends Component<Props, State> {
   };
 
   _startRecognizing = async () => {
+    console.log('_startRecognizing');
     this.setState({
       recognized: '',
       pitch: '',
@@ -111,7 +116,9 @@ class VoiceTest extends Component<Props, State> {
     });
 
     try {
-      await Voice.start('en-US');
+      await Voice.startSpeech('en-US', {
+        autoPunctuate: true,
+      });
     } catch (e) {
       console.error(e);
     }
@@ -119,7 +126,7 @@ class VoiceTest extends Component<Props, State> {
 
   _stopRecognizing = async () => {
     try {
-      await Voice.stop();
+      await Voice.stopSpeech();
     } catch (e) {
       console.error(e);
     }
@@ -127,7 +134,7 @@ class VoiceTest extends Component<Props, State> {
 
   _cancelRecognizing = async () => {
     try {
-      await Voice.cancel();
+      await Voice.cancelSpeech();
     } catch (e) {
       console.error(e);
     }
@@ -135,7 +142,7 @@ class VoiceTest extends Component<Props, State> {
 
   _destroyRecognizer = async () => {
     try {
-      await Voice.destroy();
+      await Voice.destroySpeech();
     } catch (e) {
       console.error(e);
     }
@@ -158,9 +165,8 @@ class VoiceTest extends Component<Props, State> {
           Press the button and start speaking.
         </Text>
         <Text style={styles.stat}>{`Started: ${this.state.started}`}</Text>
-        <Text style={styles.stat}>{`Recognized: ${
-          this.state.recognized
-        }`}</Text>
+        <Text
+          style={styles.stat}>{`Recognized: ${this.state.recognized}`}</Text>
         <Text style={styles.stat}>{`Pitch: ${this.state.pitch}`}</Text>
         <Text style={styles.stat}>{`Error: ${this.state.error}`}</Text>
         <Text style={styles.stat}>Results</Text>
