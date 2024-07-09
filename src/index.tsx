@@ -109,7 +109,6 @@ class RCTVoice {
       android: {},
     },
   ) {
-    console.log('startSpeech', locale, options);
     if (!this._loaded && !this._listeners && voiceEmitter !== null) {
       this._listeners = (Object.keys(this._events) as SpeechEvent[]).map(
         (key: SpeechEvent) => voiceEmitter.addListener(key, this._events[key]),

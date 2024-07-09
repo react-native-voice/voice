@@ -58,7 +58,6 @@ public class VoiceModule extends ReactContextBaseJavaModule implements Recogniti
   }
 
   private void startListening(ReadableMap opts) {
-    Log.d("ASR", "startListening()");
     if (speech != null) {
       speech.destroy();
       speech = null;
@@ -67,16 +66,13 @@ public class VoiceModule extends ReactContextBaseJavaModule implements Recogniti
     if(opts.hasKey("RECOGNIZER_ENGINE")) {
       switch (opts.getString("RECOGNIZER_ENGINE")) {
         case "GOOGLE": {
-          Log.d("ASR", "startListening() - GOOGLE");
           speech = SpeechRecognizer.createSpeechRecognizer(this.reactContext, ComponentName.unflattenFromString("com.google.android.googlequicksearchbox/com.google.android.voicesearch.serviceapi.GoogleRecognitionService"));
           break;
         }
         default:
-          Log.d("ASR", "startListening() - DEFAULT");
           speech = SpeechRecognizer.createSpeechRecognizer(this.reactContext);
       }
     } else {
-      Log.d("ASR", "startListening() - DEFAULT");
       speech = SpeechRecognizer.createSpeechRecognizer(this.reactContext);
     }
 
@@ -108,7 +104,7 @@ public class VoiceModule extends ReactContextBaseJavaModule implements Recogniti
           break;
         }
         case "EXTRA_ENABLE_FORMATTING": {
-          intent.putExtra(RecognizerIntent.EXTRA_ENABLE_FORMATTING, opts.getBoolean(key));
+          intent.putExtra(RecognizerIntent.EXTRA_ENABLE_FORMATTING, opts.getString(key));
           break;
         }
         case "EXTRA_PARTIAL_RESULTS": {
@@ -162,7 +158,6 @@ public class VoiceModule extends ReactContextBaseJavaModule implements Recogniti
 
   @ReactMethod
   public void startSpeech(final String locale, final ReadableMap opts, final Callback callback) {
-
     if (!isPermissionGranted() && opts.getBoolean("REQUEST_PERMISSIONS_AUTO")) {
       String[] PERMISSIONS = {Manifest.permission.RECORD_AUDIO};
       if (this.getCurrentActivity() != null) {
@@ -356,6 +351,10 @@ public class VoiceModule extends ReactContextBaseJavaModule implements Recogniti
 
   @Override
   public void onResults(Bundle results) {
+      // check if results is null or undefined
+    if (results == null || results.isEmpty()) {
+      return;
+    }
     WritableArray arr = Arguments.createArray();
 
     ArrayList<String> matches = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
@@ -412,5 +411,15 @@ public class VoiceModule extends ReactContextBaseJavaModule implements Recogniti
         break;
     }
     return message;
+  }
+
+  @ReactMethod
+  public void addListener(String eventName) {
+
+  }
+
+  @ReactMethod
+  public void removeListeners(Integer count) {
+
   }
 }

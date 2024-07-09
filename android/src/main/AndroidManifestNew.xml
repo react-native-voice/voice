@@ -1,2 +1,12 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<!-- for new RN versions https://github.com/callstack/react-native-builder-bob/pull/431 -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
+          package="com.reactnativevoice.voice">
+
+  <uses-sdk tools:overrideLibrary="com.facebook.react" />
+  <uses-permission android:name="android.permission.RECORD_AUDIO" />
+  <uses-permission android:name="android.permission.INTERNET" />
+  <queries>
+    <package android:name="com.google.android.googlequicksearchbox"/> 
+  </queries>
 </manifest>
