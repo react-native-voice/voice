@@ -104,7 +104,6 @@ class VoiceTest extends Component<Props, State> {
   };
 
   _startRecognizing = async () => {
-    console.log('_startRecognizing');
     this.setState({
       recognized: '',
       pitch: '',
@@ -117,6 +116,9 @@ class VoiceTest extends Component<Props, State> {
 
     try {
       await Voice.startSpeech('en-US', {
+        android: {
+          EXTRA_ENABLE_FORMATTING: 'quality',
+        },
         autoPunctuate: true,
       });
     } catch (e) {
