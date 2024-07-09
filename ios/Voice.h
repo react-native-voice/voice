@@ -5,8 +5,7 @@
 @interface Voice : NSObject <NativeVoiceSpec>
 #else
 #import <React/RCTBridgeModule.h>
+#import <React/RCTEventEmitter.h>
 
-@interface Voice : NSObject <RCTBridgeModule>
-#endif
-
+@interface Voice : RCTEventEmitter <RCTBridgeModule>
 @end
