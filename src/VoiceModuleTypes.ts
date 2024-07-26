@@ -1,4 +1,4 @@
-import { EventSubscriptionVendor } from 'react-native';
+import { EventSubscription } from 'react-native';
 
 type Callback = (error: string) => void;
 
@@ -20,7 +20,7 @@ export type VoiceModule = {
   isSpeechAvailable: Function;
 } & SpeechEvents &
   TranscriptionEvents &
-  EventSubscriptionVendor;
+  EventSubscription;
 
 export type SpeechEvents = {
   onSpeechStart?: (e: SpeechStartEvent) => void;

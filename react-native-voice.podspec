@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
 
   s.authors      = package['author']
   s.homepage     = package['homepage']
-  s.platform     = :ios, "9.0"
+  s.platforms    = { :ios => "9.0", :tvos => "15.0" }
 
   s.source       = { :git => "https://github.com/react-native-voice/voice.git" }
   s.source_files  = "ios/**/*.{h,m}"
