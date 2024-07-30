@@ -105,7 +105,13 @@ class RCTVoice {
   startSpeech(
     locale: any,
     options: StartSpeechOptions = {
+      /**
+       * for ios devices
+       */
       autoPunctuate: false,
+      /**
+       * for android devices
+       */
       android: {},
     },
   ) {

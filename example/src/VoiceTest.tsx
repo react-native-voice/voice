@@ -119,7 +119,7 @@ class VoiceTest extends Component<Props, State> {
         android: {
           EXTRA_ENABLE_FORMATTING: 'quality',
         },
-        autoPunctuate: true,
+        autoPunctuate: false,
       });
     } catch (e) {
       console.error(e);

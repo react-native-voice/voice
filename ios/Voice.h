@@ -8,4 +8,5 @@
 #import <React/RCTEventEmitter.h>
 
 @interface Voice : RCTEventEmitter <RCTBridgeModule>
+#endif
 @end
