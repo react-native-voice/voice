@@ -25,6 +25,8 @@
 @property float averagePowerForChannel0;
 @property float averagePowerForChannel1;
 
+@property BOOL hasSeenFinalResult;
+
 @end
 
 @implementation Voice {
@@ -357,11 +359,29 @@
 
                        BOOL isFinal = result.isFinal;
 
+                       if (@available(iOS 18.0, *)) {
+                         if (!isFinal) {
+                           if (result.speechRecognitionMetadata != nil) {
+                             isFinal = result.speechRecognitionMetadata.speechDuration > 0;
+                           } else {
+                             isFinal = NO;
+                           }
+                         }
+                       }
+
                        NSMutableArray *transcriptionDics = [NSMutableArray new];
-                       for (SFTranscription *transcription in result
-                                .transcriptions) {
-                         [transcriptionDics
-                             addObject:transcription.formattedString];
+                       for (SFTranscription* transcription in result.transcriptions) {
+                         NSString *transcript = transcription.formattedString;
+                         if (self->_hasSeenFinalResult) {
+                           transcript = [@" " stringByAppendingString:transcription.formattedString];
+                         }
+                         [transcriptionDics addObject:transcript];
+                       }
+
+                       if (@available(iOS 18.0, *)) {
+                         if (!result.isFinal && isFinal) {
+                           self->_hasSeenFinalResult = YES;
+                         }
                        }
 
                        [self sendResult :nil :result.bestTranscription.formattedString :transcriptionDics :[NSNumber numberWithBool:isFinal]];
