@@ -50,6 +50,6 @@
   },
   "dependencies": {
     "invariant": "^2.2.4",
-    "@expo/config-plugins": "^2.0.0"
+    "@expo/config-plugins": "^8.0.0"
   }
 }
