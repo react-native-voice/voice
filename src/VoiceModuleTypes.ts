@@ -1,4 +1,4 @@
-import { EventSubscriptionVendor } from 'react-native';
+import type { EventSubscriptionVendor } from 'react-native/Libraries/vendor/emitter/EventEmitter';
 
 type Callback = (error: string) => void;
 

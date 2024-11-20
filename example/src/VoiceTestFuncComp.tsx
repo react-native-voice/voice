@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -8,9 +8,9 @@ import {
 } from 'react-native';
 
 import Voice, {
-  SpeechRecognizedEvent,
-  SpeechResultsEvent,
-  SpeechErrorEvent,
+  type SpeechRecognizedEvent,
+  type SpeechResultsEvent,
+  type SpeechErrorEvent,
 } from '@react-native-voice/voice';
 
 function VoiceTest() {
@@ -19,8 +19,8 @@ function VoiceTest() {
   const [error, setError] = useState('');
   const [end, setEnd] = useState('');
   const [started, setStarted] = useState('');
-  const [results, setResults] = useState([]);
-  const [partialResults, setPartialResults] = useState([]);
+  const [results, setResults] = useState<string[]>([]);
+  const [partialResults, setPartialResults] = useState<string[]>([]);
 
   useEffect(() => {
     Voice.onSpeechStart = onSpeechStart;
@@ -58,12 +58,12 @@ function VoiceTest() {
 
   const onSpeechResults = (e: SpeechResultsEvent) => {
     console.log('onSpeechResults: ', e);
-    setResults(e.value);
+    setResults(e.value && e.value?.length > 0 ? e.value : []);
   };
 
   const onSpeechPartialResults = (e: SpeechResultsEvent) => {
     console.log('onSpeechPartialResults: ', e);
-    setPartialResults(e.value);
+    setPartialResults(e.value && e.value?.length > 0 ? e.value : []);
   };
 
   const onSpeechVolumeChanged = (e: any) => {
