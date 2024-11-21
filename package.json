@@ -41,7 +41,7 @@
     "dist",
     "android",
     "ios",
-    "react-native-voice.podspec",
+    "react-native-voice.podspec"
   ],
   "scripts": {
     "lint": "eslint src/*",
