@@ -25,6 +25,7 @@
     "voice"
   ],
   "license": "MIT",
+  "source": "src/index.ts",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "peerDependencies": {
@@ -35,6 +36,23 @@
     "type": "git",
     "url": "git://github.com/react-native-voice/voice.git"
   },
+  "files": [
+    "src",
+    "dist",
+    "android",
+    "ios",
+    "cpp",
+    "*.podspec",
+    "!ios/build",
+    "!android/build",
+    "!android/gradle",
+    "!android/gradlew",
+    "!android/gradlew.bat",
+    "!android/local.properties",
+    "!**/__fixtures__",
+    "!**/__mocks__",
+    "!**/.*"
+  ],
   "scripts": {
     "lint": "eslint src/*",
     "semantic-release": "semantic-release",
