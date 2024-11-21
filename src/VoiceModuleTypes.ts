@@ -1,27 +1,3 @@
-import type { EventSubscriptionVendor } from 'react-native/Libraries/vendor/emitter/EventEmitter';
-
-type Callback = (error: string) => void;
-
-export type VoiceModule = {
-  /**
-   * Gets list of SpeechRecognitionServices used.
-   * @platform android
-   */
-  getSpeechRecognitionServices: () => Promise<string[]> | void;
-  destroySpeech: (callback: Callback) => void;
-  destroyTranscription: (callback: Callback) => void;
-  startSpeech: Function;
-  startTranscription: Function;
-  stopSpeech: (callback: Callback) => void;
-  stopTranscription: (callback: Callback) => void;
-  cancelSpeech: (callback: Callback) => void;
-  cancelTranscription: (callback: Callback) => void;
-  isRecognizing: Function;
-  isSpeechAvailable: Function;
-} & SpeechEvents &
-  TranscriptionEvents &
-  EventSubscriptionVendor;
-
 export type SpeechEvents = {
   onSpeechStart?: (e: SpeechStartEvent) => void;
   onSpeechRecognized?: (e: SpeechRecognizedEvent) => void;

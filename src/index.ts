@@ -1,4 +1,9 @@
-import { NativeModules, NativeEventEmitter, Platform } from 'react-native';
+import {
+  NativeModules,
+  NativeEventEmitter,
+  Platform,
+  type EventSubscription,
+} from 'react-native';
 import invariant from 'invariant';
 import {
   type SpeechEvents,
@@ -21,7 +26,6 @@ const LINKING_ERROR =
   '- You rebuilt the app after installing the package\n' +
   '- You are not using Expo Go\n';
 
-// @ts-expect-error
 const isTurboModuleEnabled = global.__turboModuleProxy != null;
 
 const VoiceNativeModule = isTurboModuleEnabled
@@ -48,13 +52,13 @@ type SpeechEvent = keyof SpeechEvents;
 type TranscriptionEvent = keyof TranscriptionEvents;
 
 class RCTVoice {
-  _loaded: boolean;
-  _listeners: any[] | null;
-  _events: Required<SpeechEvents> & Required<TranscriptionEvents>;
+  private _loaded: boolean;
+  private _listeners: EventSubscription[];
+  private _events: Required<SpeechEvents> & Required<TranscriptionEvents>;
 
   constructor() {
     this._loaded = false;
-    this._listeners = null;
+    this._listeners = JSON.parse(JSON.stringify([]));
     this._events = {
       onSpeechStart: () => {},
       onSpeechRecognized: () => {},
@@ -71,17 +75,15 @@ class RCTVoice {
   }
 
   removeAllListeners() {
-    Voice.onSpeechStart = undefined;
-    Voice.onSpeechRecognized = undefined;
-    Voice.onSpeechEnd = undefined;
-    Voice.onSpeechError = undefined;
-    Voice.onSpeechResults = undefined;
-    Voice.onSpeechPartialResults = undefined;
-    Voice.onSpeechVolumeChanged = undefined;
-    Voice.onTranscriptionStart = undefined;
-    Voice.onTranscriptionEnd = undefined;
-    Voice.onTranscriptionError = undefined;
-    Voice.onTranscriptionResults = undefined;
+    if (this._listeners) {
+      this._listeners.forEach((listener) => {
+        if (listener?.remove) {
+          listener?.remove();
+        }
+      });
+
+      this._listeners = JSON.parse(JSON.stringify([]));
+    }
   }
 
   destroy() {
@@ -93,10 +95,7 @@ class RCTVoice {
         if (error) {
           reject(new Error(error));
         } else {
-          if (this._listeners) {
-            this._listeners.map((listener) => listener.remove());
-            this._listeners = null;
-          }
+          this.removeAllListeners();
           resolve();
         }
       });
@@ -111,9 +110,9 @@ class RCTVoice {
         if (error) {
           reject(new Error(error));
         } else {
-          if (this._listeners) {
-            this._listeners.map((listener) => listener.remove());
-            this._listeners = null;
+          if (this._listeners?.length > 0) {
+            this._listeners.forEach((listener) => listener.remove());
+            this._listeners = JSON.parse(JSON.stringify([]));
           }
           resolve();
         }
@@ -121,8 +120,12 @@ class RCTVoice {
     });
   }
 
-  start(locale: any, options = {}) {
-    if (!this._loaded && !this._listeners && voiceEmitter !== null) {
+  start(locale: string, options = {}) {
+    if (
+      !this._loaded &&
+      this._listeners.length === 0 &&
+      voiceEmitter !== null
+    ) {
       this._listeners = (Object.keys(this._events) as SpeechEvent[]).map(
         (key: SpeechEvent) => voiceEmitter.addListener(key, this._events[key]),
       );
@@ -155,7 +158,7 @@ class RCTVoice {
       }
     });
   }
-  startTranscription(url: any, locale: any, options = {}) {
+  startTranscription(url: string, locale: string, options = {}) {
     if (!this._loaded && !this._listeners && voiceEmitter !== null) {
       this._listeners = (Object.keys(this._events) as TranscriptionEvent[]).map(
         (key: TranscriptionEvent) =>
