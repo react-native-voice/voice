@@ -1,10 +1,12 @@
 version: 2.1
 orbs:
-  rn: react-native-community/react-native@3.0.0
+  rn: react-native-community/react-native@8.0.1
 
 jobs:
   checkout_code:
-    executor: rn/linux_js
+    executor:
+      name: rn/linux_js
+      node_version: "20.18.3"
     steps:
       - checkout
       - persist_to_workspace:
@@ -12,7 +14,9 @@ jobs:
           paths: .
 
   analyse_js:
-    executor: rn/linux_js
+    executor:
+      name: rn/linux_js
+      node_version: "20.18.3"
     steps:
       - attach_workspace:
           at: .
@@ -22,7 +26,9 @@ jobs:
           command: yarn lint
 
   type_check:
-    executor: rn/linux_js
+    executor:
+      name: rn/linux_js
+      node_version: "20.18.3"
     steps:
       - attach_workspace:
           at: .
@@ -31,31 +37,32 @@ jobs:
           name: Check for Typings
           command: yarn type-check
 
-
   release:
-    executor: rn/linux_js
+    executor:
+      name: rn/linux_js
+      node_version: "20.18.3"
     steps:
       - attach_workspace:
           at: .
       - rn/yarn_install
       - run:
-            name: Publish to NPM
-            command: yarn semantic-release || true
+          name: Publish to NPM
+          command: yarn semantic-release || true
 
 workflows:
   ci:
     jobs:
-    - checkout_code
-    - analyse_js:
-        requires:
-        - checkout_code
-    - type_check:
-        requires:
-        - checkout_code
-    - release:
-        requires:
-        - analyse_js
-        - type_check
-        filters:
+      - checkout_code
+      - analyse_js:
+          requires:
+            - checkout_code
+      - type_check:
+          requires:
+            - checkout_code
+      - release:
+          requires:
+            - analyse_js
+            - type_check
+          filters:
             branches:
               only: master

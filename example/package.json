@@ -10,7 +10,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@react-native-voice/voice": "github:SolankiYogesh/voice#new-arch",
+    "@react-native-voice/voice": "file:../",
     "react": "18.3.1",
     "react-native": "0.76.2"
   },
