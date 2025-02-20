@@ -119,6 +119,10 @@ public class VoiceModule extends ReactContextBaseJavaModule implements Recogniti
           intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS, extras.intValue());
           break;
         }
+        case "EXTRA_REQUEST_WORD_CONFIDENCE": {
+          intent.putExtra(RecognizerIntent.EXTRA_REQUEST_WORD_CONFIDENCE, opts.getBoolean(key));
+          break;
+        }
       }
     }
 
@@ -343,20 +347,31 @@ public class VoiceModule extends ReactContextBaseJavaModule implements Recogniti
   }
 
   @Override
-  public void onResults(Bundle results) {
+public void onResults(Bundle results) {
     WritableArray arr = Arguments.createArray();
+    WritableArray confidenceArr = Arguments.createArray();
 
     ArrayList<String> matches = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+    float[] confidenceScores = results.getFloatArray(SpeechRecognizer.CONFIDENCE_SCORES);
+
     if (matches != null) {
-      for (String result : matches) {
-        arr.pushString(result);
-      }
+        for (int i = 0; i < matches.size(); i++) {
+            arr.pushString(matches.get(i));
+            if (confidenceScores != null && i < confidenceScores.length) {
+                confidenceArr.pushDouble(confidenceScores[i]); // Push confidence score
+            } else {
+                confidenceArr.pushDouble(-1); // If confidence is not available, push -1
+            }
+        }
     }
+
     WritableMap event = Arguments.createMap();
     event.putArray("value", arr);
+    event.putArray("confidence", confidenceArr); // Send confidence scores to JS
+
     sendEvent("onSpeechResults", event);
-    Log.d("ASR", "onResults()");
-  }
+    Log.d("ASR", "onResults() - Confidence scores included");
+}
 
   @Override
   public void onRmsChanged(float rmsdB) {
