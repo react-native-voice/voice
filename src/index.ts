@@ -1,22 +1,49 @@
-import { NativeModules, NativeEventEmitter, Platform } from 'react-native';
+import {
+  NativeModules,
+  NativeEventEmitter,
+  Platform,
+  type EventSubscription,
+} from 'react-native';
 import invariant from 'invariant';
 import {
-  VoiceModule,
-  SpeechEvents,
-  TranscriptionEvents,
-  TranscriptionEndEvent,
-  TranscriptionErrorEvent,
-  TranscriptionStartEvent,
-  SpeechRecognizedEvent,
-  SpeechErrorEvent,
-  SpeechResultsEvent,
-  SpeechStartEvent,
-  SpeechEndEvent,
-  SpeechVolumeChangeEvent,
-  TranscriptionResultsEvent,
+  type SpeechEvents,
+  type TranscriptionEvents,
+  type TranscriptionEndEvent,
+  type TranscriptionErrorEvent,
+  type TranscriptionStartEvent,
+  type SpeechRecognizedEvent,
+  type SpeechErrorEvent,
+  type SpeechResultsEvent,
+  type SpeechStartEvent,
+  type SpeechEndEvent,
+  type SpeechVolumeChangeEvent,
+  type TranscriptionResultsEvent,
 } from './VoiceModuleTypes';
 
-const Voice = NativeModules.Voice as VoiceModule;
+const LINKING_ERROR =
+  `The package '@react-native-voice/voice' doesn't seem to be linked. Make sure: \n\n` +
+  Platform.select({ ios: "- You have run 'pod install'\n", default: '' }) +
+  '- You rebuilt the app after installing the package\n' +
+  '- You are not using Expo Go\n';
+
+const isTurboModuleEnabled = global.__turboModuleProxy != null;
+
+const VoiceNativeModule = isTurboModuleEnabled
+  ? Platform.OS === 'android'
+    ? require('./NativeVoiceAndroid').default
+    : require('./NativeVoiceIOS').default
+  : NativeModules.Voice;
+
+const Voice = VoiceNativeModule
+  ? VoiceNativeModule
+  : new Proxy(
+      {},
+      {
+        get() {
+          throw new Error(LINKING_ERROR);
+        },
+      },
+    );
 
 // NativeEventEmitter is only availabe on React Native platforms, so this conditional is used to avoid import conflicts in the browser/server
 const voiceEmitter =
@@ -25,13 +52,13 @@ type SpeechEvent = keyof SpeechEvents;
 type TranscriptionEvent = keyof TranscriptionEvents;
 
 class RCTVoice {
-  _loaded: boolean;
-  _listeners: any[] | null;
-  _events: Required<SpeechEvents> & Required<TranscriptionEvents>;
+  private _loaded: boolean;
+  private _listeners: EventSubscription[];
+  private _events: Required<SpeechEvents> & Required<TranscriptionEvents>;
 
   constructor() {
     this._loaded = false;
-    this._listeners = null;
+    this._listeners = JSON.parse(JSON.stringify([]));
     this._events = {
       onSpeechStart: () => {},
       onSpeechRecognized: () => {},
@@ -48,32 +75,27 @@ class RCTVoice {
   }
 
   removeAllListeners() {
-    Voice.onSpeechStart = undefined;
-    Voice.onSpeechRecognized = undefined;
-    Voice.onSpeechEnd = undefined;
-    Voice.onSpeechError = undefined;
-    Voice.onSpeechResults = undefined;
-    Voice.onSpeechPartialResults = undefined;
-    Voice.onSpeechVolumeChanged = undefined;
-    Voice.onTranscriptionStart = undefined;
-    Voice.onTranscriptionEnd = undefined;
-    Voice.onTranscriptionError = undefined;
-    Voice.onTranscriptionResults = undefined;
+    if (this._listeners) {
+      this._listeners.forEach((listener) => {
+        if (listener?.remove) {
+          listener?.remove();
+        }
+      });
+
+      this._listeners = JSON.parse(JSON.stringify([]));
+    }
   }
 
   destroy() {
     if (!this._loaded && !this._listeners) {
       return Promise.resolve();
     }
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       Voice.destroySpeech((error: string) => {
         if (error) {
           reject(new Error(error));
         } else {
-          if (this._listeners) {
-            this._listeners.map(listener => listener.remove());
-            this._listeners = null;
-          }
+          this.removeAllListeners();
           resolve();
         }
       });
@@ -88,9 +110,9 @@ class RCTVoice {
         if (error) {
           reject(new Error(error));
         } else {
-          if (this._listeners) {
-            this._listeners.map(listener => listener.remove());
-            this._listeners = null;
+          if (this._listeners?.length > 0) {
+            this._listeners.forEach((listener) => listener.remove());
+            this._listeners = JSON.parse(JSON.stringify([]));
           }
           resolve();
         }
@@ -98,14 +120,18 @@ class RCTVoice {
     });
   }
 
-  start(locale: any, options = {}) {
-    if (!this._loaded && !this._listeners && voiceEmitter !== null) {
+  start(locale: string, options = {}) {
+    if (
+      !this._loaded &&
+      this._listeners.length === 0 &&
+      voiceEmitter !== null
+    ) {
       this._listeners = (Object.keys(this._events) as SpeechEvent[]).map(
         (key: SpeechEvent) => voiceEmitter.addListener(key, this._events[key]),
       );
     }
 
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       const callback = (error: string) => {
         if (error) {
           reject(new Error(error));
@@ -132,7 +158,7 @@ class RCTVoice {
       }
     });
   }
-  startTranscription(url: any, locale: any, options = {}) {
+  startTranscription(url: string, locale: string, options = {}) {
     if (!this._loaded && !this._listeners && voiceEmitter !== null) {
       this._listeners = (Object.keys(this._events) as TranscriptionEvent[]).map(
         (key: TranscriptionEvent) =>
@@ -172,8 +198,8 @@ class RCTVoice {
     if (!this._loaded && !this._listeners) {
       return Promise.resolve();
     }
-    return new Promise((resolve, reject) => {
-      Voice.stopSpeech(error => {
+    return new Promise<void>((resolve, reject) => {
+      Voice.stopSpeech((error?: string) => {
         if (error) {
           reject(new Error(error));
         } else {
@@ -187,7 +213,7 @@ class RCTVoice {
       return Promise.resolve();
     }
     return new Promise<void>((resolve, reject) => {
-      Voice.stopTranscription(error => {
+      Voice.stopTranscription((error?: string) => {
         if (error) {
           reject(new Error(error));
         } else {
@@ -200,8 +226,8 @@ class RCTVoice {
     if (!this._loaded && !this._listeners) {
       return Promise.resolve();
     }
-    return new Promise((resolve, reject) => {
-      Voice.cancelSpeech(error => {
+    return new Promise<void>((resolve, reject) => {
+      Voice.cancelSpeech((error?: string) => {
         if (error) {
           reject(new Error(error));
         } else {
@@ -215,7 +241,7 @@ class RCTVoice {
       return Promise.resolve();
     }
     return new Promise<void>((resolve, reject) => {
-      Voice.cancelSpeech(error => {
+      Voice.cancelSpeech((error?: string) => {
         if (error) {
           reject(new Error(error));
         } else {
@@ -252,7 +278,7 @@ class RCTVoice {
   }
 
   isRecognizing(): Promise<0 | 1> {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       Voice.isRecognizing((isRecognizing: 0 | 1) => resolve(isRecognizing));
     });
   }
@@ -300,7 +326,7 @@ class RCTVoice {
   }
 }
 
-export {
+export type {
   SpeechEndEvent,
   SpeechErrorEvent,
   SpeechEvents,
