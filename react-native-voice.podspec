@@ -13,7 +13,7 @@ Pod::Spec.new do |s|
   s.homepage     = package['homepage']
   s.platform     = :ios, "9.0"
 
-  # Link with AVFoundation and Speech frameworks
+  # Link with Speech framework
   s.frameworks   = ['Speech']
 
   s.source       = { :git => "https://github.com/react-native-voice/voice.git" }
