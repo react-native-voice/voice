@@ -49,6 +49,7 @@
     "start": "yarn --cwd example start",
     "ios": "yarn --cwd example ios",
     "android": "yarn --cwd example android",
+    "prepare": "yarn build && yarn build:plugin",
     "build": "tsc",
     "dev-sync": "cp -r ./dist example/node_modules/@react-native-voice/voice",
     "type-check": "tsc -noEmit",
