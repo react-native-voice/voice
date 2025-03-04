@@ -14,7 +14,7 @@ Pod::Spec.new do |s|
   s.platform     = :ios, "9.0"
 
   # Link with AVFoundation and Speech frameworks
-  s.frameworks   = ['AVFoundation', 'Speech']
+  s.frameworks   = ['Speech']
 
   s.source       = { :git => "https://github.com/react-native-voice/voice.git" }
   s.source_files = "ios/**/*.{h,m,mm,cpp}"

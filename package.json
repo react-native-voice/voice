@@ -46,10 +46,9 @@
   "scripts": {
     "lint": "eslint src/*",
     "semantic-release": "semantic-release",
-    "start": "cd example && npm start",
-    "ios": "cd example && npm run ios",
-    "android": "cd example && npm run android",
-    "prepare": "npm run build && npm run build:plugin",
+    "start": "yarn --cwd example start",
+    "ios": "yarn --cwd example ios",
+    "android": "yarn --cwd example android",
     "build": "tsc",
     "dev-sync": "cp -r ./dist example/node_modules/@react-native-voice/voice",
     "type-check": "tsc -noEmit",
