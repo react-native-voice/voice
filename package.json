@@ -41,7 +41,7 @@
     "dist",
     "android",
     "ios",
-    "react-native-voice.podspec"
+    "react-native-voice.podspec",
   ],
   "scripts": {
     "lint": "eslint src/*",
@@ -54,11 +54,11 @@
     "dev-sync": "cp -r ./dist example/node_modules/@react-native-voice/voice",
     "type-check": "tsc -noEmit",
     "build:plugin": "tsc --build plugin",
-    "lint:plugin": "eslint plugin/src/*"
+    "lint:plugin": "eslint plugin/src/*",
   },
   "dependencies": {
     "@expo/config-plugins": "^9.0.9",
-    "invariant": "^2.2.4"
+    "invariant": "^2.2.4",
   },
   "codegenConfig": {
     "name": "RNVoiceSpec",
@@ -66,10 +66,10 @@
     "jsSrcsDir": "src",
     "outputDir": {
       "ios": "ios/generated",
-      "android": "android/generated"
+      "android": "android/generated",
     },
     "android": {
-      "javaPackageName": "com.wenkesj.voice"
-    }
+      "javaPackageName": "com.wenkesj.voice",
+    },
   }
 }
