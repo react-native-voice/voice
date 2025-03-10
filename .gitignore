@@ -21,3 +21,5 @@ plugin/build
 
 # user-specific files
 local.properties
+
+.xcode.env.local

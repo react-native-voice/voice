@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import {
   StyleSheet,
   Text,
@@ -8,9 +8,9 @@ import {
 } from 'react-native';
 
 import Voice, {
-  SpeechRecognizedEvent,
-  SpeechResultsEvent,
-  SpeechErrorEvent,
+  type SpeechRecognizedEvent,
+  type SpeechResultsEvent,
+  type SpeechErrorEvent,
 } from '@react-native-voice/voice';
 
 type Props = {};
@@ -81,14 +81,14 @@ class VoiceTest extends Component<Props, State> {
   onSpeechResults = (e: SpeechResultsEvent) => {
     console.log('onSpeechResults: ', e);
     this.setState({
-      results: e.value,
+      results: e.value && e.value?.length > 0 ? e.value : [],
     });
   };
 
   onSpeechPartialResults = (e: SpeechResultsEvent) => {
     console.log('onSpeechPartialResults: ', e);
     this.setState({
-      partialResults: e.value,
+      partialResults: e.value && e.value?.length > 0 ? e.value : [],
     });
   };
 
