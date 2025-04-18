@@ -1,4 +1,5 @@
 {
+  "extends": "expo-module-scripts/tsconfig.base",
   "compilerOptions": {
     "declaration": true /* Generates corresponding '.d.ts' file. */,
     "declarationMap": true /* Generates a sourcemap for each corresponding '.d.ts' file. */,
@@ -9,10 +10,6 @@
     "allowUnusedLabels": false,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "jsx": "react-jsx",
-    "lib": ["ESNext"],
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
     "noEmit": false,
     "noFallthroughCasesInSwitch": true,
     "noImplicitReturns": true,
@@ -24,7 +21,6 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
-    "target": "ESNext",
     "verbatimModuleSyntax": true,
     "noImplicitAny": false
   },
