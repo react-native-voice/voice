@@ -58,9 +58,7 @@
   },
   "dependencies": {
     "invariant": "^2.2.4",
-    "@expo/config-plugins": "^8.0.0"
-
-    "@expo/config-plugins": "^9.0.9",
+    "@expo/config-plugins": "^8.0.0",
     "invariant": "^2.2.4"
   },
   "codegenConfig": {
