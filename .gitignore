@@ -23,3 +23,6 @@ plugin/build
 local.properties
 
 .xcode.env.local
+
+# Visual Studio Code
+.vscode/

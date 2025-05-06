@@ -8,9 +8,9 @@
   "devDependencies": {
     "@react-native-community/eslint-config": "^3.2.0",
     "@semantic-release/git": "^10.0.1",
-    "@tsconfig/node10": "^1.0.11",
     "@types/invariant": "^2.2.37",
     "eslint": "9.20.1",
+    "expo-module-scripts": "^4.0.5",
     "lint-staged": "^15.2.10",
     "react": "18.3.1",
     "react-native": "^0.76.2",
@@ -29,8 +29,13 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "peerDependencies": {
-    "react": "*",
-    "react-native": "*"
+    "expo": ">=48.0.0",
+    "react-native": ">=0.71.0"
+  },
+  "peerDependenciesMeta": {
+    "expo": {
+      "optional": true
+    }
   },
   "repository": {
     "type": "git",
@@ -41,7 +46,9 @@
     "dist",
     "android",
     "ios",
-    "react-native-voice.podspec"
+    "react-native-voice.podspec",
+    "app.plugin.js",
+    "plugin"
   ],
   "scripts": {
     "lint": "eslint src/*",
@@ -57,7 +64,6 @@
     "lint:plugin": "eslint plugin/src/*"
   },
   "dependencies": {
-    "@expo/config-plugins": "^9.0.9",
     "invariant": "^2.2.4"
   },
   "codegenConfig": {
