@@ -307,20 +307,32 @@ class Voice (context:ReactApplicationContext):RecognitionListener {
     Log.d("ASR", "onError() - $errorMessage")
   }
 
-  override fun onResults(results: Bundle?) {
-    val arr = Arguments.createArray()
+override fun onResults(results: Bundle?) {
+  val arr = Arguments.createArray()
 
-    val matches = results!!.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-    if (matches != null) {
-      for (result in matches) {
-        arr.pushString(result)
+  try {
+    val matches = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+    
+    if (!matches.isNullOrEmpty()) {
+      for (i in 0 until matches.size) {
+        arr.pushString(matches[i])
       }
+    } else {
+      Log.w("ASR", "onResults(): matches is null or empty")
+      arr.pushString("") // aún puedes notificar algo vacío
     }
-    val event = Arguments.createMap()
-    event.putArray("value", arr)
-    sendEvent("onSpeechResults", event)
-    Log.d("ASR", "onResults()")
+
+  } catch (e: Exception) {
+    Log.e("ASR", "onResults(): Exception - ${e.message}")
+    arr.pushString("") // fallback si falla todo
   }
+
+  val event = Arguments.createMap()
+  event.putArray("value", arr)
+  sendEvent("onSpeechResults", event)
+  Log.d("ASR", "onResults()")
+}
+
 
   override fun onPartialResults(partialResults: Bundle?) {
     val arr = Arguments.createArray()
