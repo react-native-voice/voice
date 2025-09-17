@@ -60,7 +60,7 @@
     "prepare": "yarn build && yarn build:plugin",
     "build": "tsc",
     "dev-sync": "powershell -Command \"Copy-Item -Recurse -Force ./dist ./example/node_modules/@akshay/react-native-voice\"",
-    "type-check": "tsc -noEmit",
+    "type-check": "tsc --noEmit",
     "build:plugin": "tsc --build plugin",
     "lint:plugin": "eslint plugin/src/*"
   },
@@ -76,7 +76,7 @@
       "android": "android/generated"
     },
     "android": {
-      "javaPackageName": "com.wenkesj.voice"
+      "javaPackageName": "com.akshay.voice"
     }
   }
 }
