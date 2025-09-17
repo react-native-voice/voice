@@ -1,10 +1,10 @@
 {
-  "name": "@react-native-voice/voice",
-  "description": "React Native Native Voice library for iOS and Android",
-  "version": "3.2.4",
-  "author": "Sam Wenke <samwenke@gmail.com>",
+  "name": "@akshay/react-native-voice",
+  "description": "Custom fork of React Native Voice with AVAudioSession fixes and start options",
+  "version": "3.2.5",
+  "author": "Akshay Mahajan <your-email@example.com>",
   "private": false,
-  "homepage": "https://github.com/react-native-voice/voice",
+  "homepage": "git://github.com/akshaymahajan0807/react-native-voice.git",
   "devDependencies": {
     "@react-native-community/eslint-config": "^3.2.0",
     "@semantic-release/git": "^10.0.1",
@@ -22,7 +22,8 @@
     "ios",
     "react-native",
     "speech",
-    "voice"
+    "voice",
+    "speech-recognition"
   ],
   "license": "MIT",
   "source": "src/index.ts",
@@ -39,7 +40,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/react-native-voice/voice.git"
+    "url": "git://github.com/akshaymahajan0807/react-native-voice.git"
   },
   "files": [
     "src",
@@ -58,7 +59,7 @@
     "android": "yarn --cwd example android",
     "prepare": "yarn build && yarn build:plugin",
     "build": "tsc",
-    "dev-sync": "cp -r ./dist example/node_modules/@react-native-voice/voice",
+    "dev-sync": "powershell -Command \"Copy-Item -Recurse -Force ./dist ./example/node_modules/@akshay/react-native-voice\"",
     "type-check": "tsc -noEmit",
     "build:plugin": "tsc --build plugin",
     "lint:plugin": "eslint plugin/src/*"
