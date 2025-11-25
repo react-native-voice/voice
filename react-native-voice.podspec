@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   # Link with Speech framework
   s.frameworks   = ['Speech']
 
-  s.source       = { :git => "https://github.com/react-native-voice/voice.git" }
+  s.source       = { :git => "https://github.com/dev-amirzubair/voice.git" }
   s.source_files = "ios/**/*.{h,m,mm,cpp}"
   
 
