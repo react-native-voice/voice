@@ -4,53 +4,64 @@ import com.facebook.react.bridge.Callback
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReadableMap
-import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.ReactMethod
 
+/**
+ * React Native Voice Module
+ * Provides speech recognition functionality for both old and new architectures
+ */
 class VoiceModule internal constructor(context: ReactApplicationContext) :
   VoiceSpec(context) {
-  private val voice = Voice(context)
+  
+  // Single Voice instance - created once and reused
+  private val voiceInstance: Voice by lazy { Voice(context) }
+
+  // For new architecture - provides the Voice instance to the base class
+  override fun getVoice(): Voice = voiceInstance
 
   @ReactMethod
   override fun destroySpeech(callback: Callback) {
-    voice.destroySpeech(callback)
+    voiceInstance.destroySpeech(callback)
   }
 
   @ReactMethod
   override fun startSpeech(locale: String, opts: ReadableMap, callback: Callback) {
-    voice.startSpeech(locale,opts,callback)
+    voiceInstance.startSpeech(locale, opts, callback)
   }
 
   @ReactMethod
   override fun stopSpeech(callback: Callback) {
-    voice.stopSpeech(callback)
+    voiceInstance.stopSpeech(callback)
   }
 
   @ReactMethod
   override fun cancelSpeech(callback: Callback) {
-    voice.cancelSpeech(callback)
+    voiceInstance.cancelSpeech(callback)
   }
 
   @ReactMethod
   override fun isSpeechAvailable(callback: Callback) {
-    voice.isSpeechAvailable(callback)
+    voiceInstance.isSpeechAvailable(callback)
   }
 
   @ReactMethod
   override fun getSpeechRecognitionServices(promise: Promise) {
-    voice.getSpeechRecognitionServices(promise)
+    voiceInstance.getSpeechRecognitionServices(promise)
   }
 
   @ReactMethod
   override fun isRecognizing(callback: Callback) {
-    voice.isRecognizing(callback)
+    voiceInstance.isRecognizing(callback)
   }
 
+  @ReactMethod
   override fun addListener(eventType: String) {
-
+    // Required for NativeEventEmitter - no-op since we use DeviceEventEmitter
   }
 
+  @ReactMethod
   override fun removeListeners(count: Double) {
-
+    // Required for NativeEventEmitter - no-op since we use DeviceEventEmitter
   }
 
   override fun getName(): String {

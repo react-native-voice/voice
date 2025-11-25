@@ -58,7 +58,7 @@
     "android": "yarn --cwd example android",
     "prepare": "yarn build && yarn build:plugin",
     "build": "tsc",
-    "dev-sync": "cp -r ./dist example/node_modules/@react-native-voice/voice",
+    "dev-sync": "mkdir -p example/node_modules/@react-native-voice/voice/dist && cp -r ./dist/* example/node_modules/@react-native-voice/voice/dist/ && cp -r ./android example/node_modules/@react-native-voice/voice/ && cp -r ./ios example/node_modules/@react-native-voice/voice/ && cp -r ./src example/node_modules/@react-native-voice/voice/ && cp package.json react-native-voice.podspec example/node_modules/@react-native-voice/voice/",
     "type-check": "tsc -noEmit",
     "build:plugin": "tsc --build plugin",
     "lint:plugin": "eslint plugin/src/*"

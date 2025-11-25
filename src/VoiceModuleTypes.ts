@@ -31,8 +31,14 @@ export type SpeechResultsEvent = {
   value?: string[];
 };
 
+export type TranscriptionSegment = {
+  transcription?: string;
+  timestamp?: number;
+  duration?: number;
+};
+
 export type TranscriptionResultsEvent = {
-  segments?: string[];
+  segments?: TranscriptionSegment[];
   transcription?: string;
   isFinal?: boolean;
 };

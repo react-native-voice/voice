@@ -1,11 +1,5 @@
-import { useEffect, useState } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TouchableHighlight,
-} from 'react-native';
+import {useEffect, useState} from 'react';
+import {StyleSheet, Text, View, Image, TouchableHighlight} from 'react-native';
 
 import Voice, {
   type SpeechRecognizedEvent,
@@ -21,6 +15,7 @@ function VoiceTest() {
   const [started, setStarted] = useState('');
   const [results, setResults] = useState<string[]>([]);
   const [partialResults, setPartialResults] = useState<string[]>([]);
+  const [services, setServices] = useState<string[]>([]);
 
   useEffect(() => {
     Voice.onSpeechStart = onSpeechStart;
@@ -106,6 +101,18 @@ function VoiceTest() {
     _clearState();
   };
 
+  const _getServices = async () => {
+    try {
+      console.log('Getting speech recognition services...');
+      const servicesList = await Voice.getSpeechRecognitionServices();
+      console.log('Services found:', servicesList);
+      setServices(servicesList);
+    } catch (e) {
+      console.error('Error getting services:', e);
+      setError(`Services Error: ${e}`);
+    }
+  };
+
   const _clearState = () => {
     setRecognized('');
     setVolume('');
@@ -143,6 +150,16 @@ function VoiceTest() {
         );
       })}
       <Text style={styles.stat}>{`End: ${end}`}</Text>
+      <Text style={styles.stat}>Recognition Services</Text>
+      {services.length > 0 ? (
+        services.map((service, index) => (
+          <Text key={`service-${index}`} style={styles.stat}>
+            {service}
+          </Text>
+        ))
+      ) : (
+        <Text style={styles.stat}>No services found</Text>
+      )}
       <TouchableHighlight onPress={_startRecognizing}>
         <Image style={styles.button} source={require('./button.png')} />
       </TouchableHighlight>
@@ -154,6 +171,9 @@ function VoiceTest() {
       </TouchableHighlight>
       <TouchableHighlight onPress={_destroyRecognizer}>
         <Text style={styles.action}>Destroy</Text>
+      </TouchableHighlight>
+      <TouchableHighlight onPress={_getServices}>
+        <Text style={styles.action}>Get Services</Text>
       </TouchableHighlight>
     </View>
   );

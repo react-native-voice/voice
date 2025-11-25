@@ -50,12 +50,6 @@ def supportsNamespace() {
 android {
   if (supportsNamespace()) {
     namespace "com.wenkesj.voice"
-
-    sourceSets {
-      main {
-        manifest.srcFile "src/main/AndroidManifestNew.xml"
-      }
-    }
   }
 
   compileSdkVersion getExtOrIntegerDefault("compileSdkVersion")
@@ -115,6 +109,7 @@ dependencies {
   //noinspection GradleDynamicVersion
   implementation "com.facebook.react:react-native:+"
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+  implementation "androidx.core:core-ktx:1.9.0"
 }
 
 if (isNewArchitectureEnabled()) {
