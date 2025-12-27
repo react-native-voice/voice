@@ -28,11 +28,25 @@ jobs:
           distribution: "temurin"
           java-version: "17"
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: |
+          yarn install
+          cd example && yarn install
+
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
           languages: java-kotlin
-          build-mode: none
+
+      - name: Build Android
+        run: |
+          cd example/android
+          ./gradlew --no-daemon assembleDebug
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
