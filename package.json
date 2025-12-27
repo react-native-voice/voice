@@ -66,6 +66,9 @@
   "dependencies": {
     "invariant": "^2.2.4"
   },
+  "engines": {
+    "node": ">=22"
+  },
   "codegenConfig": {
     "name": "RNVoiceSpec",
     "type": "all",
