@@ -13,7 +13,11 @@ node_modules
 
 build/
 VoiceModule.iml
+
+# Package manager logs
 yarn-error.log
+bun-error.log
+npm-debug.log
 
 dist
 

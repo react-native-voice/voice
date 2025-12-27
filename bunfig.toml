@@ -1,0 +1,6 @@
+[install]
+# Use hoisted linker to avoid hanging issues with file: dependencies
+linker = "hoisted"
+# Disable auto-install of peer dependencies to avoid issues
+peer = false
+

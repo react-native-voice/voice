@@ -2,6 +2,29 @@ version: 2.1
 orbs:
   rn: react-native-community/react-native@8.0.1
 
+commands:
+  install_bun:
+    steps:
+      - restore_cache:
+          keys:
+            - bun-v1-{{ arch }}
+      - run:
+          name: Install Bun
+          command: |
+            if ! command -v bun &> /dev/null; then
+              curl -fsSL https://bun.sh/install | bash
+              echo 'export PATH="$HOME/.bun/bin:$PATH"' >> $BASH_ENV
+            fi
+      - save_cache:
+          key: bun-v1-{{ arch }}
+          paths:
+            - ~/.bun
+      - run:
+          name: Verify Bun installation
+          command: |
+            source $BASH_ENV
+            bun --version
+
 jobs:
   checkout_code:
     executor:
@@ -20,10 +43,21 @@ jobs:
     steps:
       - attach_workspace:
           at: .
-      - rn/yarn_install
+      - install_bun
+      - restore_cache:
+          keys:
+            - bun-deps-v1-{{ checksum "bun.lock" }}
+            - bun-deps-v1-
+      - run:
+          name: Install dependencies
+          command: bun install
+      - save_cache:
+          key: bun-deps-v1-{{ checksum "bun.lock" }}
+          paths:
+            - node_modules
       - run:
           name: Run ESLint
-          command: yarn lint
+          command: bun run lint
 
   type_check:
     executor:
@@ -32,10 +66,21 @@ jobs:
     steps:
       - attach_workspace:
           at: .
-      - rn/yarn_install
+      - install_bun
+      - restore_cache:
+          keys:
+            - bun-deps-v1-{{ checksum "bun.lock" }}
+            - bun-deps-v1-
+      - run:
+          name: Install dependencies
+          command: bun install
+      - save_cache:
+          key: bun-deps-v1-{{ checksum "bun.lock" }}
+          paths:
+            - node_modules
       - run:
           name: Check for Typings
-          command: yarn type-check
+          command: bun run type-check
 
   release:
     executor:
@@ -44,10 +89,21 @@ jobs:
     steps:
       - attach_workspace:
           at: .
-      - rn/yarn_install
+      - install_bun
+      - restore_cache:
+          keys:
+            - bun-deps-v1-{{ checksum "bun.lock" }}
+            - bun-deps-v1-
+      - run:
+          name: Install dependencies
+          command: bun install
+      - save_cache:
+          key: bun-deps-v1-{{ checksum "bun.lock" }}
+          paths:
+            - node_modules
       - run:
           name: Publish to NPM
-          command: yarn semantic-release || true
+          command: bun run semantic-release || true
 
 workflows:
   ci:

@@ -9,7 +9,7 @@
             alt="chat on Discord"></a>
 
 ```sh
-yarn add @react-native-voice/voice
+bun add @react-native-voice/voice
 
 # or
 

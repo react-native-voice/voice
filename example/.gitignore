@@ -39,6 +39,7 @@ local.properties
 node_modules/
 npm-debug.log
 yarn-error.log
+bun-error.log
 
 # fastlane
 #
@@ -65,10 +66,13 @@ yarn-error.log
 # testing
 /coverage
 
-# Yarn
+# Yarn (legacy)
 .yarn/*
 !.yarn/patches
 !.yarn/plugins
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+# Bun
+.bun
