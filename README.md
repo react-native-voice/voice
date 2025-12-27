@@ -35,6 +35,7 @@ npx pod-install
 - [Permissions](#permissions)
   - [Android](#android)
   - [iOS](#ios)
+- [Local Development](#local-development)
 - [Contributors](#contributors)
 
 <h2 align="center">Linking</h2>
@@ -247,6 +248,10 @@ Please see the documentation provided by ReactNative for this: [PermissionsAndro
 [npm-url]: https://npmjs.com/package/@react-native-voice/voice
 [circle-ci-badge]: https://img.shields.io/circleci/project/github/react-native-voice/voice/master.svg?style=flat-square
 
+<h2 align="center">Local Development</h2>
+
+For a detailed guide on how to test local changes in another React Native project, please see the [Local Development Guide](./docs/LOCAL_DEVELOPMENT.md).
+
 <h2 align="center">Contributors</h2>
 
 - @asafron
@@ -255,6 +260,7 @@ Please see the documentation provided by ReactNative for this: [PermissionsAndro
 - @chitezh
 - @ifsnow
 - @jamsch
+- @jsnavarroc
 - @misino
 - @Noitidart
 - @ohtangza & @hayanmind
