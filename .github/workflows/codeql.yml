@@ -30,6 +30,8 @@ jobs:
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.10.2"
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -50,7 +52,7 @@ jobs:
           languages: java-kotlin
 
       - name: Build Android
-        run: ./gradlew --no-daemon assembleDebug
+        run: gradle --no-daemon assembleDebug
         working-directory: example/android
 
       - name: Perform CodeQL Analysis
