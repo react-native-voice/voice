@@ -46,6 +46,7 @@ jobs:
       - name: Build Android
         run: |
           cd example/android
+          gradle wrapper
           ./gradlew --no-daemon assembleDebug
 
       - name: Perform CodeQL Analysis
