@@ -27,16 +27,20 @@ jobs:
         with:
           distribution: "temurin"
           java-version: "17"
+          cache: "gradle"
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "lts/*"
+          cache: "yarn"
 
-      - name: Install dependencies
-        run: |
-          yarn install
-          cd example && yarn install
+      - name: Install root dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Install example dependencies
+        run: yarn install --frozen-lockfile
+        working-directory: example
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
