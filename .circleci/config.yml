@@ -47,7 +47,7 @@ jobs:
       - rn/yarn_install
       - run:
           name: Publish to NPM
-          command: yarn semantic-release || true
+          command: yarn semantic-release
 
 workflows:
   ci:
