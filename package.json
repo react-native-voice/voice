@@ -1,7 +1,7 @@
 {
   "name": "@react-native-voice/voice",
   "description": "React Native Native Voice library for iOS and Android",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "author": "Sam Wenke <samwenke@gmail.com>",
   "private": false,
   "homepage": "https://github.com/react-native-voice/voice",
