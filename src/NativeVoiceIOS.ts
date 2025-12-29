@@ -5,6 +5,7 @@ export interface Spec extends TurboModule {
   destroySpeech: (callback: (error: string) => void) => void;
   startSpeech: (locale: string, callback: (error: string) => void) => void;
   startTranscription: (
+    filePath: string,
     locale: string,
     callback: (error: string) => void,
   ) => void;
@@ -15,10 +16,15 @@ export interface Spec extends TurboModule {
   isSpeechAvailable: (
     callback: (isAvailable: boolean, error: string) => void,
   ) => void;
-  isRecognizing: (callback: (Recognizing: boolean) => void) => void;
+  isRecognizing: (callback: (isRecognizing: boolean) => void) => void;
+  /**
+   * Add an event listener for speech recognition events
+   * Supported events: 'onSpeechStart', 'onSpeechRecognized', 'onSpeechEnd', 'onSpeechError', 'onSpeechResults', 'onSpeechPartialResults', 'onSpeechVolumeChanged', 'onTranscriptionStart', 'onTranscriptionEnd', 'onTranscriptionError', 'onTranscriptionResults'
+   */
   addListener: (eventType: string) => void;
   removeListeners: (count: number) => void;
   destroyTranscription: (callback: (error: string) => void) => void;
 }
 
-export default TurboModuleRegistry.getEnforcing<Spec>('Voice');
+// Use get() instead of getEnforcing() to allow graceful fallback
+export default TurboModuleRegistry.get<Spec>('Voice');

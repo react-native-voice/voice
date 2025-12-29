@@ -1772,7 +1772,7 @@ SPEC CHECKSUMS:
   React-logger: addd140841248966c2547eb94836399cc1061f4d
   React-Mapbuffer: 029b5332e78af8c67c4b5e65edfc717068b8eac1
   React-microtasksnativemodule: f30949ee318ba90b9668de1e325b98838b9a4da2
-  react-native-voice: 7548ce5ff00cd04bdb8e42bf6e2bd3e8b71d4f2b
+  react-native-voice: bf610989fa43b0c98e60f86925200f9aa8803050
   React-nativeconfig: 470fce6d871c02dc5eff250a362d56391b7f52d6
   React-NativeModulesApple: 1586448c61a7c2bd4040cc03ccde66a72037e77e
   React-perflogger: c8860eaab4fe60d628b27bf0086a372c429fc74f
@@ -1805,4 +1805,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 71a689932e49f453bd6454dd189b45915dda66a0
 
-COCOAPODS: 1.15.2
+COCOAPODS: 1.16.2
