@@ -1,10 +1,10 @@
 {
-  "name": "@dev-amirzubair/react-native-voice",
-  "description": "React Native Voice library for iOS and Android - Fork with New Architecture, Bridgeless mode, and React Native 0.76+ support",
+  "name": "@react-native-voice/voice",
+  "description": "React Native Voice Recognition library for iOS and Android (Online and Offline Support)",
   "version": "1.0.1",
-  "author": "Amir Zubair <amirzubairbutt@email.com>",
+  "author": "React Native Voice Contributors",
   "private": false,
-  "homepage": "https://github.com/dev-amirzubair/voice",
+  "homepage": "https://github.com/react-native-voice/voice",
   "devDependencies": {
     "@react-native-community/eslint-config": "^3.2.0",
     "@semantic-release/git": "^10.0.1",
@@ -45,7 +45,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/dev-amirzubair/voice.git"
+    "url": "git://github.com/react-native-voice/voice.git"
   },
   "files": [
     "src",

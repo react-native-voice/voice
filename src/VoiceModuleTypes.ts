@@ -31,15 +31,29 @@ export type SpeechResultsEvent = {
   value?: string[];
 };
 
+/**
+ * Transcription segment with timing metadata (iOS only)
+ * Used for file-based transcription with word-level timing information
+ */
 export type TranscriptionSegment = {
   transcription?: string;
   timestamp?: number;
   duration?: number;
 };
 
+/**
+ * Transcription results event
+ * Note: Transcription is iOS-only. Android does not support transcription.
+ * 
+ * Backward compatible: All fields are optional. The `segments` field is an addition
+ * to the existing `transcription` field, not a replacement.
+ */
 export type TranscriptionResultsEvent = {
+  /** Array of transcription segments with timing (iOS only, optional) */
   segments?: TranscriptionSegment[];
+  /** Full transcription text (backward compatible, optional) */
   transcription?: string;
+  /** Whether this is the final result (optional) */
   isFinal?: boolean;
 };
 

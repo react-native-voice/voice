@@ -69,7 +69,7 @@ function VoiceTest() {
     setPartialResults(newPartialResults);
   }, []);
 
-  const onSpeechVolumeChanged = useCallback((e: any) => {
+  const onSpeechVolumeChanged = useCallback((e: {value?: number}) => {
     setPitch(e.value);
   }, []);
 
@@ -85,15 +85,8 @@ function VoiceTest() {
     return () => {
       Voice.destroy().then(Voice.removeAllListeners);
     };
-  }, [
-    onSpeechStart,
-    onSpeechRecognized,
-    onSpeechEnd,
-    onSpeechError,
-    onSpeechResults,
-    onSpeechPartialResults,
-    onSpeechVolumeChanged,
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Empty deps array - callbacks are stable via useCallback
 
   const _clearState = () => {
     setRecognized('');

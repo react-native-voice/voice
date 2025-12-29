@@ -1,31 +1,25 @@
 # React Native Voice
 
-[![npm](https://img.shields.io/npm/v/@dev-amirzubair/react-native-voice.svg?style=flat-square)](https://npmjs.com/package/@dev-amirzubair/react-native-voice)
+[![npm](https://img.shields.io/npm/v/@react-native-voice/voice.svg?style=flat-square)](https://npmjs.com/package/@react-native-voice/voice)
 
-A speech-to-text library for [React Native](https://reactnative.dev/) with **New Architecture (Fabric/TurboModules)** and **Bridgeless mode** support.
+🎤 React Native Voice Recognition library for iOS and Android (Online and Offline Support)
 
-> **Note:** This library is a fork of [@react-native-voice/voice](https://github.com/react-native-voice/voice) with custom fixes for React Native 0.76+ and the New Architecture. [View source on GitHub](https://github.com/dev-amirzubair/voice)
-
-## What's Different?
-
-This fork includes the following improvements over the original library:
+## Features
 
 - ✅ **New Architecture Support** - Works with Fabric and TurboModules
 - ✅ **Bridgeless Mode** - Full support for React Native's Bridgeless mode
 - ✅ **React Native 0.76+** - Tested and working with the latest RN versions
-- ✅ **Fixed Android Event Emission** - Events properly reach JavaScript in new architecture
-- ✅ **Fixed iOS TurboModule Registration** - Proper fallback handling for iOS
-- ✅ **Improved Locale Handling** - Better support for Indo-Pak region languages
-- ✅ **Clean TypeScript Types** - Updated type definitions
+- ✅ **Cross-platform** - Works on both iOS and Android
+- ✅ **Online and Offline** - Supports both online and offline speech recognition
 
 ## Installation
 
 ```sh
-yarn add @dev-amirzubair/react-native-voice
+yarn add @react-native-voice/voice
 
 # or
 
-npm install @dev-amirzubair/react-native-voice --save
+npm install @react-native-voice/voice --save
 ```
 
 ### iOS Setup
@@ -41,7 +35,7 @@ No additional setup required - autolinking handles everything.
 ## Usage
 
 ```javascript
-import Voice from '@dev-amirzubair/react-native-voice';
+import Voice from '@react-native-voice/voice';
 
 // Set up event handlers
 Voice.onSpeechStart = () => console.log('Speech started');
@@ -65,7 +59,7 @@ await Voice.destroy();
 ```javascript
 import React, { useEffect, useState, useCallback } from 'react';
 import { View, Text, Button } from 'react-native';
-import Voice from '@dev-amirzubair/react-native-voice';
+import Voice from '@react-native-voice/voice';
 
 function SpeechToText() {
   const [results, setResults] = useState([]);
@@ -178,7 +172,7 @@ Add to your `app.json`:
 ```json
 {
   "expo": {
-    "plugins": ["@dev-amirzubair/react-native-voice"]
+    "plugins": ["@react-native-voice/voice"]
   }
 }
 ```
@@ -194,13 +188,20 @@ Use a physical iOS device - simulators don't support speech recognition.
 ### Events not firing
 Make sure you set up event handlers **before** calling `Voice.start()`.
 
-## Credits
+## Contributors
 
-This library is based on [@react-native-voice/voice](https://github.com/react-native-voice/voice) by the React Native Voice contributors. Special thanks to:
-
-- @wenkesj (original author)
-- @jamsch
-- All original contributors
+* @asafron
+* @BrendanFDMoore
+* @brudny
+* @chitezh
+* @ifsnow
+* @jamsch
+* @misino
+* @Noitidart
+* @ohtangza & @hayanmind
+* @rudiedev6
+* @tdonia
+* @wenkesj
 
 ## License
 

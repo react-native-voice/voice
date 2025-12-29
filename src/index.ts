@@ -186,12 +186,8 @@ class RCTVoice {
     });
   }
   startTranscription(url: string, locale: string, options = {}) {
-    if (!this._loaded && !this._listeners && voiceEmitter !== null) {
-      this._listeners = (Object.keys(this._events) as TranscriptionEvent[]).map(
-        (key: TranscriptionEvent) =>
-          voiceEmitter.addListener(key, this._events[key]),
-      );
-    }
+    // Ensure listeners are set up BEFORE starting transcription
+    this._setupListeners();
 
     return new Promise<void>((resolve, reject) => {
       const callback = (error: string) => {
@@ -268,7 +264,7 @@ class RCTVoice {
       return Promise.resolve();
     }
     return new Promise<void>((resolve, reject) => {
-      Voice.cancelSpeech((error?: string) => {
+      Voice.cancelTranscription((error?: string) => {
         if (error) {
           reject(new Error(error));
         } else {
@@ -363,12 +359,19 @@ class RCTVoice {
     this._setupListeners();
   }
 
+  /**
+   * Sets up event listeners for all registered event handlers.
+   * This method is called before starting recognition to ensure listeners are active.
+   * Note: Listeners are removed and re-added each time to ensure they're in sync with current handlers.
+   * This is safe and performant as event listener operations are lightweight.
+   */
   private _setupListeners() {
     if (voiceEmitter === null) {
       return;
     }
     
     // Remove existing listeners before setting up new ones
+    // This ensures listeners are always in sync with current event handlers
     if (this._listeners.length > 0) {
       this._listeners.forEach(listener => {
         try {
@@ -380,10 +383,13 @@ class RCTVoice {
       this._listeners = [];
     }
     
-    // Set up listeners for all events
+    // Set up listeners for all events (both Speech and Transcription events)
     const newListeners: EventSubscription[] = [];
+    const allEventKeys = [
+      ...(Object.keys(this._events) as (SpeechEvent | TranscriptionEvent)[]),
+    ];
     
-    (Object.keys(this._events) as SpeechEvent[]).forEach((key: SpeechEvent) => {
+    allEventKeys.forEach((key: SpeechEvent | TranscriptionEvent) => {
       const handler = this._events[key];
       
       if (!handler || typeof handler !== 'function') {

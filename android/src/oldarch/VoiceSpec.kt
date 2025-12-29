@@ -15,7 +15,7 @@ abstract class VoiceSpec internal constructor(context: ReactApplicationContext) 
 
   // For compatibility with VoiceModule (shared between old/new arch)
   protected open fun getVoice(): Voice {
-    throw NotImplementedError("getVoice() must be implemented by subclass")
+    throw UnsupportedOperationException("getVoice() must be implemented by subclass")
   }
 
   abstract fun destroySpeech(callback: Callback)
