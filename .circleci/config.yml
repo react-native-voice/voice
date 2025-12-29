@@ -6,7 +6,7 @@ jobs:
   checkout_code:
     executor:
       name: rn/linux_js
-      node_version: "20.18.3"
+      node_version: "22.12.0"
     steps:
       - checkout
       - persist_to_workspace:
@@ -16,7 +16,7 @@ jobs:
   analyse_js:
     executor:
       name: rn/linux_js
-      node_version: "20.18.3"
+      node_version: "22.12.0"
     steps:
       - attach_workspace:
           at: .
@@ -28,7 +28,7 @@ jobs:
   type_check:
     executor:
       name: rn/linux_js
-      node_version: "20.18.3"
+      node_version: "22.12.0"
     steps:
       - attach_workspace:
           at: .
@@ -40,14 +40,14 @@ jobs:
   release:
     executor:
       name: rn/linux_js
-      node_version: "20.18.3"
+      node_version: "22.12.0"
     steps:
       - attach_workspace:
           at: .
       - rn/yarn_install
       - run:
           name: Publish to NPM
-          command: yarn semantic-release || true
+          command: yarn semantic-release
 
 workflows:
   ci:
