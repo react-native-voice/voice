@@ -29,9 +29,6 @@ const LINKING_ERROR =
 //@ts-expect-error - Check if TurboModules are enabled (new architecture)
 const isTurboModuleEnabled = global.__turboModuleProxy != null;
 
-//@ts-expect-error - Check if Bridgeless mode is enabled
-const isBridgelessEnabled = global.RN$Bridgeless === true;
-
 // Try to get the native module - with fallback for Bridgeless mode
 const getVoiceModule = () => {
   // Try TurboModule first if enabled
@@ -117,7 +114,7 @@ class RCTVoice {
         }
       });
 
-      this._listeners = JSON.parse(JSON.stringify([]));
+      this._listeners = [];
     }
   }
 
@@ -147,7 +144,7 @@ class RCTVoice {
         } else {
           if (this._listeners?.length > 0) {
             this._listeners.forEach((listener) => listener.remove());
-            this._listeners = JSON.parse(JSON.stringify([]));
+            this._listeners = [];
           }
           resolve();
         }
@@ -458,4 +455,5 @@ export type {
   TranscriptionStartEvent,
   TranscriptionResultsEvent,
 };
+export { isTranscriptionSegmentArray } from './VoiceModuleTypes';
 export default new RCTVoice();

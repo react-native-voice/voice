@@ -121,6 +121,9 @@ function VoiceTest() {
     setStarted('');
     setResults([]);
     setPartialResults([]);
+    // Note: Services are device capabilities that don't change, but we clear them
+    // for UI consistency when resetting the recognition state
+    setServices([]);
   };
 
   return (

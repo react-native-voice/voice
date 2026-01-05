@@ -45,20 +45,30 @@ export type TranscriptionSegment = {
  * Transcription results event
  * Note: Transcription is iOS-only. Android does not support transcription.
  * 
- * The `segments` field supports both string[] (legacy) and TranscriptionSegment[] (new)
- * for backward compatibility. The native implementation sends TranscriptionSegment[],
- * but TypeScript allows both types to prevent breaking existing code.
+ * IMPORTANT: At runtime, `segments` is always `TranscriptionSegment[]` (objects).
+ * The union type `string[] | TranscriptionSegment[]` is only for TypeScript backward
+ * compatibility. The native iOS implementation never sends string arrays.
  */
 export type TranscriptionResultsEvent = {
   /** 
    * Array of transcription segments (iOS only, optional)
-   * Supports both legacy string[] and new TranscriptionSegment[] format
    * 
-   * Legacy format: string[] - array of transcription strings
-   * New format: TranscriptionSegment[] - objects with transcription, timestamp, duration
+   * Runtime type: Always TranscriptionSegment[] (objects with transcription, timestamp, duration)
+   * TypeScript type: string[] | TranscriptionSegment[] (for backward compatibility)
    * 
-   * The native iOS implementation sends TranscriptionSegment[] format.
-   * For backward compatibility, TypeScript allows both types.
+   * Use `isTranscriptionSegmentArray()` type guard to safely check the format at runtime.
+   * 
+   * @example
+   * ```typescript
+   * Voice.onTranscriptionResults = (e) => {
+   *   if (e.segments && isTranscriptionSegmentArray(e.segments)) {
+   *     // TypeScript now knows e.segments is TranscriptionSegment[]
+   *     e.segments.forEach(segment => {
+   *       console.log(segment.transcription, segment.timestamp);
+   *     });
+   *   }
+   * };
+   * ```
    */
   segments?: string[] | TranscriptionSegment[];
   /** Full transcription text (unchanged, backward compatible, optional) */
@@ -66,6 +76,36 @@ export type TranscriptionResultsEvent = {
   /** Whether this is the final result (optional) */
   isFinal?: boolean;
 };
+
+/**
+ * Type guard to check if segments is TranscriptionSegment[] format
+ * 
+ * At runtime, segments is always TranscriptionSegment[], but this guard helps
+ * TypeScript narrow the type and provides runtime safety.
+ * 
+ * @param segments - The segments array to check
+ * @returns true if segments is TranscriptionSegment[] format
+ * 
+ * @example
+ * ```typescript
+ * if (e.segments && isTranscriptionSegmentArray(e.segments)) {
+ *   // TypeScript knows e.segments is TranscriptionSegment[]
+ *   e.segments.forEach(segment => {
+ *     console.log(segment.transcription, segment.timestamp);
+ *   });
+ * }
+ * ```
+ */
+export function isTranscriptionSegmentArray(
+  segments: string[] | TranscriptionSegment[] | undefined
+): segments is TranscriptionSegment[] {
+  if (!segments || segments.length === 0) {
+    return false;
+  }
+  // Check if first element is an object (TranscriptionSegment) or string
+  const first = segments[0];
+  return typeof first === 'object' && first !== null && 'transcription' in first;
+}
 
 export type SpeechErrorEvent = {
   error?: {
