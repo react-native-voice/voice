@@ -99,8 +99,13 @@ export type TranscriptionResultsEvent = {
 export function isTranscriptionSegmentArray(
   segments: string[] | TranscriptionSegment[] | undefined
 ): segments is TranscriptionSegment[] {
-  if (!segments || segments.length === 0) {
+  if (!segments) {
     return false;
+  }
+  // Empty array: At runtime, segments is always TranscriptionSegment[], so empty array
+  // should be considered the new format (TranscriptionSegment[])
+  if (segments.length === 0) {
+    return true;
   }
   // Check if first element is an object (TranscriptionSegment) or string
   const first = segments[0];

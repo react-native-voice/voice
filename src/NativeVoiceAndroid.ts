@@ -47,4 +47,5 @@ export interface Spec extends TurboModule {
   removeListeners: (count: number) => void;
 }
 
-export default TurboModuleRegistry.getEnforcing<Spec>('Voice');
+// Use get() instead of getEnforcing() for graceful fallback if module isn't available
+export default TurboModuleRegistry.get<Spec>('Voice');
