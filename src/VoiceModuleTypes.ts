@@ -45,17 +45,22 @@ export type TranscriptionSegment = {
  * Transcription results event
  * Note: Transcription is iOS-only. Android does not support transcription.
  * 
- * The `segments` field is a NEW feature (not a breaking change) that provides
- * word-level timing information. The original `transcription` field remains
- * unchanged for backward compatibility.
+ * The `segments` field supports both string[] (legacy) and TranscriptionSegment[] (new)
+ * for backward compatibility. The native implementation sends TranscriptionSegment[],
+ * but TypeScript allows both types to prevent breaking existing code.
  */
 export type TranscriptionResultsEvent = {
   /** 
-   * Array of transcription segments with timing (iOS only, optional)
-   * NEW in v1.0.1: This field was added to provide word-level timing metadata.
-   * Previously, only the `transcription` field was available.
+   * Array of transcription segments (iOS only, optional)
+   * Supports both legacy string[] and new TranscriptionSegment[] format
+   * 
+   * Legacy format: string[] - array of transcription strings
+   * New format: TranscriptionSegment[] - objects with transcription, timestamp, duration
+   * 
+   * The native iOS implementation sends TranscriptionSegment[] format.
+   * For backward compatibility, TypeScript allows both types.
    */
-  segments?: TranscriptionSegment[];
+  segments?: string[] | TranscriptionSegment[];
   /** Full transcription text (unchanged, backward compatible, optional) */
   transcription?: string;
   /** Whether this is the final result (optional) */

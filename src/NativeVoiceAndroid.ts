@@ -3,8 +3,20 @@ import { TurboModuleRegistry } from 'react-native';
 
 export type SpeechOptions = {
   EXTRA_LANGUAGE_MODEL?: string;
-  EXTRA_MAX_RESULTS?: number;
-  EXTRA_PARTIAL_RESULTS?: boolean;
+  /** 
+   * Maximum number of results
+   * Supports both legacy string format and new number format for backward compatibility
+   * Legacy: string (e.g., "5") - will be converted to number
+   * New: number (e.g., 5) - preferred format
+   */
+  EXTRA_MAX_RESULTS?: string | number;
+  /** 
+   * Enable partial results
+   * Supports both legacy string format and new boolean format for backward compatibility
+   * Legacy: string (e.g., "true") - will be converted to boolean
+   * New: boolean (e.g., true) - preferred format
+   */
+  EXTRA_PARTIAL_RESULTS?: string | boolean;
   REQUEST_PERMISSIONS_AUTO?: boolean;
   RECOGNIZER_ENGINE?: string;
   EXTRA_SPEECH_INPUT_MINIMUM_LENGTH_MILLIS?: number;

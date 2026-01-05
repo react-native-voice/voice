@@ -140,12 +140,51 @@ class Voice(context: ReactApplicationContext) : RecognitionListener {
         }
 
         "EXTRA_MAX_RESULTS" -> {
-          val extras = opts.getDouble(key)
-          intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, extras.toInt())
+          // Support both string (legacy) and number (new) for backward compatibility
+          if (opts.hasKey(key) && !opts.isNull(key)) {
+            val value = when (opts.getType(key)) {
+              com.facebook.react.bridge.ReadableType.String -> {
+                // Legacy string format - convert to number
+                try {
+                  opts.getString(key)?.toIntOrNull()
+                } catch (e: Exception) {
+                  null
+                }
+              }
+              else -> {
+                // New number format
+                try {
+                  opts.getDouble(key).toInt()
+                } catch (e: Exception) {
+                  null
+                }
+              }
+            }
+            if (value != null) {
+              intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, value)
+            }
+          }
         }
 
         "EXTRA_PARTIAL_RESULTS" -> {
-          intent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, opts.getBoolean(key))
+          // Support both string (legacy) and boolean (new) for backward compatibility
+          if (opts.hasKey(key) && !opts.isNull(key)) {
+            val value = when (opts.getType(key)) {
+              com.facebook.react.bridge.ReadableType.String -> {
+                // Legacy string format - convert to boolean
+                opts.getString(key)?.lowercase() == "true"
+              }
+              else -> {
+                // New boolean format
+                try {
+                  opts.getBoolean(key)
+                } catch (e: Exception) {
+                  false
+                }
+              }
+            }
+            intent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, value)
+          }
         }
 
         "EXTRA_SPEECH_INPUT_MINIMUM_LENGTH_MILLIS" -> {

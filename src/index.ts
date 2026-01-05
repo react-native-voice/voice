@@ -122,7 +122,7 @@ class RCTVoice {
   }
 
   destroy() {
-    if (!this._loaded && !this._listeners) {
+    if (!this._loaded || this._listeners.length === 0) {
       return Promise.resolve();
     }
     return new Promise<void>((resolve, reject) => {
@@ -137,7 +137,7 @@ class RCTVoice {
     });
   }
   destroyTranscription() {
-    if (!this._loaded && !this._listeners) {
+    if (!this._loaded || this._listeners.length === 0) {
       return Promise.resolve();
     }
     return new Promise<void>((resolve, reject) => {
@@ -220,7 +220,7 @@ class RCTVoice {
     });
   }
   stop() {
-    if (!this._loaded && !this._listeners) {
+    if (!this._loaded || this._listeners.length === 0) {
       return Promise.resolve();
     }
     return new Promise<void>((resolve, reject) => {
@@ -234,7 +234,7 @@ class RCTVoice {
     });
   }
   stopTranscription() {
-    if (!this._loaded && !this._listeners) {
+    if (!this._loaded || this._listeners.length === 0) {
       return Promise.resolve();
     }
     return new Promise<void>((resolve, reject) => {
@@ -248,7 +248,7 @@ class RCTVoice {
     });
   }
   cancel() {
-    if (!this._loaded && !this._listeners) {
+    if (!this._loaded || this._listeners.length === 0) {
       return Promise.resolve();
     }
     return new Promise<void>((resolve, reject) => {
@@ -262,7 +262,7 @@ class RCTVoice {
     });
   }
   cancelTranscription() {
-    if (!this._loaded && !this._listeners) {
+    if (!this._loaded || this._listeners.length === 0) {
       return Promise.resolve();
     }
     return new Promise<void>((resolve, reject) => {
