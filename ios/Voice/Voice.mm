@@ -29,8 +29,6 @@
 @implementation Voice {
 }
 
-
-
 ///** Returns "YES" if no errors had occurred */
 - (BOOL)setupAudioSession {
   if ([self isHeadsetPluggedIn] || [self isHeadSetBluetooth]) {
@@ -164,11 +162,6 @@
 
   self.speechRecognizer.delegate = self;
 
-  [self sendEventWithName:@"onTranscriptionError"
-                     body:@{
-                       @"error" :
-                           @{@"code" : @"fake_error", @"message" : filePath}
-                     }];
   // Set up recognition request
   self.recognitionUrlRequest = [[SFSpeechURLRecognitionRequest alloc]
       initWithURL:[NSURL fileURLWithPath:filePath]];
@@ -302,6 +295,10 @@
  // Configure request so that results are returned before audio
  // recording is finished
  self.recognitionRequest.shouldReportPartialResults = YES;
+  // Set task hint for better end-of-speech detection (like dictation)
+  self.recognitionRequest.taskHint = SFSpeechRecognitionTaskHintDictation;
+  // Ensure continuous mode is off for auto-stop behavior
+  self.continuous = NO;
 
  if (self.recognitionRequest == nil) {
    [self sendResult:@{@"code" : @"recognition_init"}:nil:nil:nil];
@@ -580,9 +577,8 @@ RCT_EXPORT_METHOD(isRecognizing : (RCTResponseSenderBlock)callback) {
  }
 }
 
-RCT_EXPORT_METHOD(startSpeech
-                 : (NSString *)localeStr callback
-                 : (RCTResponseSenderBlock)callback) {
+RCT_EXPORT_METHOD(startSpeech : (NSString *)
+                      localeStr callback : (RCTResponseSenderBlock)callback) {
  if (self.recognitionTask != nil) {
    [self sendResult:RCTMakeError(@"Speech recognition already started!", nil,
                                  nil):nil:nil:nil];
@@ -613,10 +609,8 @@ RCT_EXPORT_METHOD(startSpeech
  callback(@[ @false ]);
 }
 
-RCT_EXPORT_METHOD(startTranscription
-                  : (NSString *)filePath withLocaleStr
-                  : (NSString *)localeStr callback
-                  : (RCTResponseSenderBlock)callback) {
+RCT_EXPORT_METHOD(startTranscription : (NSString *)filePath withLocaleStr : (
+    NSString *)localeStr callback : (RCTResponseSenderBlock)callback) {
   if (self.recognitionTask != nil) {
     [self sendResult:RCTMakeError(@"Speech recognition already started!", nil,
                                   nil):nil:nil:nil];
@@ -646,8 +640,6 @@ RCT_EXPORT_METHOD(startTranscription
   }];
   callback(@[ @false ]);
 }
- 
-
 
 + (BOOL)requiresMainQueueSetup {
     return YES;
@@ -656,8 +648,7 @@ RCT_EXPORT_METHOD(startTranscription
 // Don't compile this code when we build for the old architecture.
 #ifdef RCT_NEW_ARCH_ENABLED
 - (std::shared_ptr<facebook::react::TurboModule>)getTurboModule:
-    (const facebook::react::ObjCTurboModule::InitParams &)params
-{
+    (const facebook::react::ObjCTurboModule::InitParams &)params {
     return std::make_shared<facebook::react::NativeVoiceIOSSpecJSI>(params);
 }
 #endif
@@ -667,6 +658,5 @@ RCT_EXPORT_METHOD(startTranscription
 }
 
 RCT_EXPORT_MODULE()
-
 
 @end

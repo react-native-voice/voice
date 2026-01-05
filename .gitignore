@@ -26,3 +26,4 @@ local.properties
 
 # Visual Studio Code
 .vscode/
+.gradle

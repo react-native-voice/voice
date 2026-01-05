@@ -1,10 +1,10 @@
 import {
   NativeModules,
+  DeviceEventEmitter,
   NativeEventEmitter,
   Platform,
   type EventSubscription,
 } from 'react-native';
-import invariant from 'invariant';
 import {
   type SpeechEvents,
   type TranscriptionEvents,
@@ -26,29 +26,58 @@ const LINKING_ERROR =
   '- You rebuilt the app after installing the package\n' +
   '- You are not using Expo Go\n';
 
-//@ts-expect-error
+//@ts-expect-error - Check if TurboModules are enabled (new architecture)
 const isTurboModuleEnabled = global.__turboModuleProxy != null;
 
-const VoiceNativeModule = isTurboModuleEnabled
-  ? Platform.OS === 'android'
-    ? require('./NativeVoiceAndroid').default
-    : require('./NativeVoiceIOS').default
-  : NativeModules.Voice;
+// Try to get the native module - with fallback for Bridgeless mode
+const getVoiceModule = () => {
+  // Try TurboModule first if enabled
+  if (isTurboModuleEnabled) {
+    try {
+      const turboModule = Platform.OS === 'android'
+        ? require('./NativeVoiceAndroid').default
+        : require('./NativeVoiceIOS').default;
+      if (turboModule) {
+        return turboModule;
+      }
+    } catch (e) {
+      // TurboModule not available, fall through to NativeModules
+    }
+  }
+  
+  // Fallback to NativeModules (works in both Bridge and Bridgeless mode)
+  return NativeModules.Voice;
+};
 
-const Voice = VoiceNativeModule
-  ? VoiceNativeModule
-  : new Proxy(
-      {},
-      {
-        get() {
-          throw new Error(LINKING_ERROR);
-        },
-      },
-    );
+const Voice = getVoiceModule() || new Proxy(
+  {},
+  {
+    get() {
+      throw new Error(LINKING_ERROR);
+    },
+  },
+);
 
-// NativeEventEmitter is only availabe on React Native platforms, so this conditional is used to avoid import conflicts in the browser/server
-const voiceEmitter =
-  Platform.OS !== 'web' ? new NativeEventEmitter(Voice) : null;
+// Platform-specific event emitter setup:
+// - iOS: Always uses RCTEventEmitter (module-specific), needs NativeEventEmitter
+// - Android: Uses RCTDeviceEventEmitter (global), needs DeviceEventEmitter
+const voiceEmitter = (() => {
+  if (Platform.OS === 'web') {
+    return null;
+  }
+  
+  // iOS always uses NativeEventEmitter with the Voice module
+  if (Platform.OS === 'ios') {
+    try {
+      return Voice ? new NativeEventEmitter(Voice) : DeviceEventEmitter;
+    } catch (e) {
+      return DeviceEventEmitter;
+    }
+  }
+  
+  // Android uses DeviceEventEmitter (global event bus)
+  return DeviceEventEmitter;
+})();
 type SpeechEvent = keyof SpeechEvents;
 type TranscriptionEvent = keyof TranscriptionEvents;
 
@@ -56,10 +85,12 @@ class RCTVoice {
   private _loaded: boolean;
   private _listeners: EventSubscription[];
   private _events: Required<SpeechEvents> & Required<TranscriptionEvents>;
+  private _needsListenerUpdate: boolean;
 
   constructor() {
     this._loaded = false;
-    this._listeners = JSON.parse(JSON.stringify([]));
+    this._listeners = [];
+    this._needsListenerUpdate = false;
     this._events = {
       onSpeechStart: () => {},
       onSpeechRecognized: () => {},
@@ -83,12 +114,12 @@ class RCTVoice {
         }
       });
 
-      this._listeners = JSON.parse(JSON.stringify([]));
+      this._listeners = [];
     }
   }
 
   destroy() {
-    if (!this._loaded && !this._listeners) {
+    if (!this._loaded || this._listeners.length === 0) {
       return Promise.resolve();
     }
     return new Promise<void>((resolve, reject) => {
@@ -103,7 +134,7 @@ class RCTVoice {
     });
   }
   destroyTranscription() {
-    if (!this._loaded && !this._listeners) {
+    if (!this._loaded || this._listeners.length === 0) {
       return Promise.resolve();
     }
     return new Promise<void>((resolve, reject) => {
@@ -113,7 +144,7 @@ class RCTVoice {
         } else {
           if (this._listeners?.length > 0) {
             this._listeners.forEach((listener) => listener.remove());
-            this._listeners = JSON.parse(JSON.stringify([]));
+            this._listeners = [];
           }
           resolve();
         }
@@ -122,16 +153,9 @@ class RCTVoice {
   }
 
   start(locale: string, options = {}) {
-    if (
-      !this._loaded &&
-      this._listeners.length === 0 &&
-      voiceEmitter !== null
-    ) {
-      this._listeners = (Object.keys(this._events) as SpeechEvent[]).map(
-        (key: SpeechEvent) => voiceEmitter.addListener(key, this._events[key]),
-      );
-    }
-
+    // Ensure listeners are set up BEFORE starting recognition
+    this._setupListeners();
+    
     return new Promise<void>((resolve, reject) => {
       const callback = (error: string) => {
         if (error) {
@@ -140,6 +164,7 @@ class RCTVoice {
           resolve();
         }
       };
+      
       if (Platform.OS === 'android') {
         Voice.startSpeech(
           locale,
@@ -160,12 +185,8 @@ class RCTVoice {
     });
   }
   startTranscription(url: string, locale: string, options = {}) {
-    if (!this._loaded && !this._listeners && voiceEmitter !== null) {
-      this._listeners = (Object.keys(this._events) as TranscriptionEvent[]).map(
-        (key: TranscriptionEvent) =>
-          voiceEmitter.addListener(key, this._events[key]),
-      );
-    }
+    // Ensure listeners are set up BEFORE starting transcription
+    this._setupListeners();
 
     return new Promise<void>((resolve, reject) => {
       const callback = (error: string) => {
@@ -196,7 +217,7 @@ class RCTVoice {
     });
   }
   stop() {
-    if (!this._loaded && !this._listeners) {
+    if (!this._loaded || this._listeners.length === 0) {
       return Promise.resolve();
     }
     return new Promise<void>((resolve, reject) => {
@@ -210,7 +231,7 @@ class RCTVoice {
     });
   }
   stopTranscription() {
-    if (!this._loaded && !this._listeners) {
+    if (!this._loaded || this._listeners.length === 0) {
       return Promise.resolve();
     }
     return new Promise<void>((resolve, reject) => {
@@ -224,7 +245,7 @@ class RCTVoice {
     });
   }
   cancel() {
-    if (!this._loaded && !this._listeners) {
+    if (!this._loaded || this._listeners.length === 0) {
       return Promise.resolve();
     }
     return new Promise<void>((resolve, reject) => {
@@ -238,11 +259,11 @@ class RCTVoice {
     });
   }
   cancelTranscription() {
-    if (!this._loaded && !this._listeners) {
+    if (!this._loaded || this._listeners.length === 0) {
       return Promise.resolve();
     }
     return new Promise<void>((resolve, reject) => {
-      Voice.cancelSpeech((error?: string) => {
+      Voice.cancelTranscription((error?: string) => {
         if (error) {
           reject(new Error(error));
         } else {
@@ -266,13 +287,13 @@ class RCTVoice {
   /**
    * (Android) Get a list of the speech recognition engines available on the device
    * */
-  getSpeechRecognitionServices() {
+  getSpeechRecognitionServices(): Promise<string[]> {
     if (Platform.OS !== 'android') {
-      invariant(
-        Voice,
-        'Speech recognition services can be queried for only on Android',
+      return Promise.reject(
+        new Error(
+          'Speech recognition services can be queried for only on Android',
+        ),
       );
-      return;
     }
 
     return Voice.getSpeechRecognitionServices();
@@ -285,45 +306,138 @@ class RCTVoice {
   }
 
   set onSpeechStart(fn: (e: SpeechStartEvent) => void) {
-    this._events.onSpeechStart = fn;
+    if (this._events.onSpeechStart !== fn) {
+      this._events.onSpeechStart = fn;
+      this._needsListenerUpdate = true;
+    }
   }
 
   set onTranscriptionStart(fn: (e: TranscriptionStartEvent) => void) {
-    this._events.onTranscriptionStart = fn;
+    if (this._events.onTranscriptionStart !== fn) {
+      this._events.onTranscriptionStart = fn;
+      this._needsListenerUpdate = true;
+    }
   }
 
   set onSpeechRecognized(fn: (e: SpeechRecognizedEvent) => void) {
-    this._events.onSpeechRecognized = fn;
+    if (this._events.onSpeechRecognized !== fn) {
+      this._events.onSpeechRecognized = fn;
+      this._needsListenerUpdate = true;
+    }
   }
 
   set onSpeechEnd(fn: (e: SpeechEndEvent) => void) {
-    this._events.onSpeechEnd = fn;
+    if (this._events.onSpeechEnd !== fn) {
+      this._events.onSpeechEnd = fn;
+      this._needsListenerUpdate = true;
+    }
   }
 
   set onTranscriptionEnd(fn: (e: SpeechEndEvent) => void) {
-    this._events.onTranscriptionEnd = fn;
+    if (this._events.onTranscriptionEnd !== fn) {
+      this._events.onTranscriptionEnd = fn;
+      this._needsListenerUpdate = true;
+    }
   }
   set onSpeechError(fn: (e: SpeechErrorEvent) => void) {
-    this._events.onSpeechError = fn;
+    if (this._events.onSpeechError !== fn) {
+      this._events.onSpeechError = fn;
+      this._needsListenerUpdate = true;
+    }
   }
 
   set onTranscriptionError(fn: (e: TranscriptionErrorEvent) => void) {
-    this._events.onTranscriptionError = fn;
+    if (this._events.onTranscriptionError !== fn) {
+      this._events.onTranscriptionError = fn;
+      this._needsListenerUpdate = true;
+    }
   }
 
   set onSpeechResults(fn: (e: SpeechResultsEvent) => void) {
-    this._events.onSpeechResults = fn;
+    if (this._events.onSpeechResults !== fn) {
+      this._events.onSpeechResults = fn;
+      this._needsListenerUpdate = true;
+    }
   }
 
   set onTranscriptionResults(fn: (e: TranscriptionResultsEvent) => void) {
-    this._events.onTranscriptionResults = fn;
+    if (this._events.onTranscriptionResults !== fn) {
+      this._events.onTranscriptionResults = fn;
+      this._needsListenerUpdate = true;
+    }
   }
 
   set onSpeechPartialResults(fn: (e: SpeechResultsEvent) => void) {
-    this._events.onSpeechPartialResults = fn;
+    if (this._events.onSpeechPartialResults !== fn) {
+      this._events.onSpeechPartialResults = fn;
+      this._needsListenerUpdate = true;
+    }
   }
   set onSpeechVolumeChanged(fn: (e: SpeechVolumeChangeEvent) => void) {
-    this._events.onSpeechVolumeChanged = fn;
+    if (this._events.onSpeechVolumeChanged !== fn) {
+      this._events.onSpeechVolumeChanged = fn;
+      this._needsListenerUpdate = true;
+    }
+  }
+
+  /**
+   * Sets up event listeners for all registered event handlers.
+   * This method is called before starting recognition to ensure listeners are active.
+   * Listeners are only updated when handlers have changed (tracked via _needsListenerUpdate).
+   */
+  private _setupListeners() {
+    if (voiceEmitter === null) {
+      return;
+    }
+    
+    // Only update listeners if handlers have changed or listeners haven't been set up yet
+    if (!this._needsListenerUpdate && this._loaded && this._listeners.length > 0) {
+      return;
+    }
+    
+    // Remove existing listeners before setting up new ones
+    if (this._listeners.length > 0) {
+      this._listeners.forEach(listener => {
+        try {
+          listener.remove();
+        } catch (e) {
+          // Ignore errors when removing listeners
+        }
+      });
+      this._listeners = [];
+    }
+    
+    // Set up listeners for all events (both Speech and Transcription events)
+    const newListeners: EventSubscription[] = [];
+    const allEventKeys = [
+      ...(Object.keys(this._events) as (SpeechEvent | TranscriptionEvent)[]),
+    ];
+    
+    allEventKeys.forEach((key: SpeechEvent | TranscriptionEvent) => {
+      const handler = this._events[key];
+      
+      if (!handler || typeof handler !== 'function') {
+        return;
+      }
+      
+      const currentHandler = handler;
+      
+      const listener = voiceEmitter!.addListener(key, (event: any) => {
+        if (currentHandler) {
+          try {
+            currentHandler(event);
+          } catch (error) {
+            // Handler error - silently ignore
+          }
+        }
+      });
+      
+      newListeners.push(listener);
+    });
+    
+    this._listeners = newListeners;
+    this._loaded = true;
+    this._needsListenerUpdate = false;
   }
 }
 
@@ -341,4 +455,5 @@ export type {
   TranscriptionStartEvent,
   TranscriptionResultsEvent,
 };
+export { isTranscriptionSegmentArray } from './VoiceModuleTypes';
 export default new RCTVoice();
