@@ -36,10 +36,15 @@
   "types": "dist/index.d.ts",
   "peerDependencies": {
     "expo": ">=48.0.0",
-    "react-native": ">=0.71.0"
+    "react": ">=18.0.0",
+    "react-native": ">=0.71.0",
+    "react-is": ">=16.12.0 || ^17.0.0 || ^18.0.0"
   },
   "peerDependenciesMeta": {
     "expo": {
+      "optional": true
+    },
+    "react-is": {
       "optional": true
     }
   },

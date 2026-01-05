@@ -51,7 +51,7 @@ abstract class VoiceSpec internal constructor(context: ReactApplicationContext) 
     // Required for NativeEventEmitter
   }
 
-  override fun getName(): String {
+    override fun getName(): String {
     return NAME
   }
 

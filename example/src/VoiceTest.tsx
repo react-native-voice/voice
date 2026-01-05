@@ -20,7 +20,7 @@ const DEBUG = __DEV__;
 
 function VoiceTest() {
   const [recognized, setRecognized] = useState('');
-  const [pitch, setPitch] = useState('');
+  const [pitch, setPitch] = useState<number | undefined>(undefined);
   const [error, setError] = useState('');
   const [end, setEnd] = useState('');
   const [started, setStarted] = useState('');
@@ -90,7 +90,7 @@ function VoiceTest() {
 
   const _clearState = () => {
     setRecognized('');
-    setPitch('');
+    setPitch(undefined);
     setError('');
     setStarted('');
     setResults([]);

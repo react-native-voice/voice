@@ -179,6 +179,24 @@ Add to your `app.json`:
 
 ## Troubleshooting
 
+### Module Resolution Error: `react-is` cannot be resolved
+
+If you see an error about `react-is` module resolution:
+
+```bash
+# Install react-is explicitly
+yarn add react-is
+# or
+npm install react-is
+```
+
+Then clear Metro cache:
+```bash
+npx react-native start --reset-cache
+```
+
+See [TROUBLESHOOTING.md](./TROUBLESHOOTING.md) for more details.
+
 ### Android: No speech recognition services found
 Install the [Google Search app](https://play.google.com/store/apps/details?id=com.google.android.googlequicksearchbox) from Play Store.
 

@@ -88,10 +88,12 @@ class RCTVoice {
   private _loaded: boolean;
   private _listeners: EventSubscription[];
   private _events: Required<SpeechEvents> & Required<TranscriptionEvents>;
+  private _needsListenerUpdate: boolean;
 
   constructor() {
     this._loaded = false;
     this._listeners = [];
+    this._needsListenerUpdate = false;
     this._events = {
       onSpeechStart: () => {},
       onSpeechRecognized: () => {},
@@ -307,71 +309,96 @@ class RCTVoice {
   }
 
   set onSpeechStart(fn: (e: SpeechStartEvent) => void) {
-    this._events.onSpeechStart = fn;
-    this._setupListeners();
+    if (this._events.onSpeechStart !== fn) {
+      this._events.onSpeechStart = fn;
+      this._needsListenerUpdate = true;
+    }
   }
 
   set onTranscriptionStart(fn: (e: TranscriptionStartEvent) => void) {
-    this._events.onTranscriptionStart = fn;
-    this._setupListeners();
+    if (this._events.onTranscriptionStart !== fn) {
+      this._events.onTranscriptionStart = fn;
+      this._needsListenerUpdate = true;
+    }
   }
 
   set onSpeechRecognized(fn: (e: SpeechRecognizedEvent) => void) {
-    this._events.onSpeechRecognized = fn;
-    this._setupListeners();
+    if (this._events.onSpeechRecognized !== fn) {
+      this._events.onSpeechRecognized = fn;
+      this._needsListenerUpdate = true;
+    }
   }
 
   set onSpeechEnd(fn: (e: SpeechEndEvent) => void) {
-    this._events.onSpeechEnd = fn;
-    this._setupListeners();
+    if (this._events.onSpeechEnd !== fn) {
+      this._events.onSpeechEnd = fn;
+      this._needsListenerUpdate = true;
+    }
   }
 
   set onTranscriptionEnd(fn: (e: SpeechEndEvent) => void) {
-    this._events.onTranscriptionEnd = fn;
-    this._setupListeners();
+    if (this._events.onTranscriptionEnd !== fn) {
+      this._events.onTranscriptionEnd = fn;
+      this._needsListenerUpdate = true;
+    }
   }
   set onSpeechError(fn: (e: SpeechErrorEvent) => void) {
-    this._events.onSpeechError = fn;
-    this._setupListeners();
+    if (this._events.onSpeechError !== fn) {
+      this._events.onSpeechError = fn;
+      this._needsListenerUpdate = true;
+    }
   }
 
   set onTranscriptionError(fn: (e: TranscriptionErrorEvent) => void) {
-    this._events.onTranscriptionError = fn;
-    this._setupListeners();
+    if (this._events.onTranscriptionError !== fn) {
+      this._events.onTranscriptionError = fn;
+      this._needsListenerUpdate = true;
+    }
   }
 
   set onSpeechResults(fn: (e: SpeechResultsEvent) => void) {
-    this._events.onSpeechResults = fn;
-    this._setupListeners();
+    if (this._events.onSpeechResults !== fn) {
+      this._events.onSpeechResults = fn;
+      this._needsListenerUpdate = true;
+    }
   }
 
   set onTranscriptionResults(fn: (e: TranscriptionResultsEvent) => void) {
-    this._events.onTranscriptionResults = fn;
-    this._setupListeners();
+    if (this._events.onTranscriptionResults !== fn) {
+      this._events.onTranscriptionResults = fn;
+      this._needsListenerUpdate = true;
+    }
   }
 
   set onSpeechPartialResults(fn: (e: SpeechResultsEvent) => void) {
-    this._events.onSpeechPartialResults = fn;
-    this._setupListeners();
+    if (this._events.onSpeechPartialResults !== fn) {
+      this._events.onSpeechPartialResults = fn;
+      this._needsListenerUpdate = true;
+    }
   }
   set onSpeechVolumeChanged(fn: (e: SpeechVolumeChangeEvent) => void) {
-    this._events.onSpeechVolumeChanged = fn;
-    this._setupListeners();
+    if (this._events.onSpeechVolumeChanged !== fn) {
+      this._events.onSpeechVolumeChanged = fn;
+      this._needsListenerUpdate = true;
+    }
   }
 
   /**
    * Sets up event listeners for all registered event handlers.
    * This method is called before starting recognition to ensure listeners are active.
-   * Note: Listeners are removed and re-added each time to ensure they're in sync with current handlers.
-   * This is safe and performant as event listener operations are lightweight.
+   * Listeners are only updated when handlers have changed (tracked via _needsListenerUpdate).
    */
   private _setupListeners() {
     if (voiceEmitter === null) {
       return;
     }
     
+    // Only update listeners if handlers have changed or listeners haven't been set up yet
+    if (!this._needsListenerUpdate && this._loaded && this._listeners.length > 0) {
+      return;
+    }
+    
     // Remove existing listeners before setting up new ones
-    // This ensures listeners are always in sync with current event handlers
     if (this._listeners.length > 0) {
       this._listeners.forEach(listener => {
         try {
@@ -413,6 +440,7 @@ class RCTVoice {
     
     this._listeners = newListeners;
     this._loaded = true;
+    this._needsListenerUpdate = false;
   }
 }
 
