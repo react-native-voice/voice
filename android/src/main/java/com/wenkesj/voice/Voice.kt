@@ -136,7 +136,9 @@ class Voice (context:ReactApplicationContext):RecognitionListener {
   }
 
   fun startSpeech(locale: String?, opts: ReadableMap, callback: Callback?) {
-    if (!isPermissionGranted() && opts.getBoolean("REQUEST_PERMISSIONS_AUTO")) {
+    if (!isPermissionGranted()
+      && opts.hasKey("REQUEST_PERMISSIONS_AUTO")
+      && opts.getBoolean("REQUEST_PERMISSIONS_AUTO")) {
       val PERMISSIONS = arrayOf<String>(Manifest.permission.RECORD_AUDIO)
       if (reactContext.currentActivity != null) {
         (reactContext.currentActivity as PermissionAwareActivity).requestPermissions(
@@ -147,7 +149,12 @@ class Voice (context:ReactApplicationContext):RecognitionListener {
             val granted = grantResults[i] == PackageManager.PERMISSION_GRANTED
             permissionsGranted = permissionsGranted && granted
           }
-          startSpeechWithPermissions(locale!!, opts, callback!!)
+          if (permissionsGranted) {
+            startSpeechWithPermissions(locale!!, opts, callback!!)
+          } else {
+            // We only start recognition when permission is granted.
+            callback?.invoke("Insufficient permissions")
+          }
           permissionsGranted
         }
       }
