@@ -3,8 +3,10 @@ package com.wenkesj.voice
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.media.AudioManager
 import android.os.Bundle
 import android.os.Handler
 import android.speech.RecognitionListener
@@ -29,6 +31,29 @@ class Voice (context:ReactApplicationContext):RecognitionListener {
   private var speech: SpeechRecognizer? = null
   private var isRecognizing = false
   private var locale: String? = null
+
+  // AudioManager for muting/unmuting the recognition beep sound
+  private val audioManager: AudioManager? = context.getSystemService(Context.AUDIO_SERVICE) as? AudioManager
+  private var originalStreamVolume: Int = 0
+
+  /**
+   * Mutes the notification stream to suppress the speech recognition beep sound on Android
+   */
+  private fun muteRecognitionSound() {
+    audioManager?.let {
+      originalStreamVolume = it.getStreamVolume(AudioManager.STREAM_NOTIFICATION)
+      it.setStreamVolume(AudioManager.STREAM_NOTIFICATION, 0, 0)
+    }
+  }
+
+  /**
+   * Restores the notification stream volume to its original level
+   */
+  private fun unmuteRecognitionSound() {
+    if (audioManager != null && originalStreamVolume > 0) {
+      audioManager.setStreamVolume(AudioManager.STREAM_NOTIFICATION, originalStreamVolume, 0)
+    }
+  }
 
   private fun getLocale(locale: String?): String {
     if (locale != null && locale != "") {
@@ -153,6 +178,8 @@ class Voice (context:ReactApplicationContext):RecognitionListener {
       }
       return
     }
+    // Mute the recognition beep sound before starting
+    muteRecognitionSound()
     startSpeechWithPermissions(locale!!, opts, callback!!)
   }
 
@@ -170,6 +197,8 @@ class Voice (context:ReactApplicationContext):RecognitionListener {
         callback.invoke(e.message)
       }
     }
+    // Unmute the recognition sound when stopped
+    unmuteRecognitionSound()
   }
 
   fun cancelSpeech(callback: Callback) {
@@ -297,6 +326,9 @@ class Voice (context:ReactApplicationContext):RecognitionListener {
 
 
   override fun onError(error: Int) {
+    // Unmute the recognition sound if an error occurs
+    unmuteRecognitionSound()
+
     val errorMessage = String.format("%d/%s", error, getErrorText(error))
     val errorData = Arguments.createMap()
     errorData.putString("message", errorMessage)
@@ -308,9 +340,14 @@ class Voice (context:ReactApplicationContext):RecognitionListener {
   }
 
   override fun onResults(results: Bundle?) {
+    // Unmute the recognition sound when results are received (end of recognition)
+    unmuteRecognitionSound()
+
+    if (results == null) return
+
     val arr = Arguments.createArray()
 
-    val matches = results!!.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+    val matches = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
     if (matches != null) {
       for (result in matches) {
         arr.pushString(result)
