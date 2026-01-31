@@ -1,3 +1,8 @@
+> ⚠️ **This package is deprecated and archived.**
+>
+> Please use this actively maintained alternative:
+> - [`expo-speech-recognition`](https://github.com/jamsch/expo-speech-recognition) — Modern speech recognition for React Native & Expo
+
 ![CircleCI branch][circle-ci-badge]
 [![npm][npm]][npm-url]
 
